@@ -20,18 +20,21 @@ public class TrainingApply {
 	private User user;
 	private String status;
 	private Date applyDate;
+	@ManyToOne
+	@JoinColumn(name = "trainingId")
+	private Training training;
 
 	public TrainingApply() {
 		super();
 	}
-	public TrainingApply(int applyId, User user, String status, Date applyDate) {
+	public TrainingApply(int applyId, User user, String status, Date applyDate, Training training) {
 		super();
 		this.applyId = applyId;
 		this.user = user;
 		this.status = status;
 		this.applyDate = applyDate;
+		this.training = training;
 	}
-
 	public int getApplyId() {
 		return applyId;
 	}
@@ -56,10 +59,16 @@ public class TrainingApply {
 	public void setApplyDate(Date applyDate) {
 		this.applyDate = applyDate;
 	}
+	public Training getTraining() {
+		return training;
+	}
+	public void setTraining(Training training) {
+		this.training = training;
+	}
 
 	@Override
 	public String toString() {
 		return "TrainingApply [applyId=" + applyId + ", user=" + user + ", status=" + status + ", applyDate="
-				+ applyDate + "]";
+				+ applyDate + ", training=" + training + "]";
 	}	
 }
