@@ -1,0 +1,51 @@
+
+.admin-dashboard {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+  }
+  
+  .requests-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+  }
+  
+  .requests-table th, .requests-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+  }
+  
+  .requests-table th {
+    background-color: #4CAF50;
+    color: white;
+  }
+  
+  .requests-table td button {
+    margin-right: 10px;
+    padding: 5px 10px;
+    border: none;
+    background-color: #4CAF50;
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .requests-table td button:hover {
+    background-color: #45a049;
+  }
+  
+  .trainings-list {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .trainings-list li {
+    background-color: white;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
