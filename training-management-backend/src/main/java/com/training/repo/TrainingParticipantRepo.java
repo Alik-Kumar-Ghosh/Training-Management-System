@@ -12,4 +12,7 @@ import com.training.model.User;
 public interface TrainingParticipantRepo extends JpaRepository<TrainingParticipant, Integer> {
 	@Query("select t.participant from TrainingParticipant t where t.training = :training")
 	List<User> findParticipants(Training training);
+
+	@Query("select t.training from TrainingParticipant t where t.participant = :user")
+	List<Training> findUserTrainings(User user);
 }
