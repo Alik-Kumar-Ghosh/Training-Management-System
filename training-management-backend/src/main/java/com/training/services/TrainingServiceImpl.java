@@ -142,5 +142,16 @@ public class TrainingServiceImpl implements TrainingService {
 			return null;
 		return trainingParticipantRepo.save(participant);
 	}
+	
+	private TrainingRepo trainingRepository;
+	
+	@Autowired
+    public void TrainingService(TrainingRepo trainingRepository) {
+        this.trainingRepository = trainingRepository;
+    }
+
+    public List<Training> getAllTrainings() {
+        return trainingRepository.findAll();
+    }
 
 }
