@@ -2,7 +2,9 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './login.css';
+
 const Login = () => {
+  const [userName, setUserName] = useState('');
   const navigate= useNavigate ();
   //const userType = 'trainer';
   const [userType, setUserType] = useState(null);
@@ -57,11 +59,11 @@ const Login = () => {
         <div className="input-container">
           <input
             type="text"
-            value={userId}
-            onChange={(e) => setUserId(e.target.value)}
+            value={userName}
+            onChange={(e) => setUserName(e.target.value)}
             required
           />
-          <label>User ID</label>
+          <label>User Name</label>
         </div>
         <div className="input-container">
           <input
