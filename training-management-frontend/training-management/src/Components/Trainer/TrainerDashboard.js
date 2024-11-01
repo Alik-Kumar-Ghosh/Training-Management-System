@@ -1,5 +1,6 @@
 import axios from 'axios';
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import './TrainerDashboard.css';
 
 function TrainerDashboard() {
@@ -58,7 +59,7 @@ function TrainerDashboard() {
                              {/* <button onClick={() => console.log('View Profile')}>View Profile</button>
                             <button onClick={() => console.log('Settings')}>Settings</button>
                             <button onClick={() => console.log('Logout')}>Logout</button> */}
-                            <button>View Profile</button>
+                             <Link to="/profile"><button>View Profile</button></Link>
                             <button>Logout</button>
                         </div>
                     )}

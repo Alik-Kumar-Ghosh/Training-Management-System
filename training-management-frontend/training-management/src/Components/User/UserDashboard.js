@@ -2,7 +2,10 @@
 
 import axios from 'axios';
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import './UserDashboard.css';
+
+
 
 const UserDashboard = ({ userType }) => {
     const [ongoingTrainings, setOngoingTrainings] = useState([]);
@@ -99,7 +102,8 @@ const UserDashboard = ({ userType }) => {
                     <img src="https://via.placeholder.com/40" alt="User" className="profile-icon" />
                     {showProfileMenu && (
                         <div className="profile-dropdown">
-                            <button onClick={() => console.log('View Profile')}>View Profile</button>
+                            <Link to="/profile">
+                            <button onClick={() => console.log('View Profile')}>View Profile</button> </Link>
                             <button onClick={() => console.log('Settings')}>Settings</button>
                             <button onClick={() => console.log('Logout')}>Logout</button>
                         </div>
@@ -164,7 +168,7 @@ const UserDashboard = ({ userType }) => {
             </section>
 
             {/* Pending Approvals Section for Manager */}
-            {userType === 'manager' && (
+            {userType === 'manager' && ( 
                 <section className="approval-section">
                     <button onClick={loadPendingApprovals}>Pending Approvals</button>
                     <ul>
@@ -184,7 +188,8 @@ const UserDashboard = ({ userType }) => {
                         </div>
                     )}
                 </section>
-            )}
+                 )}
+           
 
             {/* Pending Approvals Section for Trainee */}
             {userType === 'trainee' && (
