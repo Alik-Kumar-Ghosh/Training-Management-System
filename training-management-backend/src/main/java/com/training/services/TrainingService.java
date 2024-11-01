@@ -23,6 +23,7 @@ public interface TrainingService {
 	List<Training> getUpcomingTrainings();
 	List<Training> getOngoingTrainings();
 	List<Training> getPastTrainings();
+	List<Training> getAllTrainings();
 	List<TrainingApply> getTrainingApplications(Training training);
 	List<TrainingRequest> getTrainingRequests();
 

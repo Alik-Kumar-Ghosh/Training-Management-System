@@ -100,6 +100,11 @@ public class TrainingServiceImpl implements TrainingService {
 	public List<Training> getPastTrainings() {
 		return trainingRepo.findPastTrainings(Date.valueOf(LocalDate.now()));
 	}
+	
+	@Override
+	public List<Training> getAllTrainings() {
+		return trainingRepo.findAll();
+	}
 
 	@Override
 	public List<TrainingApply> getTrainingApplications(Training training) {
@@ -142,16 +147,4 @@ public class TrainingServiceImpl implements TrainingService {
 			return null;
 		return trainingParticipantRepo.save(participant);
 	}
-	
-	private TrainingRepo trainingRepository;
-	
-	@Autowired
-    public void TrainingService(TrainingRepo trainingRepository) {
-        this.trainingRepository = trainingRepository;
-    }
-
-    public List<Training> getAllTrainings() {
-        return trainingRepository.findAll();
-    }
-
 }
