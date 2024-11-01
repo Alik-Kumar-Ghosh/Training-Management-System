@@ -3,7 +3,7 @@ import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import AdminDashboard from './components/admin/adminDashboard';
 import LandingPage from './components/common/landing-page/landingPage';
 import Login from './components/common/login/login';
-import UserProfile from './components/common/ProfilePage/userProfile';
+import UserProfile from './components/common/profilePage/userProfile';
 import TrainerDashboard from './components/trainer/trainerDashboard';
 import UserDashboard from './components/user/userDashboard';
 
