@@ -1,55 +1,56 @@
 package com.training.controller;
 
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import com.training.model.Training;
 import com.training.model.TrainingApply;
-import com.training.model.User;
 import com.training.services.TrainingService;
-import com.training.services.UserService;
+
+import java.util.List;
 
 @RestController
-@RequestMapping("/api/training/apply")
+@RequestMapping("/api/trainings")
 public class TrainingApplyController {
+
     @Autowired
     private TrainingService trainingService;
-    @Autowired
-    private UserService userService;
 
-    @PostMapping
-    public ResponseEntity<TrainingApply> applyForTraining(@RequestBody TrainingApply trainingApplication) {
-        TrainingApply createdApplication = trainingService.createTrainingApply(trainingApplication);
-        return new ResponseEntity<>(createdApplication, HttpStatus.CREATED);
+    @GetMapping("/ongoing")
+    public ResponseEntity<List<Training>> getOngoingTrainings() {
+        List<Training> ongoingTrainings = trainingService.getOngoingTrainings();
+        return ResponseEntity.ok(ongoingTrainings);
     }
 
-    @GetMapping("/{applicationId}")
-    public ResponseEntity<TrainingApply> getApplicationById(@PathVariable int applicationId) {
-        TrainingApply trainingApplication = trainingService.findApplicationById(applicationId);
-        return trainingApplication != null ? 
-            new ResponseEntity<>(trainingApplication, HttpStatus.OK) :
-            new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    @GetMapping("/past")
+    public ResponseEntity<List<Training>> getPastTrainings() {
+        List<Training> pastTrainings = trainingService.getPastTrainings();
+        return ResponseEntity.ok(pastTrainings);
     }
 
-    @GetMapping("/training/{trainingId}")
-    public ResponseEntity<List<TrainingApply>> getApplicationsForTraining(@PathVariable int trainingId) {
-        Training training = trainingService.findTrainingById(trainingId);
-        if (training == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    @GetMapping("/available")
+    public ResponseEntity<List<Training>> getAvailableTrainings() {
+        List<Training> availableTrainings = trainingService.getAllTrainings();
+        return ResponseEntity.ok(availableTrainings);
+    }
+
+    @PostMapping("/apply/{trainingId}")
+    public ResponseEntity<String> applyForTraining(@PathVariable int trainingId, @RequestBody TrainingApply trainingApplication) {
+        try {
+            trainingApplication.setApplyId(trainingId);
+            TrainingApply savedApplication = trainingService.createTrainingApply(trainingApplication);
+
+            if (savedApplication != null) {
+                return ResponseEntity.ok("Successfully applied for training ID: " + trainingId);
+            } else {
+                return ResponseEntity.status(400).body("Failed to apply for training ID: " + trainingId);
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error applying for training: " + e.getMessage());
         }
-        List<TrainingApply> applications = trainingService.getTrainingApplications(training);
-        return new ResponseEntity<>(applications, HttpStatus.OK);
-    }
-
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<List<TrainingApply>> getApplicationsByUser(@PathVariable int userId) {
-        User user = userService.findById(userId);
-        if (user == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        List<TrainingApply> applications = userService.getMyApplications(user);
-        return new ResponseEntity<>(applications, HttpStatus.OK);
     }
 }
+
+ 
