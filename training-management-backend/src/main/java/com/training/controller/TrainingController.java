@@ -16,8 +16,8 @@ public class TrainingController {
 
     @GetMapping
     public List<Training> getAllTrainings() {
-    	 List<Training> lstraining = trainingService.getAllTrainings();
-    	 System.out.println(lstraining);
-    	 return lstraining;
+    	 List<Training> trainings = trainingService.getAllTrainings();
+    	 System.out.println(trainings);
+    	 return trainings;
     }
 }
