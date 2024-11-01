@@ -13,6 +13,7 @@ public interface UserService {
 	// Fetching services
 	User findById(int userId);
 	List<User> findByName(String name);
+	User findByUserName(String userName);
 	List<Training> getMyOngoingTrainings(User user);
 	List<Training> getMyUpcomingTrainings(User user);
 	List<Training> getMyPastTrainings(User user);
