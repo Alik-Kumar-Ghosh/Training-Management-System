@@ -12,12 +12,15 @@ import com.training.model.Training;
 import com.training.model.TrainingParticipant;
 import com.training.model.User;
 import com.training.services.TrainingService;
+import com.training.services.UserService;
 
 @RestController
 public class TrainingParticipantController {
 
 	@Autowired
 	private TrainingService trainingService;
+	@Autowired
+	private UserService userService;
 
 	@GetMapping("/training/participants")
 	public List<User> getParticipants(@RequestParam("training") Training training) {
@@ -28,7 +31,7 @@ public class TrainingParticipantController {
 	public TrainingParticipant addParticipant(@RequestParam("trainingId") int trainingId,
 			@RequestParam("userId") int userId) {
 		Training training = trainingService.findTrainingById(trainingId);
-		User user = trainingService.findUserById(userId);
+		User user = userService.findById(userId);
 		if (training != null && user != null) {
 			TrainingParticipant participant = new TrainingParticipant();
 			participant.setTraining(training);

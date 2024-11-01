@@ -1,11 +1,11 @@
 import React from 'react';
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
-import AdminDashboard from './Components/Admin/AdminDashboard';
-import LandingPage from './Components/Common/landing-page/landingPage';
-import Login from './Components/Common/Login/login';
-import UserProfile from './Components/Common/ProfilePage/UserProfile';
-import TrainerDashboard from './Components/Trainer/TrainerDashboard';
-import UserDashboard from './Components/User/UserDashboard';
+import AdminDashboard from './components/admin/adminDashboard';
+import LandingPage from './components/common/landing-page/landingPage';
+import Login from './components/common/login/login';
+import UserProfile from './components/common/ProfilePage/userProfile';
+import TrainerDashboard from './components/trainer/trainerDashboard';
+import UserDashboard from './components/user/userDashboard';
 
 
 const AppRoutes = () => (
