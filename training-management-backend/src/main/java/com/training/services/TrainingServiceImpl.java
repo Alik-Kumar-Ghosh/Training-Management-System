@@ -147,4 +147,5 @@ public class TrainingServiceImpl implements TrainingService {
 			return null;
 		return trainingParticipantRepo.save(participant);
 	}
+	
 }
