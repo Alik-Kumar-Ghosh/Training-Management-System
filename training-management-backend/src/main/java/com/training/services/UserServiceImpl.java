@@ -21,8 +21,6 @@ import com.training.repo.UserRepo;
 @Service
 public class UserServiceImpl implements UserService {
 	@Autowired
-	AuthenticationService authenticationService;
-	@Autowired
 	UserRepo userRepo;
 	@Autowired
 	TrainingRepo trainingRepo;

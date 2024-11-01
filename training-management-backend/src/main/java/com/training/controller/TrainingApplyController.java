@@ -1,13 +1,10 @@
 package com.training.controller;
 
 import java.util.List;
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import com.training.model.Training;
 import com.training.model.TrainingApply;
 import com.training.model.User;
@@ -17,10 +14,8 @@ import com.training.services.UserService;
 @RestController
 @RequestMapping("/api/training/apply")
 public class TrainingApplyController {
-
     @Autowired
     private TrainingService trainingService;
-    
     @Autowired
     private UserService userService;
 
@@ -48,7 +43,6 @@ public class TrainingApplyController {
         return new ResponseEntity<>(applications, HttpStatus.OK);
     }
 
-    
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<TrainingApply>> getApplicationsByUser(@PathVariable int userId) {
         User user = userService.findById(userId);
@@ -58,6 +52,4 @@ public class TrainingApplyController {
         List<TrainingApply> applications = userService.getMyApplications(user);
         return new ResponseEntity<>(applications, HttpStatus.OK);
     }
-
-
 }
