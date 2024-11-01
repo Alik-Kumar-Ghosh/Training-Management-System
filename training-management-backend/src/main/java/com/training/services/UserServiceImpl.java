@@ -37,6 +37,7 @@ public class UserServiceImpl implements UserService {
 	public User createUser(User user) {
 		return userRepo.save(user);
 	}
+
 	@Override
 	public User findById(int userId) {
 		Optional<User> optUser = userRepo.findById(userId);
@@ -44,9 +45,18 @@ public class UserServiceImpl implements UserService {
 			return null;
 		return optUser.get();
 	}
+
 	@Override
 	public List<User> findByName(String name) {
 		return userRepo.findByName(name);
+	}
+
+	@Override
+	public User findByUserName(String userName) {
+		Optional<User> optUser = userRepo.findByUserName(userName);
+		if(optUser.isEmpty())
+			return null;
+		return optUser.get();
 	}
 
 	@Override

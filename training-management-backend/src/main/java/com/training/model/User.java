@@ -1,6 +1,7 @@
 package com.training.model;
 
 import java.sql.Date;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -16,6 +17,8 @@ public class User {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "useridseq")
 	private int userId;
 	private String name;
+	@Column(unique = true, nullable = false)
+	private String userName;
 	private String email;
 	private String userType;
 	private String phone;
@@ -29,10 +32,11 @@ public class User {
 	public User() {
 		super();
 	}
-	public User(int userId, String name, String email, String userType, String phone, Date dob, Date doj, String password, User manager) {
+	public User(int userId, String name, String userName, String email, String userType, String phone, Date dob, Date doj, String password, User manager) {
 		super();
 		this.userId = userId;
 		this.name = name;
+		this.userName = userName;
 		this.email = email;
 		this.userType = userType;
 		this.phone = phone;
@@ -53,6 +57,12 @@ public class User {
 	}
 	public void setName(String name) {
 		this.name = name;
+	}
+	public String getUserName() {
+		return userName;
+	}
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
 	public String getEmail() {
 		return email;
@@ -99,7 +109,8 @@ public class User {
 
 	@Override
 	public String toString() {
-		return "User [userId=" + userId + ", name=" + name + ", email=" + email + ", userType=" + userType + ", phone="
-				+ phone + ", dob=" + dob + ", doj=" + doj + ", password=" + password + ", manager=" + manager + "]";
+		return "User [userId=" + userId + ", name=" + name + ", userName=" + userName + ", email=" + email
+				+ ", userType=" + userType + ", phone=" + phone + ", dob=" + dob + ", doj=" + doj + ", password="
+				+ password + ", manager=" + manager + "]";
 	}
 }
