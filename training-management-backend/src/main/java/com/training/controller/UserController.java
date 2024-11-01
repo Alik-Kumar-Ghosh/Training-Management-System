@@ -1,5 +1,7 @@
 package com.training.controller;
 
+import com.training.exceptions.InvalidCredentialsException;
+import com.training.exceptions.UserNotFoundException;
 import com.training.model.User;
 import com.training.services.AuthenticationService;
 import com.training.services.UserService;
@@ -30,7 +32,7 @@ public class UserController {
                 return ResponseEntity.status(404).body("User not found");
             }
         } else {
-            return ResponseEntity.status(401).body("Invalid credentials");
+        	 throw new InvalidCredentialsException("Invalid credentials");
         }
     }
 
@@ -42,7 +44,7 @@ public class UserController {
         if (user != null) {
             return ResponseEntity.ok().body(user.getUserType());
         } else {
-            return ResponseEntity.status(404).body("User not found");
+        	throw new UserNotFoundException("User not found");
         }
     }
 
