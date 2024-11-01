@@ -98,6 +98,11 @@ public class TrainingServiceImpl implements TrainingService {
 	public List<Training> getPastTrainings() {
 		return trainingRepo.findPastTrainings(Date.valueOf(LocalDate.now()));
 	}
+	
+	@Override
+	public List<Training> getAllTrainings() {
+		return trainingRepo.findAll();
+	}
 
 	@Override
 	public List<TrainingApply> getTrainingApplications(Training training) {
