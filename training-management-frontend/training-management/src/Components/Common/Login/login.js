@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import './login.css';
 
 const Login = () => {
-  const [userId, setUserId] = useState('');
+  const [userName, setUserName] = useState('');
   const [password, setPassword] = useState('');
 
   const handleLogin = (e) => {
@@ -16,11 +16,11 @@ const Login = () => {
         <div className="input-container">
           <input
             type="text"
-            value={userId}
-            onChange={(e) => setUserId(e.target.value)}
+            value={userName}
+            onChange={(e) => setUserName(e.target.value)}
             required
           />
-          <label>User ID</label>
+          <label>User Name</label>
         </div>
         <div className="input-container">
           <input
