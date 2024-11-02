@@ -1,9 +1,12 @@
 import React from 'react';
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import AdminDashboard from './components/admin/adminDashboard';
-import LandingPage from './components/common/landing-page/landingPage';
-import Login from './components/common/login/login';
-import UserProfile from './components/common/profilePage/userProfile';
+import LandingPage from './components/Common/landingPage/landingPage';
+import OngoingTraining from './components/Common/landingPage/ongoingTraining';
+import PastTraining from './components/Common/landingPage/pastTraining';
+import UpcomingTraining from './components/Common/landingPage/upcomingTraining';
+import Login from './components/Common/login/login';
+import UserProfile from './components/Common/profilePage/userProfile';
 import TrainerDashboard from './components/trainer/trainerDashboard';
 import UserDashboard from './components/user/userDashboard';
 
@@ -14,6 +17,9 @@ const AppRoutes = () => (
       <Route path="/" element={<LandingPage/>} exact />
       <Route path="/login" element={<Login/>} />
       <Route path="/admin/dashboard" element={<AdminDashboard/>} />
+      <Route path="/trainings/ongoing" element={<OngoingTraining />} />
+      <Route path="/trainings/past" element={<PastTraining />} />
+      <Route path="/trainings/upcoming" element={<UpcomingTraining/>} />
        {/* <Route path="/admin/manage-training" element={<ManageTraining/>} />
        <Route path="/admin/pending-approvals" element={<PendingApprovals />} />
        <Route path="/manager/dashboard" element={<ManagerDashboard/>} />

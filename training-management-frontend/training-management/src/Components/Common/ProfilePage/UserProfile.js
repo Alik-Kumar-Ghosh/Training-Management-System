@@ -10,7 +10,7 @@ const UserProfile = () => {
         dob: '',
         dateOfJoining: '',
         phone: '',
-        password: '********', // Masked password for display
+        password: '', // Masked password for display
     });
     const [isEditingPhone, setIsEditingPhone] = useState(false);
     const [isEditingPassword, setIsEditingPassword] = useState(false);
@@ -96,7 +96,7 @@ const UserProfile = () => {
                     ) : (
                         <>
                             <p>{profile.phone}</p>
-                            <button onClick={handleEditPhone} className="edit-button">✏️</button>
+                            <button onClick={handleEditPhone} className="edit-button">✏</button>
                         </>
                     )}
                 </div>
@@ -117,7 +117,7 @@ const UserProfile = () => {
                     ) : (
                         <>
                             <p>{profile.password}</p>
-                            <button onClick={handleEditPassword} className="edit-button">✏️</button>
+                            <button onClick={handleEditPassword} className="edit-button">✏</button>
                         </>
                     )}
                 </div>
@@ -127,6 +127,3 @@ const UserProfile = () => {
 };
 
 export default UserProfile;
-
-
-
