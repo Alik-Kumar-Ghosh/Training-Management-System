@@ -1,16 +1,17 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import './userProfile.css';
+import logo from './logo.png';
 
 const UserProfile = () => {
     const [profile, setProfile] = useState({
-        name: '',
-        email: '',
-        employeeId: '',
-        dob: '',
-        dateOfJoining: '',
-        phone: '',
-        password: '', // Masked password for display
+        name: 'xyz',
+        email: 'zyz@12.com',
+        employeeId: 'aiushd',
+        dob: 'sdaiusjd',
+        dateOfJoining: 'sdasd',
+        phone: 'sdasdassssssssssss',
+        password: '********', // Masked password for display
     });
     const [isEditingPhone, setIsEditingPhone] = useState(false);
     const [isEditingPassword, setIsEditingPassword] = useState(false);
@@ -57,8 +58,9 @@ const UserProfile = () => {
 
     return (
         <div className="profile-container">
-            <h2>User Profile</h2>
+            <img src={logo} alt="Logo" className="logo" />
             <div className="profile-details">
+            <h2>User Profile</h2>
                 <div className="profile-field">
                     <span>Name:</span>
                     <p>{profile.name}</p>
@@ -96,7 +98,7 @@ const UserProfile = () => {
                     ) : (
                         <>
                             <p>{profile.phone}</p>
-                            <button onClick={handleEditPhone} className="edit-button">✏</button>
+                            <button onClick={handleEditPhone} className="edit-button">✏️</button>
                         </>
                     )}
                 </div>
@@ -117,7 +119,7 @@ const UserProfile = () => {
                     ) : (
                         <>
                             <p>{profile.password}</p>
-                            <button onClick={handleEditPassword} className="edit-button">✏</button>
+                            <button onClick={handleEditPassword} className="edit-button">✏️</button>
                         </>
                     )}
                 </div>
@@ -127,3 +129,6 @@ const UserProfile = () => {
 };
 
 export default UserProfile;
+
+
+
