@@ -1,4 +1,4 @@
-/* Login.css */
+/* Login.css 
 .login-container {
     display: flex;
     justify-content: center;
@@ -46,4 +46,116 @@
     color: #333;
     font-size: 0.8rem;
   }
+*/
+.logo{
+  min-height:70%;
+  padding: 0px;
+}
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: linear-gradient(150deg, #2d1b76, #dd5c8b);
+  padding: 20px,0px,0px;
+}
+
+form {
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 10px 50px rgba(0, 0, 0, 0.9);
+  padding: 60px;
+  width: 100%;
+  max-width: 500px;
+  height: 50%;
+  transition: transform 0.3s;
+}
+
+form:hover {
+  transform: translateY(-10px);
+}
+
+h2 {
+  text-align: center;
+  color:#000000; 
+  margin-bottom: 30px;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.input-container {
+  margin-bottom: 25px;
+  position: relative;
+}
+
+input {
+  width: 100%;
+  padding: 15px;
+  border: 1px solid #ced4da;
+  border-radius: 8px;
+  font-size: 16px;
+  color: #495057;
+  outline: none;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+input:focus {
+  border-color:#ff00ae; 
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+label {
+  position: absolute;
+  left: 15px;
+  top: 15px;
+  color: #999;
+  font-size: 16px;
+  pointer-events: none;
+  transition: 0.2s;
+}
+
+input:focus + label,
+input:not(:placeholder-shown) + label {
+  top: -20px;
+  left: 15px;
+  font-size: 16px; 
+  color: #000000; 
+}
+
+
+input:focus {
+  padding-top: 20px;
+}
+
+button {
+  width: 100%;
+  padding: 12px;
+  background-color:#ff00ae; 
+  ;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+button:hover {
+  background-color:black; 
+  ;
+  transform: translateY(-2px);
+}
+
+button:active {
+  transform: translateY(0);
+}
+
+@media (max-width: 480px) {
+  h2 {
+    font-size: 24px;
+  }
   
+  input, button {
+    font-size: 14px;
+  }
+}

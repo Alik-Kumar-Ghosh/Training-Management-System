@@ -2,13 +2,13 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './login.css';
+import logo from './logo.png';
 
 const Login = () => {
   const [userName, setUserName] = useState('');
   const navigate= useNavigate ();
   //const userType = 'trainer';
   const [userType, setUserType] = useState(null);
-  const [userId, setUserId] = useState('');
   const [password, setPassword] = useState('');
 
   useEffect(() => {
@@ -55,7 +55,9 @@ const Login = () => {
 
   return (
     <div className="login-container">
+      <img src={logo} alt="Logo" className="logo" />
       <form >
+      <h2>Login</h2>
         <div className="input-container">
           <input
             type="text"
