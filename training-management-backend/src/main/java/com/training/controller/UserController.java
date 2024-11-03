@@ -1,13 +1,18 @@
 package com.training.controller;
 
-import com.training.exceptions.InvalidCredentialsException;
-import com.training.exceptions.UserNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.training.model.User;
 import com.training.services.AuthenticationService;
 import com.training.services.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api")
@@ -20,7 +25,7 @@ public class UserController {
 	private AuthenticationService authenticationService;
 
 	@PostMapping("/login")
-	public ResponseEntity<String> login(@RequestParam String userName, @RequestParam String password) {
+	public ResponseEntity<String> login(@RequestParam String userName, @RequestParam String password) throws Exception {
 		boolean isVerified = authenticationService.verifyPassword(userName, password);
 
 		if (isVerified) {
@@ -31,7 +36,7 @@ public class UserController {
 				return ResponseEntity.status(404).body("User not found");
 			}
 		} else {
-			throw new InvalidCredentialsException("Invalid credentials");
+			throw new Exception("Invalid credentials");
 		}
 	}
 
