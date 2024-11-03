@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import './userProfile.css';
+import './UserProfile.css';
 import logo from './logo.png';
 
 const UserProfile = () => {
