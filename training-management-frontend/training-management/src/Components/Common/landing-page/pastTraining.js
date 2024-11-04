@@ -109,4 +109,3 @@ export default PastTraining;
 // };
 
 // export default PastTraining;
-
