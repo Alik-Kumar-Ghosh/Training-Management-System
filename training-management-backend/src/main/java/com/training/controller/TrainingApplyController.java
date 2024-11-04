@@ -88,7 +88,9 @@ public class TrainingApplyController {
     	String userType = user.getUserType();
     	if(userType.equalsIgnoreCase("trainee"))
     		throw new InvalidRequestException("You don't have permissions to send this request");
-    	if(userType.equalsIgnoreCase("manager") && !applicationStatus.equalsIgnoreCase("pending"))
+    	if(application.getUser().getManager() != user && !userType.equalsIgnoreCase("admin"))
+    		throw new InvalidRequestException("You don't have permissions to send this request");
+    	if(application.getUser().getManager() == user && !applicationStatus.equalsIgnoreCase("pending"))
     		throw new InvalidRequestException("You don't have permissions to send this request");
     	if(userType.equalsIgnoreCase("admin") && !applicationStatus.equalsIgnoreCase("approved"))
     		throw new InvalidRequestException("You don't have permissions to send this request");
