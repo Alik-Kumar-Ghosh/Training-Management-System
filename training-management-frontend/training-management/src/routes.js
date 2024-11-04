@@ -10,7 +10,6 @@ import UserProfile from './components/common/profilePage/userProfile';
 import TrainerDashboard from './components/trainer/trainerDashboard';
 import UserDashboard from './components/user/userDashboard';
 
-
 const AppRoutes = () => (
   <Router>
     <Routes>

@@ -3,8 +3,6 @@ import React, { useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import './userDashboard.css';
 
-
-
 const TraineeManagerDashboard = ({ userId, userType}) => {
     const [ongoingTrainings, setOngoingTrainings] = useState([]);
     const [pastTrainings, setPastTrainings] = useState([]);

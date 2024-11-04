@@ -26,4 +26,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleGeneralException(Exception ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
+    
+    @ExceptionHandler(ApplicationNotFoundException.class)
+    public ResponseEntity<String> handleApplicationNotFoundException(ApplicationNotFoundException ex){
+    	return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
 }
