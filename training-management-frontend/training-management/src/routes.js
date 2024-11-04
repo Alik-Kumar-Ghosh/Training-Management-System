@@ -1,14 +1,14 @@
 import React from 'react';
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
-import AdminDashboard from './Components/Admin/AdminDashboard';
-import LandingPage from './Components/Common/landing-page/landingPage';
-import OngoingTraining from './Components/Common/landing-page/ongoingTraining';
-import PastTraining from './Components/Common/landing-page/pastTraining';
-import UpcomingTraining from './Components/Common/landing-page/upcomingTraining';
-import Login from './Components/Common/Login/login';
-import UserProfile from './Components/Common/ProfilePage/UserProfile';
-import TrainerDashboard from './Components/Trainer/TrainerDashboard';
-import UserDashboard from './Components/User/UserDashboard';
+import AdminDashboard from './components/admin/adminDashboard';
+import LandingPage from './components/common/landing-page/landingPage';
+import OngoingTraining from './components/common/landing-page/ongoingTraining';
+import PastTraining from './components/common/landing-page/pastTraining';
+import UpcomingTraining from './components/common/landing-page/upcomingTraining';
+import Login from './components/common/login/login';
+import UserProfile from './components/common/profilePage/userProfile';
+import TrainerDashboard from './components/trainer/trainerDashboard';
+import UserDashboard from './components/user/userDashboard';
 
 
 const AppRoutes = () => (
