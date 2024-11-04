@@ -1,19 +1,25 @@
 import React from 'react';
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
-import AdminDashboard from './components/admin/adminDashboard';
-import LandingPage from './components/common/landing-page/landingPage';
-import Login from './components/common/login/login';
-import UserProfile from './components/common/profilePage/userProfile';
-import TrainerDashboard from './components/trainer/trainerDashboard';
-import UserDashboard from './components/user/userDashboard';
+import AdminDashboard from './Components/Admin/AdminDashboard';
+import LandingPage from './Components/Common/landing-page/landingPage';
+import OngoingTraining from './Components/Common/landing-page/ongoingTraining';
+import PastTraining from './Components/Common/landing-page/pastTraining';
+import UpcomingTraining from './Components/Common/landing-page/upcomingTraining';
+import Login from './Components/Common/Login/login';
+import UserProfile from './Components/Common/ProfilePage/UserProfile';
+import TrainerDashboard from './Components/Trainer/TrainerDashboard';
+import UserDashboard from './Components/User/UserDashboard';
 
 
 const AppRoutes = () => (
   <Router>
     <Routes>
-      <Route path="/" element={<LandingPage/>} exact />
-      <Route path="/login" element={<Login/>} />
-      <Route path="/admin/dashboard" element={<AdminDashboard/>} />
+      <Route path="/" element={<LandingPage />} exact />
+      <Route path="/login" element={<Login />} />
+      <Route path="/admin/dashboard" element={<AdminDashboard />} />
+      <Route path="/trainings/ongoing" element={<OngoingTraining />} />
+      <Route path="/trainings/past" element={<PastTraining />} />
+      <Route path="/trainings/upcoming" element={<UpcomingTraining/>} />
        {/* <Route path="/admin/manage-training" element={<ManageTraining/>} />
        <Route path="/admin/pending-approvals" element={<PendingApprovals />} />
        <Route path="/manager/dashboard" element={<ManagerDashboard/>} />
@@ -27,7 +33,7 @@ const AppRoutes = () => (
        <Route path="/trainer/dashboard" element={<TrainerDashboard/>} />
        <Route path="/trainer/past-training" element={<PastTraining/>} />
        <Route path="/trainer/participant-information/:id" element={<ParticipantInformation/>} /> */}
-       <Route  path="/user/dashboard" element={<UserDashboard/>} />
+       <Route  path="/user/dashboard" element={<UserDashboard  />} />
        <Route  path="/trainer/dashboard" element={<TrainerDashboard/>}  />
        <Route path="/profile" element={<UserProfile />} />
       </Routes>

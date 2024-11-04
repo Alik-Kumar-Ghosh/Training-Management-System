@@ -1,20 +1,11 @@
-import React, { useState,useRef } from 'react';
-import './userDashboard.css';
+import axios from 'axios';
+import React, { useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
+import './UserDashboard.css';
 
-const mockData = {
-    ongoing: [
-        { topic: 'React Basics', startDate: '2024-10-01', endDate: '2024-10-05', location: 'Room 101' },
-        { topic: 'Node.js Fundamentals', startDate: '2024-10-10', endDate: '2024-10-15', location: 'Room 102' },
-    ],
-    past: [
-        { topic: 'Java Fundamentals', startDate: '2024-09-01', endDate: '2024-09-03', location: 'Room 202' },
-    ],
-    available: [
-        { id: 1, topic: 'Advanced Spring Boot', startDate: '2024-11-01', location: 'Room 303' },
-    ]
-};
 
-const TraineeManagerDashboard = ({ userType }) => {
+
+const TraineeManagerDashboard = ({ userId, userType}) => {
     const [ongoingTrainings, setOngoingTrainings] = useState([]);
     const [pastTrainings, setPastTrainings] = useState([]);
     const [availableTrainings, setAvailableTrainings] = useState([]);
@@ -27,25 +18,77 @@ const TraineeManagerDashboard = ({ userType }) => {
 
     const [openSection, setOpenSection] = useState(null); // Add state to track the opened section
 
-    const loadOngoingTrainings = () => {
-        setOngoingTrainings(mockData.ongoing);
-        setOpenSection(openSection === 'ongoing' ? null : 'ongoing'); // Toggle the ongoing section
-    };
-    const loadPastTrainings = () => {
-        setPastTrainings(mockData.past);
-        setOpenSection(openSection === 'past' ? null : 'past'); // Toggle the past section
-    };
-    const loadAvailableTrainings = () => {
-        setAvailableTrainings(mockData.available);
-        setOpenSection(openSection === 'available' ? null : 'available'); // Toggle the available section
+    
+
+    
+    const loadOngoingTrainings = async () => {
+        try {
+            const response = await axios.get('/user/ongoing-trainings', {
+                params: { userId }
+            });
+            setOngoingTrainings(response.data);
+        } catch (error) {
+            console.error('Error fetching ongoing trainings:', error);
+        }
     };
 
+    const loadPastTrainings = async () => {
+        try {
+            const response = await axios.get('/user/past-trainings', {
+                params: { userId }
+            });
+            setPastTrainings(response.data);
+        } catch (error) {
+            console.error('Error fetching past trainings:', error);
+        }
+    };
+
+    const loadAvailableTrainings = async () => {
+        try {
+            const response = await axios.get('/user/upcoming-trainings', {
+                params: { userId }
+            });
+            setAvailableTrainings(response.data);
+        } catch (error) {
+            console.error('Error fetching available trainings:', error);
+        }
+    };
+
+    const loadPendingApprovals = async () => {
+        if (userType === 'manager') {
+            try {
+                const response = await axios.get('/manager/pending-approvals', {
+                    params: { userId }
+                });
+                setPendingApprovals(response.data);
+            } catch (error) {
+                console.error('Error fetching pending approvals:', error);
+            }
+        }
+    };
     const handleRequestClick = (request) => {
         setSelectedRequest(request);
         setOpenSection(openSection === 'available' ? null : 'requested');
     }
-    const handleApproval = (id, status) => console.log(`Request ID: ${id}, Status: ${status}`);
-    const handleApplyTraining = (trainingId) => console.log(`Applied for training ID: ${trainingId}`);
+    //const handleApproval = (id, status) => console.log(`Request ID: ${id}, Status: ${status}`);
+    const handleApproval = async (id, status) => {
+        try {
+            await axios.post(`/api/approvals/${id}`, { status });
+            console.log(`Request ID: ${id}, Status: ${status}`);
+            setPendingApprovals((prev) => prev.filter((req) => req.id !== id));
+        } catch (error) {
+            console.error(`Error updating approval status for request ${id}:`, error);
+        }
+    };
+    //const handleApplyTraining = (trainingId) => console.log(`Applied for training ID: ${trainingId}`);
+    const handleApplyTraining = async (trainingId) => {
+        try {
+            await axios.post(`/api/trainings/apply/${trainingId}`);
+            console.log(`Applied for training ID: ${trainingId}`);
+        } catch (error) {
+            console.error(`Error applying for training ${trainingId}:`, error);
+        }
+    };
     const toggleProfileMenu = () => setShowProfileMenu((prevState) => !prevState);
 
     const handleNewTrainingRequestClick = () => {
@@ -71,7 +114,7 @@ const TraineeManagerDashboard = ({ userType }) => {
                     <img src="https://via.placeholder.com/40" alt="User" className="profile-icon" />
                     {showProfileMenu && (
                         <div className="profile-dropdown">
-                            <button onClick={() => console.log('View Profile')}>View Profile</button>
+                          <Link to="/profile"> <button onClick={() => console.log('View Profile')}>View Profile</button></Link> 
                             <button onClick={() => console.log('Settings')}>Settings</button>
                             <button onClick={() => console.log('Logout')}>Logout</button>
                         </div>
@@ -170,3 +213,29 @@ const TraineeManagerDashboard = ({ userType }) => {
 };
 
 export default TraineeManagerDashboard;
+
+// const mockData = {
+//     ongoing: [
+//         { topic: 'React Basics', startDate: '2024-10-01', endDate: '2024-10-05', location: 'Room 101' },
+//         { topic: 'Node.js Fundamentals', startDate: '2024-10-10', endDate: '2024-10-15', location: 'Room 102' },
+//     ],
+//     past: [
+//         { topic: 'Java Fundamentals', startDate: '2024-09-01', endDate: '2024-09-03', location: 'Room 202' },
+//     ],
+//     available: [
+//         { id: 1, topic: 'Advanced Spring Boot', startDate: '2024-11-01', location: 'Room 303' },
+//     ]
+// };
+
+// const loadOngoingTrainings = () => {
+    //     setOngoingTrainings(mockData.ongoing);
+    //     setOpenSection(openSection === 'ongoing' ? null : 'ongoing'); // Toggle the ongoing section
+    // };
+    // const loadPastTrainings = () => {
+    //     setPastTrainings(mockData.past);
+    //     setOpenSection(openSection === 'past' ? null : 'past'); // Toggle the past section
+    // };
+    // const loadAvailableTrainings = () => {
+    //     setAvailableTrainings(mockData.available);
+    //     setOpenSection(openSection === 'available' ? null : 'available'); // Toggle the available section
+    // };
