@@ -92,7 +92,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './login.css';
 import logo from './logo.png';
-import BASE_URL from '../../../utilsp/api';
+import BASE_URL from '../../../utils/api';
 
 const Login = () => {
   const [userName, setUserName] = useState('');
