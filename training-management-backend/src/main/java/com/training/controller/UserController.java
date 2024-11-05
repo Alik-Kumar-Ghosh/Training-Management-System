@@ -74,6 +74,42 @@ public class UserController {
 			return ResponseEntity.ok(user);
 		}
 	}
+
+	@GetMapping("/trainer/past-trainings")
+	public ResponseEntity<List<Training>> getTrainerPastTrainings(@RequestParam int userId){
+		User user = userService.findById(userId);
+		
+		if(user == null)
+			throw new UserNotFoundException("No user found with user id: " + userId);
+		if(!user.getUserType().equalsIgnoreCase("trainer"))
+			throw new InvalidRequestException("You don't have permissions to send this request");
+		
+		return ResponseEntity.ok(userService.getTrainerPastTrainings(user));
+	}
+	
+	@GetMapping("/trainer/ongoing-trainings")
+	public ResponseEntity<List<Training>> getTrainerOngoingTrainings(@RequestParam int userId){
+		User user = userService.findById(userId);
+		
+		if(user == null)
+			throw new UserNotFoundException("No user found with user id: " + userId);
+		if(!user.getUserType().equalsIgnoreCase("trainer"))
+			throw new InvalidRequestException("You don't have permissions to send this request");
+		
+		return ResponseEntity.ok(userService.getTrainerOngoingTrainings(user));
+	}
+
+	@GetMapping("/trainer/upcoming-trainings")
+	public ResponseEntity<List<Training>> getTrainerUpcomingTrainings(@RequestParam int userId){
+		User user = userService.findById(userId);
+		
+		if(user == null)
+			throw new UserNotFoundException("No user found with user id: " + userId);
+		if(!user.getUserType().equalsIgnoreCase("trainer"))
+			throw new InvalidRequestException("You don't have permissions to send this request");
+		
+		return ResponseEntity.ok(userService.getTrainerUpcomingTrainings(user));
+	}
 		
 	@GetMapping("/user/past-trainings")
 	public ResponseEntity<List<Training>> getUserPastTrainings(@RequestParam int userId){

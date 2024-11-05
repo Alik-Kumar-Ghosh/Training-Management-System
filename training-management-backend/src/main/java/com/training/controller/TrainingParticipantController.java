@@ -26,15 +26,16 @@ public class TrainingParticipantController {
 		User user = userService.findById(userId);
 		if(user == null)
 			throw new UserNotFoundException("User not found with the given user id");
-		if(!user.getUserType().equalsIgnoreCase("admin"))
-			throw new InvalidRequestException("You don't have permissions to send this request");
+		
 		Training training = trainingService.findTrainingById(trainingId);
-		if (training != null) {
-			List<User> participants = trainingService.getTrainingParticipants(training);
-			return new ResponseEntity<>(participants, HttpStatus.OK);
-		}
-		else
+		
+		if (training == null)
 			throw new TrainingNotFoundException("Training not found with id: " + trainingId);
+		if(!user.getUserType().equalsIgnoreCase("admin") && training.getTrainer() != user)
+			throw new InvalidRequestException("You don't have permissions to send this request");
+
+		List<User> participants = trainingService.getTrainingParticipants(training);
+		return new ResponseEntity<>(participants, HttpStatus.OK);
 	}
 
 	@PostMapping("/add-participant")
