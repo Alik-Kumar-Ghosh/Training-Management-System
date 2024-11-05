@@ -2,16 +2,18 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import logo from './logo.png';
 import './userProfile.css';
+import BASE_URL from '../../../utils/api'
 
 const UserProfile = ({ userId }) => {
     const [profile, setProfile] = useState({
-        name: 'xyz',
-        email: 'zyz@12.com',
-        employeeId: 'aiushd',
-        dob: 'sdaiusjd',
-        dateOfJoining: 'sdasd',
-        phone: 'sdasdassssssssssss',
-        password: '********', // Masked password for display
+        name: '',
+        userName:'',
+        email: '',
+        employeeId: '',
+        dob: '',
+        dateOfJoining: '',
+        phone: '',
+        password:''  // Masked password for display
     });
     const [isEditingPhone, setIsEditingPhone] = useState(false);
     const [isEditingPassword, setIsEditingPassword] = useState(false);
@@ -19,7 +21,7 @@ const UserProfile = ({ userId }) => {
     useEffect(() => {
         const fetchProfileData = async () => {
             try {
-                const response = await axios.get(`/user/profile`,{
+                const response = await axios.get(`${BASE_URL}/user/profile`,{
                     params: { userId }
                 }); // Replace with actual API endpoint
                 setProfile(response.data);
@@ -39,7 +41,7 @@ const UserProfile = ({ userId }) => {
 
     const handleUpdatePhone = async () => {
         try {
-            const response = await axios.put('/user/update-user', {
+            const response = await axios.put(`${BASE_URL}/user/update-user`, {
                 userId,
                 phone: profile.phone,
             });
@@ -53,7 +55,7 @@ const UserProfile = ({ userId }) => {
 
     const handleUpdatePassword = async () => {
         try {
-            const response = await axios.put('/user/update-user', {
+            const response = await axios.put(`${BASE_URL}/user/update-user`, {
                 userId,
                 password: profile.password,
             });
@@ -76,6 +78,10 @@ const UserProfile = ({ userId }) => {
                 <div className="profile-field">
                     <span>Name:</span>
                     <p>{profile.name}</p>
+                </div>
+                <div className="profile-field">
+                    <span>Username:</span>
+                    <p>{profile.userName}</p>
                 </div>
                 <div className="profile-field">
                     <span>Email:</span>

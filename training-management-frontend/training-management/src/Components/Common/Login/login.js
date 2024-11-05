@@ -92,6 +92,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './login.css';
 import logo from './logo.png';
+import BASE_URL from '../../../utilsp/api';
 
 const Login = () => {
   const [userName, setUserName] = useState('');
@@ -103,7 +104,7 @@ const Login = () => {
 
     try {
       
-      const response = await axios.get('/login', {
+      const response = await axios.get(`${BASE_URL}/login`, {
         params: {
           username: userName,
           password: password
