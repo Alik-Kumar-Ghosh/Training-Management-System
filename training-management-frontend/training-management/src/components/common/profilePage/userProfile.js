@@ -1,8 +1,8 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
+import BASE_URL from '../../../utils/api';
 import logo from './logo.png';
 import './userProfile.css';
-import BASE_URL from '../../../utils/api'
 
 const UserProfile = ({ userId }) => {
     const [profile, setProfile] = useState({
@@ -17,6 +17,7 @@ const UserProfile = ({ userId }) => {
     });
     const [isEditingPhone, setIsEditingPhone] = useState(false);
     const [isEditingPassword, setIsEditingPassword] = useState(false);
+    const [oldPassword, setOldPassword] = useState('');
 
     useEffect(() => {
         const fetchProfileData = async () => {
@@ -37,6 +38,7 @@ const UserProfile = ({ userId }) => {
     const handleEditPassword = () => setIsEditingPassword(true);
 
     const handlePhoneChange = (e) => setProfile({ ...profile, phone: e.target.value });
+    const handleOldPasswordChange = (e) => setOldPassword(e.target.value);
     const handlePasswordChange = (e) => setProfile({ ...profile, password: e.target.value });
 
     const handleUpdatePhone = async () => {
@@ -123,9 +125,16 @@ const UserProfile = ({ userId }) => {
 
                 {/* Editable field for Password */}
                 <div className="profile-field">
-                    <span>Password:</span>
+                    <span>Change Password</span>
                     {isEditingPassword ? (
                         <>
+                        <input
+                                type="password"
+                                placeholder="Old Password"
+                                value={oldPassword}
+                                onChange={handleOldPasswordChange}
+                                className="edit-input"
+                            />
                             <input
                                 type="password"
                                 placeholder="New Password"
