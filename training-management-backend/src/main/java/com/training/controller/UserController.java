@@ -1,6 +1,9 @@
 package com.training.controller;
 
 import java.util.List;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -9,7 +12,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.training.model.Training;
 import com.training.model.TrainingApply;
@@ -37,9 +39,9 @@ public class UserController {
 	private AuthenticationService authenticationService;
 
 	@PostMapping("/login")
-	public ResponseEntity<User> login(@RequestBody User ob) {
-		String userName=ob.getUserName();
-		String password=ob.getPassword();
+	public ResponseEntity<String> login(@RequestBody User obj, HttpServletResponse response) {
+		String userName=obj.getUserName();
+		String password=obj.getPassword();
 		if(userName.isEmpty() || password.isEmpty())
 			throw new InvalidRequestException("Please enter all the required fields");
 
@@ -48,14 +50,43 @@ public class UserController {
 			throw new UserNotFoundException("No user found with username: " + userName);
 		
 		boolean isVerified = authenticationService.verifyPassword(userName, password);
-		if(isVerified)
-			return ResponseEntity.ok(user);
+		if(isVerified) {
+			Cookie userId = new Cookie("userId", "" + user.getUserId());
+			Cookie userType = new Cookie("userType", user.getUserType());
+
+	        userId.setPath("/");
+	        userId.setMaxAge(7 * 24 * 60 * 60);
+	        userType.setPath("/");
+	        userType.setMaxAge(7 * 24 * 60 * 60);
+	        response.addCookie(userId);
+			response.addCookie(userType);
+
+			return ResponseEntity.ok("Login successful");
+		}
 		else
 			throw new InvalidRequestException("Incorrect username/password combination! Please try again.");
 	}
+
+	@PostMapping("/logout")
+	public ResponseEntity<String> logout(HttpServletResponse response){
+		Cookie userId = new Cookie("userId", null);
+		Cookie userType = new Cookie("userType", null);
+		
+		userId.setMaxAge(0);
+		userType.setMaxAge(0);
+		response.addCookie(userId);
+		response.addCookie(userType);
+		
+		return ResponseEntity.ok("Logout successful");
+	}
 	
 	@GetMapping("/user/profile")
-	public ResponseEntity<User> getProfile(@RequestParam int userId){
+	public ResponseEntity<User> getProfile(HttpServletRequest request){
+		Cookie[] cookies = request.getCookies();
+		if(cookies == null)
+			throw new ForbiddenException();
+		int idx = cookies[0].getName().equals("userId") ? 0 : 1; 
+		int userId = Integer.parseInt(cookies[idx].getValue());
 		User user = userService.findById(userId);
 
 		if(user == null)
@@ -65,7 +96,12 @@ public class UserController {
 	}
 
 	@GetMapping("/user/user-type")
-	public ResponseEntity<String> getUserType(@RequestParam int userId) {
+	public ResponseEntity<String> getUserType(HttpServletRequest request) {
+		Cookie[] cookies = request.getCookies();
+		if(cookies == null)
+			throw new ForbiddenException();
+		int idx = cookies[0].getName().equals("userId") ? 0 : 1; 
+		int userId = Integer.parseInt(cookies[idx].getValue());
 		User user = userService.findById(userId);
 
 		if(user == null)
@@ -75,8 +111,12 @@ public class UserController {
 	}
 
 	@PutMapping("/user/update-user")
-	public ResponseEntity<User> updateUser(@RequestBody User obj) {
-		int userId = obj.getUserId();
+	public ResponseEntity<User> updateUser(@RequestBody User obj, HttpServletRequest request) {
+		Cookie[] cookies = request.getCookies();
+		if(cookies == null)
+			throw new ForbiddenException();
+		int idx = cookies[0].getName().equals("userId") ? 0 : 1; 
+		int userId = Integer.parseInt(cookies[idx].getValue());
 		String phone = obj.getPhone();
 		String password = obj.getPassword();
 
@@ -96,7 +136,12 @@ public class UserController {
 	}
 
 	@GetMapping("/trainer/past-trainings")
-	public ResponseEntity<List<Training>> getTrainerPastTrainings(@RequestParam int userId){
+	public ResponseEntity<List<Training>> getTrainerPastTrainings(HttpServletRequest request){
+		Cookie[] cookies = request.getCookies();
+		if(cookies == null)
+			throw new ForbiddenException();
+		int idx = cookies[0].getName().equals("userId") ? 0 : 1; 
+		int userId = Integer.parseInt(cookies[idx].getValue());
 		User user = userService.findById(userId);
 		
 		if(user == null)
@@ -108,7 +153,12 @@ public class UserController {
 	}
 	
 	@GetMapping("/trainer/ongoing-trainings")
-	public ResponseEntity<List<Training>> getTrainerOngoingTrainings(@RequestParam int userId){
+	public ResponseEntity<List<Training>> getTrainerOngoingTrainings(HttpServletRequest request){
+		Cookie[] cookies = request.getCookies();
+		if(cookies == null)
+			throw new ForbiddenException();
+		int idx = cookies[0].getName().equals("userId") ? 0 : 1; 
+		int userId = Integer.parseInt(cookies[idx].getValue());
 		User user = userService.findById(userId);
 		
 		if(user == null)
@@ -120,7 +170,12 @@ public class UserController {
 	}
 
 	@GetMapping("/trainer/upcoming-trainings")
-	public ResponseEntity<List<Training>> getTrainerUpcomingTrainings(@RequestParam int userId){
+	public ResponseEntity<List<Training>> getTrainerUpcomingTrainings(HttpServletRequest request){
+		Cookie[] cookies = request.getCookies();
+		if(cookies == null)
+			throw new ForbiddenException();
+		int idx = cookies[0].getName().equals("userId") ? 0 : 1; 
+		int userId = Integer.parseInt(cookies[idx].getValue());
 		User user = userService.findById(userId);
 		
 		if(user == null)
@@ -132,7 +187,12 @@ public class UserController {
 	}
 		
 	@GetMapping("/user/past-trainings")
-	public ResponseEntity<List<Training>> getUserPastTrainings(@RequestParam int userId){
+	public ResponseEntity<List<Training>> getUserPastTrainings(HttpServletRequest request){
+		Cookie[] cookies = request.getCookies();
+		if(cookies == null)
+			throw new ForbiddenException();
+		int idx = cookies[0].getName().equals("userId") ? 0 : 1; 
+		int userId = Integer.parseInt(cookies[idx].getValue());
 		User user = userService.findById(userId);
 
 		if(user == null)
@@ -142,7 +202,12 @@ public class UserController {
 	}
 
 	@GetMapping("/user/ongoing-trainings")
-	public ResponseEntity<List<Training>> getUserOngoingTrainings(@RequestParam int userId){
+	public ResponseEntity<List<Training>> getUserOngoingTrainings(HttpServletRequest request){
+		Cookie[] cookies = request.getCookies();
+		if(cookies == null)
+			throw new ForbiddenException();
+		int idx = cookies[0].getName().equals("userId") ? 0 : 1; 
+		int userId = Integer.parseInt(cookies[idx].getValue());
 		User user = userService.findById(userId);
 
 		if(user == null)
@@ -152,7 +217,12 @@ public class UserController {
 	}
 
 	@GetMapping("/user/upcoming-trainings")
-	public ResponseEntity<List<Training>> getUserUpcomingTrainings(@RequestParam int userId){
+	public ResponseEntity<List<Training>> getUserUpcomingTrainings(HttpServletRequest request){
+		Cookie[] cookies = request.getCookies();
+		if(cookies == null)
+			throw new ForbiddenException();
+		int idx = cookies[0].getName().equals("userId") ? 0 : 1; 
+		int userId = Integer.parseInt(cookies[idx].getValue());
 		User user = userService.findById(userId);
 
 		if(user == null)
@@ -162,7 +232,12 @@ public class UserController {
 	}
 
 	@GetMapping("/user/applications")
-	public ResponseEntity<List<TrainingApply>> getUserApplications(@RequestParam int userId){
+	public ResponseEntity<List<TrainingApply>> getUserApplications(HttpServletRequest request){
+		Cookie[] cookies = request.getCookies();
+		if(cookies == null)
+			throw new ForbiddenException();
+		int idx = cookies[0].getName().equals("userId") ? 0 : 1; 
+		int userId = Integer.parseInt(cookies[idx].getValue());
 		User user = userService.findById(userId);
 
 		if(user == null)
@@ -172,7 +247,12 @@ public class UserController {
 	}
 
 	@GetMapping("/user/requests")
-	public ResponseEntity<List<TrainingRequest>> getUserRequests(@RequestParam int userId){
+	public ResponseEntity<List<TrainingRequest>> getUserRequests(HttpServletRequest request){
+		Cookie[] cookies = request.getCookies();
+		if(cookies == null)
+			throw new ForbiddenException();
+		int idx = cookies[0].getName().equals("userId") ? 0 : 1; 
+		int userId = Integer.parseInt(cookies[idx].getValue());
 		User user = userService.findById(userId);
 
 		if(user == null)
@@ -182,7 +262,12 @@ public class UserController {
 	}
 
 	@GetMapping("/manager/pending-approvals")
-	public ResponseEntity<List<TrainingApply>> getManagerPendingApprovals(@RequestParam int userId){
+	public ResponseEntity<List<TrainingApply>> getManagerPendingApprovals(HttpServletRequest request){
+		Cookie[] cookies = request.getCookies();
+		if(cookies == null)
+			throw new ForbiddenException();
+		int idx = cookies[0].getName().equals("userId") ? 0 : 1; 
+		int userId = Integer.parseInt(cookies[idx].getValue());
 		User user = userService.findById(userId);
 
 		if(user == null)
@@ -192,7 +277,12 @@ public class UserController {
 	}
 
 	@GetMapping("/admin/pending-approvals")
-	public ResponseEntity<List<TrainingApply>> getAdminPendingApprovals(@RequestParam int userId){
+	public ResponseEntity<List<TrainingApply>> getAdminPendingApprovals(HttpServletRequest request){
+		Cookie[] cookies = request.getCookies();
+		if(cookies == null)
+			throw new ForbiddenException();
+		int idx = cookies[0].getName().equals("userId") ? 0 : 1; 
+		int userId = Integer.parseInt(cookies[idx].getValue());
 		User user = userService.findById(userId);
 
 		if(user == null)
@@ -205,7 +295,12 @@ public class UserController {
 	}
 
 	@GetMapping("/admin/pending-requests")
-	public ResponseEntity<List<TrainingRequest>> getAdminPendingRequests(@RequestParam int userId){
+	public ResponseEntity<List<TrainingRequest>> getAdminPendingRequests(HttpServletRequest request){
+		Cookie[] cookies = request.getCookies();
+		if(cookies == null)
+			throw new ForbiddenException();
+		int idx = cookies[0].getName().equals("userId") ? 0 : 1; 
+		int userId = Integer.parseInt(cookies[idx].getValue());
 		User user = userService.findById(userId);
 
 		if(user == null)
