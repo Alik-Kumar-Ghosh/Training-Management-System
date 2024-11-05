@@ -1,10 +1,10 @@
 import axios from 'axios';
 import React, { useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import './userDashboard.css';
 import BASE_URL from '../../utils/api';
 
-const TraineeManagerDashboard = ({ userId, userType}) => {
+const TraineeManagerDashboard = () => {
     const [ongoingTrainings, setOngoingTrainings] = useState([]);
     const [pastTrainings, setPastTrainings] = useState([]);
     const [availableTrainings, setAvailableTrainings] = useState([]);
@@ -16,7 +16,8 @@ const TraineeManagerDashboard = ({ userId, userType}) => {
     const textareaRef = useRef(null);
 
     const [openSection, setOpenSection] = useState(null); // Add state to track the opened section
-
+    const location = useLocation();
+    const { userId, userType } = location.state || {};
 
     const loadOngoingTrainings = async () => {
         try {
@@ -111,7 +112,16 @@ const TraineeManagerDashboard = ({ userId, userType}) => {
                     <img src="https://via.placeholder.com/40" alt="User" className="profile-icon" />
                     {showProfileMenu && (
                         <div className="profile-dropdown">
-                          <Link to="/profile"> <button onClick={() => console.log('View Profile')}>View Profile</button></Link> 
+                          <Link 
+  to={{
+    pathname: "/profile",
+    state: {
+      userId: userId,
+      userType: userType,
+      // Add other state parameters here if needed
+    },
+  }}
+> <button onClick={() => console.log('View Profile')}>View Profile</button></Link> 
                             <button onClick={() => console.log('Settings')}>Settings</button>
                             <button onClick={() => console.log('Logout')}>Logout</button>
                         </div>
@@ -210,5 +220,4 @@ const TraineeManagerDashboard = ({ userId, userType}) => {
 };
 
 export default TraineeManagerDashboard;
-
 
