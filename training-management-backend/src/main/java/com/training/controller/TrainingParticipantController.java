@@ -4,8 +4,10 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.training.model.Training;
@@ -13,7 +15,17 @@ import com.training.model.TrainingParticipant;
 import com.training.model.User;
 import com.training.services.TrainingService;
 import com.training.services.UserService;
-
+@CrossOrigin(
+	    origins = {
+	        "http://localhost:3000"
+	        },
+	    methods = {
+	                RequestMethod.OPTIONS,
+	                RequestMethod.GET,
+	                RequestMethod.PUT,
+	                RequestMethod.DELETE,
+	                RequestMethod.POST
+	})
 @RestController
 public class TrainingParticipantController {
 	@Autowired
