@@ -1,42 +1,33 @@
 package com.training.controller;
 
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.training.model.Training;
 import com.training.model.TrainingParticipant;
 import com.training.model.User;
+import com.training.services.AuthenticationService;
 import com.training.services.TrainingService;
 import com.training.services.UserService;
-@CrossOrigin(
-	    origins = {
-	        "http://localhost:3000"
-	        },
-	    allowCredentials = "true",
-	    methods = {
-	                RequestMethod.OPTIONS,
-	                RequestMethod.GET,
-	                RequestMethod.PUT,
-	                RequestMethod.DELETE,
-	                RequestMethod.POST
-	})
+
 @RestController
 public class TrainingParticipantController {
 	@Autowired
 	private TrainingService trainingService;
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private AuthenticationService authenticationService;
 
 	@GetMapping("/training/participants")
-	public ResponseEntity<List<User>> getParticipants(@RequestParam int userId, @RequestParam int trainingId) {
-		User user = userService.findById(userId);
+	public ResponseEntity<List<User>> getParticipants(HttpServletRequest request, @RequestParam int trainingId) {
+		User user = authenticationService.getLoggedInUser(request);
 		if(user == null)
 			throw new UserNotFoundException("User not found with the given user id");
 		
@@ -52,9 +43,15 @@ public class TrainingParticipantController {
 	}
 
 	@PostMapping("/add-participant")
-	public ResponseEntity<TrainingParticipant> addParticipant(@RequestParam int trainingId, @RequestParam int userId) {
+	public ResponseEntity<TrainingParticipant> addParticipant(HttpServletRequest request, @RequestParam int trainingId, @RequestParam String userName) {
+		User admin = authenticationService.getLoggedInUser(request);
+		if(admin == null)
+			throw new ForbiddenException();
+		if(!admin.getUserType().equalsIgnoreCase("admin"))
+			throw new InvalidRequestException("You don't have permissions to send this request");
+
 		Training training = trainingService.findTrainingById(trainingId);
-		User user = userService.findById(userId);
+		User user = userService.findByUserName(userName);
 
 		if (training != null && user != null) {
 			TrainingParticipant participant = new TrainingParticipant(0, training, user);

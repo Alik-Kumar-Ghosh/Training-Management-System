@@ -3,44 +3,25 @@ package com.training.controller;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.training.model.TrainingRequest;
 import com.training.model.User;
 import com.training.services.AuthenticationService;
 import com.training.services.TrainingService;
-import com.training.services.UserService;
-@CrossOrigin(
-	    origins = {
-	        "http://localhost:3000"
-	        },
-	    allowCredentials = "true",
-	    methods = {
-	                RequestMethod.OPTIONS,
-	                RequestMethod.GET,
-	                RequestMethod.PUT,
-	                RequestMethod.DELETE,
-	                RequestMethod.POST
-	})
+
 @RestController
 public class TrainingRequestController {
 	@Autowired
-	TrainingService trainingService;
+	private TrainingService trainingService;
 	@Autowired
-	UserService userService;
-	@Autowired
-	AuthenticationService authenticationService;
+	private AuthenticationService authenticationService;
 
 	@PostMapping("/request-training")
 	public ResponseEntity<TrainingRequest> requestNewTraining(HttpServletRequest request, @RequestParam String topic, 

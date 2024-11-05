@@ -3,44 +3,31 @@ package com.training.controller;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.training.model.Training;
 import com.training.model.TrainingApply;
 import com.training.model.TrainingParticipant;
 import com.training.model.User;
+import com.training.services.AuthenticationService;
 import com.training.services.TrainingService;
-import com.training.services.UserService;
 
-@CrossOrigin(
-	    origins = {
-	        "http://localhost:3000"
-	        },
-	    allowCredentials = "true",
-	    methods = {
-	                RequestMethod.OPTIONS,
-	                RequestMethod.GET,
-	                RequestMethod.PUT,
-	                RequestMethod.DELETE,
-	                RequestMethod.POST
-	})
 @RestController
 public class TrainingApplyController {
     @Autowired
     private TrainingService trainingService;
     @Autowired
-    private UserService userService;
+    private AuthenticationService authenticationService;
 
     @PostMapping("/apply/{trainingId}")
-    public ResponseEntity<TrainingApply> apply(@RequestParam int userId, @RequestParam int trainingId){
-    	User user = userService.findById(userId);
+    public ResponseEntity<TrainingApply> apply(HttpServletRequest request, @RequestParam int trainingId){
+    	User user = authenticationService.getLoggedInUser(request);
     	if(user == null)
     		throw new UserNotFoundException("User not found with the given user id");
     	
@@ -58,9 +45,9 @@ public class TrainingApplyController {
     }
 
     @GetMapping("/application/{applicationId}")
-    public ResponseEntity<TrainingApply> getApplication(@RequestParam int userId, @RequestParam int applicationId){
+    public ResponseEntity<TrainingApply> getApplication(HttpServletRequest request, @RequestParam int applicationId){
     	TrainingApply application = trainingService.findApplicationById(applicationId);
-    	User user = userService.findById(userId);
+    	User user = authenticationService.getLoggedInUser(request);
 
     	if(user == null)
     		throw new UserNotFoundException("User not found with the given user id");
@@ -72,8 +59,8 @@ public class TrainingApplyController {
     }
 
     @GetMapping("/applications/{trainingId}")
-    public ResponseEntity<List<TrainingApply>> getTrainingApplications(@RequestParam int userId, @RequestParam int trainingId){
-    	User user = userService.findById(userId);
+    public ResponseEntity<List<TrainingApply>> getTrainingApplications(HttpServletRequest request, @RequestParam int trainingId){
+    	User user = authenticationService.getLoggedInUser(request);
     	if(user == null || !user.getUserType().equalsIgnoreCase("admin"))
     		throw new InvalidRequestException("You don't have permissions to send this request");
 
@@ -86,11 +73,11 @@ public class TrainingApplyController {
     }
 
     @PutMapping("/update-application/{applicationId}")
-    public ResponseEntity<TrainingApply> updateTrainingApplication(@RequestParam int userId, @RequestParam int applicationId,
+    public ResponseEntity<TrainingApply> updateTrainingApplication(HttpServletRequest request, @RequestParam int applicationId,
     		@RequestParam String status) throws Exception{
-    	User user = userService.findById(userId);
+    	User user = authenticationService.getLoggedInUser(request);
     	if(user == null)
-    		throw new UserNotFoundException("No user found with user id: " + userId);
+    		throw new UserNotFoundException("No user found with user id");
     	TrainingApply application = trainingService.findApplicationById(applicationId);
     	if(application == null)
     		throw new ApplicationNotFoundException("No application found with given application id");
