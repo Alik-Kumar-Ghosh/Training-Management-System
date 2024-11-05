@@ -17,6 +17,9 @@ public interface UserService {
 	List<Training> getMyOngoingTrainings(User user);
 	List<Training> getMyUpcomingTrainings(User user);
 	List<Training> getMyPastTrainings(User user);
+	List<Training> getTrainerOngoingTrainings(User user);
+	List<Training> getTrainerUpcomingTrainings(User user);
+	List<Training> getTrainerPastTrainings(User user);
 	List<TrainingApply> getPendingApplicationsManager(User user); // Applications that the manager needs to approve
 	List<TrainingApply> getPendingApplicationsAdmin(); // Applications that the admin needs to approve
 	List<TrainingRequest> getPendingRequests(); // Requests that the admin needs to approve

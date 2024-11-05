@@ -83,6 +83,33 @@ public class UserServiceImpl implements UserService {
 		myTrainings.retainAll(pastTrainings);
 		return myTrainings;
 	}
+	
+	@Override
+	public List<Training> getTrainerOngoingTrainings(User user){
+		List<Training> ongoingTrainings = trainingRepo.findOngoingTrainings(Date.valueOf(LocalDate.now()));
+		List<Training> myTrainings = userRepo.findTrainerTrainings(user);
+
+		myTrainings.retainAll(ongoingTrainings);
+		return myTrainings;
+	}
+
+	@Override
+	public List<Training> getTrainerUpcomingTrainings(User user){
+		List<Training> upcomingTrainings = trainingRepo.findUpcomingTrainings(Date.valueOf(LocalDate.now()));
+		List<Training> myTrainings = userRepo.findTrainerTrainings(user);
+
+		myTrainings.retainAll(upcomingTrainings);
+		return myTrainings;
+	}
+
+	@Override
+	public List<Training> getTrainerPastTrainings(User user){
+		List<Training> pastTrainings = trainingRepo.findPastTrainings(Date.valueOf(LocalDate.now()));
+		List<Training> myTrainings = userRepo.findTrainerTrainings(user);
+
+		myTrainings.retainAll(pastTrainings);
+		return myTrainings;
+	}
 
 	@Override
 	public List<TrainingApply> getPendingApplicationsManager(User user) {
