@@ -2,7 +2,7 @@ import axios from 'axios';
 import React, { useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import './userDashboard.css';
-import BASE_URL from '../../utilsp/api';
+import BASE_URL from '../../utils/api';
 
 const TraineeManagerDashboard = ({ userId, userType}) => {
     const [ongoingTrainings, setOngoingTrainings] = useState([]);

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './adminDashboard.css';
-import BASE_URL from '../../utilsp/api';
+import BASE_URL from '../../utils/api';
 
 const AdminDashboard = ({userId, userType}) => {
   const [requests, setRequests] = useState([]);
