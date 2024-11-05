@@ -75,7 +75,11 @@ public class UserController {
 	}
 
 	@PutMapping("/user/update-user")
-	public ResponseEntity<User> updateUser(@RequestParam int userId, @RequestParam String phone, @RequestParam String password) {
+	public ResponseEntity<User> updateUser(@RequestBody User obj) {
+		int userId = obj.getUserId();
+		String phone = obj.getPhone();
+		String password = obj.getPassword();
+
 		User user = userService.findById(userId);
 
 		if(user == null)
