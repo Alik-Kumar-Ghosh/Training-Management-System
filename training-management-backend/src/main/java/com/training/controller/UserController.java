@@ -6,12 +6,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import com.training.model.Training;
 import com.training.model.TrainingApply;
@@ -20,18 +18,6 @@ import com.training.model.User;
 import com.training.services.AuthenticationService;
 import com.training.services.UserService;
 
-@CrossOrigin(
-	    origins = {
-	        "http://localhost:3000"
-	        },
-	    allowCredentials = "true",
-	    methods = {
-	                RequestMethod.OPTIONS,
-	                RequestMethod.GET,
-	                RequestMethod.PUT,
-	                RequestMethod.DELETE,
-	                RequestMethod.POST
-	})
 @RestController
 public class UserController {
 	@Autowired
@@ -58,11 +44,11 @@ public class UserController {
 	        userId.setPath("/");
 	        userId.setMaxAge(7 * 24 * 60 * 60);
 	        userId.setHttpOnly(true);
-	        userId.setSecure(true);
+	        userId.setSecure(false);
 	        userType.setPath("/");
 	        userType.setMaxAge(7 * 24 * 60 * 60);
 	        userType.setHttpOnly(true);
-	        userType.setSecure(true);
+	        userType.setSecure(false);
 	        response.addCookie(userId);
 			response.addCookie(userType);
 
@@ -80,11 +66,11 @@ public class UserController {
 		userId.setPath("/");
         userId.setMaxAge(0);
         userId.setHttpOnly(true);
-        userId.setSecure(true);
+        userId.setSecure(false);
         userType.setPath("/");
         userType.setMaxAge(0);
         userType.setHttpOnly(true);
-        userType.setSecure(true);
+        userType.setSecure(false);
 		response.addCookie(userId);
 		response.addCookie(userType);
 		
