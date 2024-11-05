@@ -1,354 +1,55 @@
-// import React from 'react';
-// import { Link } from 'react-router-dom';
-
-// const LandingPage = () => {
-//   return (
-//     <div>
-//       <h1>Welcome to Training Management System</h1>
-//       <p>About Us</p>
-//       <p>Contact</p>
-//       <Link to="/login">
-//         <button>Login</button>
-//       </Link>
-//     </div>
-//   );
-// };
-
-// export default LandingPage;
-
-
-// import React from 'react';
-// import { Link } from 'react-router-dom';
-// import './landingPage.css'; // Import the CSS file for styling
-
-// const LandingPage = () => {
-//   return (
-//     <div className="landing-page">
-//       <header className="header">
-//         <h1>Welcome to Training Management System</h1>
-//         <nav>
-//           <ul>
-//             <li><a href="#about">About</a></li>
-//             <li><a href="#benefits">Benefits</a></li>
-//             <li><a href="#help">Help</a></li>
-//             <li><a href="#contact">Contact</a></li>
-//           </ul>
-//         </nav>
-//       </header>
-//       <section id="login" className="login-section">
-//         <h2>Login</h2>
-//         <Link to="/login">
-//           <button className="login-button">Login</button>
-//         </Link>
-//       </section>
-//       <section id="about" className="section">
-//         <h2>About Us</h2>
-//         <p>Learn more about our Training Management System and how it can help you manage your training programs efficiently.</p>
-//       </section>
-//       <section id="benefits" className="section">
-//         <h2>Benefits</h2>
-//         <p>Discover the benefits of using our system, including streamlined processes, improved tracking, and enhanced reporting.</p>
-//       </section>
-//       <section id="help" className="section">
-//         <h2>Help</h2>
-//         <p>Need assistance? Our support team is here to help you with any questions or issues you may have.</p>
-//       </section>
-//       <section id="contact" className="section">
-//         <h2>Contact</h2>
-//         <p>Get in touch with us for more information or to schedule a demo.</p>
-//       </section>
-     
-//     </div>
-//   );
-// };
-
-// export default LandingPage;
-
-
-
 import axios from 'axios';
 import React ,{useEffect, useState} from 'react';
 import { Link } from 'react-router-dom';
 import './landingPage.css';
 import logo from './logo.png';
+import BASE_URL from '../../../utils/api';
+
 
 const LandingPage = () => {
 
-    // const [ongoingTrainings, setOngoingTrainings] = useState([]);
-    // const [pastTrainings, setPastTrainings] = useState([]);
-    // const [upcomingTrainings, setUpcomingTrainings] = useState([]);
-  
-    // useEffect(() => {
-    //   // Fetch Ongoing Trainings
-    //   const fetchOngoingTrainings = async () => {
-    //     try {
-    //       const response = await axios.get('/api/trainings/ongoing');
-    //       setOngoingTrainings(response.data.slice(0, 5)); // Only show top 5
-    //     } catch (error) {
-    //       console.error('Error fetching ongoing trainings:', error);
-    //     }
-    //   };
-  
-    //   // Fetch Past Trainings
-    //   const fetchPastTrainings = async () => {
-    //     try {
-    //       const response = await axios.get('/api/trainings/past');
-    //       setPastTrainings(response.data.slice(0, 5)); // Only show top 5
-    //     } catch (error) {
-    //       console.error('Error fetching past trainings:', error);
-    //     }
-    //   };
-  
-    //   // Fetch Upcoming Trainings
-    //   const fetchUpcomingTrainings = async () => {
-    //     try {
-    //       const response = await axios.get('/api/trainings/upcoming');
-    //       setUpcomingTrainings(response.data.slice(0, 5)); // Only show top 5
-    //     } catch (error) {
-    //       console.error('Error fetching upcoming trainings:', error);
-    //     }
-    //   };
-  
-    //   fetchOngoingTrainings();
-    //   fetchPastTrainings();
-    //   fetchUpcomingTrainings();
-    // }, []);
-
-  // State variables for ongoing, upcoming, and past trainings
-    // State variables for ongoing, upcoming, and past trainings
     const [ongoingTrainings, setOngoingTrainings] = useState([]);
-    const [upcomingTrainings, setUpcomingTrainings] = useState([]);
     const [pastTrainings, setPastTrainings] = useState([]);
+    const [upcomingTrainings, setUpcomingTrainings] = useState([]);
   
     useEffect(() => {
-      // Dummy ongoing training data for demonstration
-      const dummyOngoingTrainings = [
-        {
-          id: 1,
-          topic: 'React Basics',
-          location: 'Online',
-          startDate: '2024-11-01',
-          endDate: '2024-11-10',
-        },
-        {
-          id: 2,
-          topic: 'Python for Data Science',
-          location: 'Mumbai',
-          startDate: '2024-11-05',
-          endDate: '2024-11-15',
-        },
-        {
-          id: 3,
-          topic: 'Advanced CSS Techniques',
-          location: 'Delhi',
-          startDate: '2024-11-10',
-          endDate: '2024-11-20',
-        },
-        {
-          id: 4,
-          topic: 'JavaScript ES6 Features',
-          location: 'Bangalore',
-          startDate: '2024-11-12',
-          endDate: '2024-11-22',
-        },
-        {
-          id: 5,
-          topic: 'Machine Learning for Beginners',
-          location: 'Online',
-          startDate: '2024-11-15',
-          endDate: '2024-11-25',
-        },
-        {
-          id: 6,
-          topic: 'Introduction to TypeScript',
-          location: 'Chennai',
-          startDate: '2024-11-20',
-          endDate: '2024-11-30',
-        },
-        {
-          id: 7,
-          topic: 'DevOps Fundamentals',
-          location: 'Pune',
-          startDate: '2024-11-25',
-          endDate: '2024-12-05',
-        },
-        {
-          id: 8,
-          topic: 'Cloud Computing Essentials',
-          location: 'Hyderabad',
-          startDate: '2024-12-01',
-          endDate: '2024-12-10',
-        },
-        {
-          id: 9,
-          topic: 'Agile Methodologies',
-          location: 'Delhi',
-          startDate: '2024-12-05',
-          endDate: '2024-12-12',
-        },
-        {
-          id: 10,
-          topic: 'UI/UX Design Principles',
-          location: 'Bangalore',
-          startDate: '2024-12-10',
-          endDate: '2024-12-20',
-        },
-      ];
+      // Fetch Ongoing Trainings
+      const fetchOngoingTrainings = async () => {
+        try {
+          const response = await axios.get(`${BASE_URL}/training/ongoing`);
+          setOngoingTrainings(response.data.slice(0, 5)); // Only show top 5
+        } 
+        catch (error) {
+          console.error('Error fetching ongoing trainings:', error);
+        }
+      };
   
-      // Dummy upcoming training data for demonstration
-      const dummyUpcomingTrainings = [
-        {
-          id: 11,
-          topic: 'Introduction to Docker',
-          location: 'Online',
-          startDate: '2024-11-20',
-          endDate: '2024-11-27',
-        },
-        {
-          id: 12,
-          topic: 'Advanced JavaScript Concepts',
-          location: 'Chennai',
-          startDate: '2024-11-25',
-          endDate: '2024-12-05',
-        },
-        {
-          id: 13,
-          topic: 'Data Visualization with D3.js',
-          location: 'Mumbai',
-          startDate: '2024-12-01',
-          endDate: '2024-12-08',
-        },
-        {
-          id: 14,
-          topic: 'Ethical Hacking and Cybersecurity',
-          location: 'Delhi',
-          startDate: '2024-12-10',
-          endDate: '2024-12-15',
-        },
-        {
-          id: 15,
-          topic: 'Mobile App Development with React Native',
-          location: 'Bangalore',
-          startDate: '2024-12-12',
-          endDate: '2024-12-20',
-        },
-        {
-          id: 16,
-          topic: 'Machine Learning with TensorFlow',
-          location: 'Online',
-          startDate: '2024-12-15',
-          endDate: '2024-12-25',
-        },
-        {
-          id: 17,
-          topic: 'Blockchain Basics',
-          location: 'Hyderabad',
-          startDate: '2024-12-20',
-          endDate: '2024-12-30',
-        },
-        {
-          id: 18,
-          topic: 'Introduction to Quantum Computing',
-          location: 'Delhi',
-          startDate: '2024-12-25',
-          endDate: '2025-01-05',
-        },
-        {
-          id: 19,
-          topic: 'Digital Marketing Strategies',
-          location: 'Pune',
-          startDate: '2025-01-02',
-          endDate: '2025-01-10',
-        },
-        {
-          id: 20,
-          topic: 'Game Development with Unity',
-          location: 'Online',
-          startDate: '2025-01-10',
-          endDate: '2025-01-20',
-        },
-      ];
+      // Fetch Past Trainings
+      const fetchPastTrainings = async () => {
+        try {
+          const response = await axios.get(`${BASE_URL}/training/past`);
+          setPastTrainings(response.data.slice(0, 5)); // Only show top 5
+        } catch (error) {
+          console.error('Error fetching past trainings:', error);
+        }
+      };
   
-      // Dummy past training data for demonstration
-      const dummyPastTrainings = [
-        {
-          id: 21,
-          topic: 'Introduction to SQL',
-          location: 'Bangalore',
-          startDate: '2024-09-01',
-          endDate: '2024-09-05',
-        },
-        {
-          id: 22,
-          topic: 'Agile Project Management',
-          location: 'Chennai',
-          startDate: '2024-09-15',
-          endDate: '2024-09-20',
-        },
-        {
-          id: 23,
-          topic: 'Data Analysis with Python',
-          location: 'Delhi',
-          startDate: '2024-08-20',
-          endDate: '2024-08-25',
-        },
-        {
-          id: 24,
-          topic: 'Introduction to HTML & CSS',
-          location: 'Mumbai',
-          startDate: '2024-08-01',
-          endDate: '2024-08-10',
-        },
-        {
-          id: 25,
-          topic: 'Software Testing Fundamentals',
-          location: 'Online',
-          startDate: '2024-07-15',
-          endDate: '2024-07-20',
-        },
-        {
-          id: 26,
-          topic: 'Intro to Machine Learning',
-          location: 'Pune',
-          startDate: '2024-07-10',
-          endDate: '2024-07-15',
-        },
-        {
-          id: 27,
-          topic: 'Full Stack Development Bootcamp',
-          location: 'Bangalore',
-          startDate: '2024-06-01',
-          endDate: '2024-06-30',
-        },
-        {
-          id: 28,
-          topic: 'Network Security Basics',
-          location: 'Delhi',
-          startDate: '2024-06-15',
-          endDate: '2024-06-20',
-        },
-        {
-          id: 29,
-          topic: 'React Native Development',
-          location: 'Hyderabad',
-          startDate: '2024-05-10',
-          endDate: '2024-05-15',
-        },
-        {
-          id: 30,
-          topic: 'Creating REST APIs with Node.js',
-          location: 'Online',
-          startDate: '2024-04-05',
-          endDate: '2024-04-10',
-        },
-      ];
+      // Fetch Upcoming Trainings
+      const fetchUpcomingTrainings = async () => {
+        try {
+          const response = await axios.get(`${BASE_URL}/training/upcoming`);
+          setUpcomingTrainings(response.data.slice(0, 5)); // Only show top 5
+        } catch (error) {
+          console.error('Error fetching upcoming trainings:', error);
+        }
+      };
   
-      // Set the state variables with the dummy data
-      setOngoingTrainings(dummyOngoingTrainings);
-      setUpcomingTrainings(dummyUpcomingTrainings);
-      setPastTrainings(dummyPastTrainings);
+      fetchOngoingTrainings();
+      fetchPastTrainings();
+      fetchUpcomingTrainings();
     }, []);
 
+  
   return (
     <div className="landing-page">
       <header className="header">
@@ -521,6 +222,6 @@ const LandingPage = () => {
       </footer>
     </div>
   );
-};
+}
 
 export default LandingPage;
