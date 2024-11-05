@@ -24,6 +24,7 @@ import com.training.services.UserService;
 	    origins = {
 	        "http://localhost:3000"
 	        },
+	    allowCredentials = "true",
 	    methods = {
 	                RequestMethod.OPTIONS,
 	                RequestMethod.GET,
@@ -39,7 +40,7 @@ public class UserController {
 	private AuthenticationService authenticationService;
 
 	@PostMapping("/login")
-	public ResponseEntity<String> login(@RequestBody User obj, HttpServletResponse response) {
+	public ResponseEntity<User> login(@RequestBody User obj, HttpServletResponse response) {
 		String userName=obj.getUserName();
 		String password=obj.getPassword();
 		if(userName.isEmpty() || password.isEmpty())
@@ -56,12 +57,16 @@ public class UserController {
 
 	        userId.setPath("/");
 	        userId.setMaxAge(7 * 24 * 60 * 60);
+	        userId.setHttpOnly(true);
+	        userId.setSecure(true);
 	        userType.setPath("/");
 	        userType.setMaxAge(7 * 24 * 60 * 60);
+	        userType.setHttpOnly(true);
+	        userType.setSecure(true);
 	        response.addCookie(userId);
 			response.addCookie(userType);
 
-			return ResponseEntity.ok("Login successful");
+			return ResponseEntity.ok(user);
 		}
 		else
 			throw new InvalidRequestException("Incorrect username/password combination! Please try again.");
@@ -72,8 +77,14 @@ public class UserController {
 		Cookie userId = new Cookie("userId", null);
 		Cookie userType = new Cookie("userType", null);
 		
-		userId.setMaxAge(0);
-		userType.setMaxAge(0);
+		userId.setPath("/");
+        userId.setMaxAge(0);
+        userId.setHttpOnly(true);
+        userId.setSecure(true);
+        userType.setPath("/");
+        userType.setMaxAge(0);
+        userType.setHttpOnly(true);
+        userType.setSecure(true);
 		response.addCookie(userId);
 		response.addCookie(userType);
 		
@@ -82,12 +93,7 @@ public class UserController {
 	
 	@GetMapping("/user/profile")
 	public ResponseEntity<User> getProfile(HttpServletRequest request){
-		Cookie[] cookies = request.getCookies();
-		if(cookies == null)
-			throw new ForbiddenException();
-		int idx = cookies[0].getName().equals("userId") ? 0 : 1; 
-		int userId = Integer.parseInt(cookies[idx].getValue());
-		User user = userService.findById(userId);
+		User user = authenticationService.getLoggedInUser(request);
 
 		if(user == null)
 			throw new UserNotFoundException("User not found with the given user id");
@@ -97,12 +103,7 @@ public class UserController {
 
 	@GetMapping("/user/user-type")
 	public ResponseEntity<String> getUserType(HttpServletRequest request) {
-		Cookie[] cookies = request.getCookies();
-		if(cookies == null)
-			throw new ForbiddenException();
-		int idx = cookies[0].getName().equals("userId") ? 0 : 1; 
-		int userId = Integer.parseInt(cookies[idx].getValue());
-		User user = userService.findById(userId);
+		User user = authenticationService.getLoggedInUser(request);
 
 		if(user == null)
 			throw new UserNotFoundException("User not found with the given user id");
@@ -112,15 +113,9 @@ public class UserController {
 
 	@PutMapping("/user/update-user")
 	public ResponseEntity<User> updateUser(@RequestBody User obj, HttpServletRequest request) {
-		Cookie[] cookies = request.getCookies();
-		if(cookies == null)
-			throw new ForbiddenException();
-		int idx = cookies[0].getName().equals("userId") ? 0 : 1; 
-		int userId = Integer.parseInt(cookies[idx].getValue());
 		String phone = obj.getPhone();
 		String password = obj.getPassword();
-
-		User user = userService.findById(userId);
+		User user = authenticationService.getLoggedInUser(request);
 
 		if(user == null)
 			throw new UserNotFoundException("No user found with given details");
@@ -137,15 +132,10 @@ public class UserController {
 
 	@GetMapping("/trainer/past-trainings")
 	public ResponseEntity<List<Training>> getTrainerPastTrainings(HttpServletRequest request){
-		Cookie[] cookies = request.getCookies();
-		if(cookies == null)
-			throw new ForbiddenException();
-		int idx = cookies[0].getName().equals("userId") ? 0 : 1; 
-		int userId = Integer.parseInt(cookies[idx].getValue());
-		User user = userService.findById(userId);
+		User user = authenticationService.getLoggedInUser(request);
 		
 		if(user == null)
-			throw new UserNotFoundException("No user found with user id: " + userId);
+			throw new UserNotFoundException("User not found with the given user id");
 		if(!user.getUserType().equalsIgnoreCase("trainer"))
 			throw new InvalidRequestException("You don't have permissions to send this request");
 		
@@ -154,15 +144,10 @@ public class UserController {
 	
 	@GetMapping("/trainer/ongoing-trainings")
 	public ResponseEntity<List<Training>> getTrainerOngoingTrainings(HttpServletRequest request){
-		Cookie[] cookies = request.getCookies();
-		if(cookies == null)
-			throw new ForbiddenException();
-		int idx = cookies[0].getName().equals("userId") ? 0 : 1; 
-		int userId = Integer.parseInt(cookies[idx].getValue());
-		User user = userService.findById(userId);
+		User user = authenticationService.getLoggedInUser(request);
 		
 		if(user == null)
-			throw new UserNotFoundException("No user found with user id: " + userId);
+			throw new UserNotFoundException("User not found with the given user id");
 		if(!user.getUserType().equalsIgnoreCase("trainer"))
 			throw new InvalidRequestException("You don't have permissions to send this request");
 		
@@ -171,15 +156,10 @@ public class UserController {
 
 	@GetMapping("/trainer/upcoming-trainings")
 	public ResponseEntity<List<Training>> getTrainerUpcomingTrainings(HttpServletRequest request){
-		Cookie[] cookies = request.getCookies();
-		if(cookies == null)
-			throw new ForbiddenException();
-		int idx = cookies[0].getName().equals("userId") ? 0 : 1; 
-		int userId = Integer.parseInt(cookies[idx].getValue());
-		User user = userService.findById(userId);
+		User user = authenticationService.getLoggedInUser(request);
 		
 		if(user == null)
-			throw new UserNotFoundException("No user found with user id: " + userId);
+			throw new UserNotFoundException("User not found with the given user id");
 		if(!user.getUserType().equalsIgnoreCase("trainer"))
 			throw new InvalidRequestException("You don't have permissions to send this request");
 		
@@ -188,105 +168,70 @@ public class UserController {
 		
 	@GetMapping("/user/past-trainings")
 	public ResponseEntity<List<Training>> getUserPastTrainings(HttpServletRequest request){
-		Cookie[] cookies = request.getCookies();
-		if(cookies == null)
-			throw new ForbiddenException();
-		int idx = cookies[0].getName().equals("userId") ? 0 : 1; 
-		int userId = Integer.parseInt(cookies[idx].getValue());
-		User user = userService.findById(userId);
+		User user = authenticationService.getLoggedInUser(request);
 
 		if(user == null)
-			throw new UserNotFoundException("No user found with user id: " + userId);
+			throw new UserNotFoundException("User not found with the given user id");
 		else
 			return ResponseEntity.ok(userService.getMyPastTrainings(user));
 	}
 
 	@GetMapping("/user/ongoing-trainings")
 	public ResponseEntity<List<Training>> getUserOngoingTrainings(HttpServletRequest request){
-		Cookie[] cookies = request.getCookies();
-		if(cookies == null)
-			throw new ForbiddenException();
-		int idx = cookies[0].getName().equals("userId") ? 0 : 1; 
-		int userId = Integer.parseInt(cookies[idx].getValue());
-		User user = userService.findById(userId);
+		User user = authenticationService.getLoggedInUser(request);
 
 		if(user == null)
-			throw new UserNotFoundException("No user found with user id: " + userId);
+			throw new UserNotFoundException("User not found with the given user id");
 		else
 			return ResponseEntity.ok(userService.getMyOngoingTrainings(user));
 	}
 
 	@GetMapping("/user/upcoming-trainings")
 	public ResponseEntity<List<Training>> getUserUpcomingTrainings(HttpServletRequest request){
-		Cookie[] cookies = request.getCookies();
-		if(cookies == null)
-			throw new ForbiddenException();
-		int idx = cookies[0].getName().equals("userId") ? 0 : 1; 
-		int userId = Integer.parseInt(cookies[idx].getValue());
-		User user = userService.findById(userId);
+		User user = authenticationService.getLoggedInUser(request);
 
 		if(user == null)
-			throw new UserNotFoundException("No user found with user id: " + userId);
+			throw new UserNotFoundException("User not found with the given user id");
 		else
 			return ResponseEntity.ok(userService.getMyUpcomingTrainings(user));
 	}
 
 	@GetMapping("/user/applications")
 	public ResponseEntity<List<TrainingApply>> getUserApplications(HttpServletRequest request){
-		Cookie[] cookies = request.getCookies();
-		if(cookies == null)
-			throw new ForbiddenException();
-		int idx = cookies[0].getName().equals("userId") ? 0 : 1; 
-		int userId = Integer.parseInt(cookies[idx].getValue());
-		User user = userService.findById(userId);
+		User user = authenticationService.getLoggedInUser(request);
 
 		if(user == null)
-			throw new UserNotFoundException("No user found with user id: " + userId);
+			throw new UserNotFoundException("User not found with the given user id");
 		else
 			return ResponseEntity.ok(userService.getMyApplications(user));
 	}
 
 	@GetMapping("/user/requests")
 	public ResponseEntity<List<TrainingRequest>> getUserRequests(HttpServletRequest request){
-		Cookie[] cookies = request.getCookies();
-		if(cookies == null)
-			throw new ForbiddenException();
-		int idx = cookies[0].getName().equals("userId") ? 0 : 1; 
-		int userId = Integer.parseInt(cookies[idx].getValue());
-		User user = userService.findById(userId);
+		User user = authenticationService.getLoggedInUser(request);
 
 		if(user == null)
-			throw new UserNotFoundException("No user found with user id: " + userId);
+			throw new UserNotFoundException("User not found with the given user id");
 		else
 			return ResponseEntity.ok(userService.getMyRequests(user));
 	}
 
 	@GetMapping("/manager/pending-approvals")
 	public ResponseEntity<List<TrainingApply>> getManagerPendingApprovals(HttpServletRequest request){
-		Cookie[] cookies = request.getCookies();
-		if(cookies == null)
-			throw new ForbiddenException();
-		int idx = cookies[0].getName().equals("userId") ? 0 : 1; 
-		int userId = Integer.parseInt(cookies[idx].getValue());
-		User user = userService.findById(userId);
+		User user = authenticationService.getLoggedInUser(request);
 
 		if(user == null)
-			throw new UserNotFoundException("No user found with user id: " + userId);
+			throw new UserNotFoundException("User not found with the given user id");
 		else
 			return ResponseEntity.ok(userService.getPendingApplicationsManager(user));
 	}
 
 	@GetMapping("/admin/pending-approvals")
 	public ResponseEntity<List<TrainingApply>> getAdminPendingApprovals(HttpServletRequest request){
-		Cookie[] cookies = request.getCookies();
-		if(cookies == null)
-			throw new ForbiddenException();
-		int idx = cookies[0].getName().equals("userId") ? 0 : 1; 
-		int userId = Integer.parseInt(cookies[idx].getValue());
-		User user = userService.findById(userId);
+		User user = authenticationService.getLoggedInUser(request);
 
 		if(user == null)
-			throw new UserNotFoundException("No user found with user id: " + userId);
+			throw new UserNotFoundException("User not found with the given user id");
 		else {
 			if(user.getUserType().equalsIgnoreCase("admin"))
 				return ResponseEntity.ok(userService.getPendingApplicationsAdmin());
@@ -296,15 +241,10 @@ public class UserController {
 
 	@GetMapping("/admin/pending-requests")
 	public ResponseEntity<List<TrainingRequest>> getAdminPendingRequests(HttpServletRequest request){
-		Cookie[] cookies = request.getCookies();
-		if(cookies == null)
-			throw new ForbiddenException();
-		int idx = cookies[0].getName().equals("userId") ? 0 : 1; 
-		int userId = Integer.parseInt(cookies[idx].getValue());
-		User user = userService.findById(userId);
+		User user = authenticationService.getLoggedInUser(request);
 
 		if(user == null)
-			throw new UserNotFoundException("No user found with user id: " + userId);
+			throw new UserNotFoundException("User not found with the given user id");
 		else {
 			if(user.getUserType().equalsIgnoreCase("admin"))
 				return ResponseEntity.ok(userService.getPendingRequests());

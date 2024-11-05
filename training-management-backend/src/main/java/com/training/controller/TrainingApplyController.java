@@ -23,6 +23,7 @@ import com.training.services.UserService;
 	    origins = {
 	        "http://localhost:3000"
 	        },
+	    allowCredentials = "true",
 	    methods = {
 	                RequestMethod.OPTIONS,
 	                RequestMethod.GET,
