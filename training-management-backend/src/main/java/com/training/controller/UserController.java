@@ -3,9 +3,12 @@ package com.training.controller;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.training.model.Training;
@@ -15,6 +18,17 @@ import com.training.model.User;
 import com.training.services.AuthenticationService;
 import com.training.services.UserService;
 
+@CrossOrigin(
+	    origins = {
+	        "http://localhost:3000"
+	        },
+	    methods = {
+	                RequestMethod.OPTIONS,
+	                RequestMethod.GET,
+	                RequestMethod.PUT,
+	                RequestMethod.DELETE,
+	                RequestMethod.POST
+	})
 @RestController
 public class UserController {
 	@Autowired
@@ -23,7 +37,9 @@ public class UserController {
 	private AuthenticationService authenticationService;
 
 	@PostMapping("/login")
-	public ResponseEntity<User> login(@RequestParam String userName, @RequestParam String password) {
+	public ResponseEntity<User> login(@RequestBody User ob) {
+		String userName=ob.getUserName();
+		String password=ob.getPassword();
 		if(userName.isEmpty() || password.isEmpty())
 			throw new InvalidRequestException("Please enter all the required fields");
 
