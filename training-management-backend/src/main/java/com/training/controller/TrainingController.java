@@ -2,32 +2,22 @@ package com.training.controller;
 
 import java.sql.Date;
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.training.model.Training;
 import com.training.model.User;
+import com.training.services.AuthenticationService;
 import com.training.services.TrainingService;
 import com.training.services.UserService;
 
-@CrossOrigin(
-	    origins = {
-	        "http://localhost:3000"
-	        },
-	    methods = {
-	                RequestMethod.OPTIONS,
-	                RequestMethod.GET,
-	                RequestMethod.PUT,
-	                RequestMethod.DELETE,
-	                RequestMethod.POST
-	})
 @RestController
 @RequestMapping("/training")
 public class TrainingController {
@@ -35,11 +25,14 @@ public class TrainingController {
     private TrainingService trainingService;
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private AuthenticationService authenticationService;
 
 	@PostMapping("/create")
-	public ResponseEntity<Training> createTraining(@RequestParam int userId, @RequestParam Date startDate, @RequestParam Date endDate,
+	public ResponseEntity<Training> createTraining(HttpServletRequest request, @RequestParam Date startDate, @RequestParam Date endDate,
 			@RequestParam String topic, @RequestParam String trainerUserName, @RequestParam String location, @RequestParam String description){
-		User user = userService.findById(userId);
+
+		User user = authenticationService.getLoggedInUser(request);
 		if(user == null || !user.getUserType().equalsIgnoreCase("admin"))
 			throw new InvalidRequestException("You don't have the permissions to send this request!!!");
 
@@ -99,34 +92,32 @@ public class TrainingController {
     }
 
     @PutMapping("/update-training")
-    public ResponseEntity<Training> updateTraining(@RequestParam int userId, @RequestParam int trainingId, @RequestParam Date startDate,
-    		@RequestParam Date endDate, @RequestParam String topic, @RequestParam String trainerUserName, @RequestParam String location,
-    		@RequestParam String description){
-    	User user = userService.findById(userId);
+    public ResponseEntity<Training> updateTraining(HttpServletRequest request, @RequestBody Training updateTraining){
+    	User user = authenticationService.getLoggedInUser(request);
 		if(user == null || !user.getUserType().equalsIgnoreCase("admin"))
 			throw new InvalidRequestException("You don't have the permissions to send this request!!!");
     	
-    	Training training = trainingService.findTrainingById(trainingId);
+    	Training training = trainingService.findTrainingById(updateTraining.getTrainingId());
     	if(training == null)
     		throw new TrainingNotFoundException("No training found with given training id");
     	
-    	if(startDate != null)
-    		training.setStartDate(startDate);
-    	if(endDate != null)
-    		training.setEndDate(endDate);
-    	if(!topic.isEmpty())
-    		training.setTopic(topic);
-    	if(!trainerUserName.isEmpty()) {
-    		User trainer = userService.findByUserName(trainerUserName);
+    	if(updateTraining.getStartDate() != null)
+    		training.setStartDate(updateTraining.getStartDate());
+    	if(updateTraining.getEndDate() != null)
+    		training.setEndDate(updateTraining.getEndDate());
+    	if(!updateTraining.getTopic().isEmpty())
+    		training.setTopic(updateTraining.getTopic());
+    	if(!updateTraining.getTrainer().getUserName().isEmpty()) {
+    		User trainer = userService.findByUserName(updateTraining.getTrainer().getUserName());
     		if(trainer == null || !trainer.getUserType().equalsIgnoreCase("trainer"))
-    			throw new UserNotFoundException("No trainer found with given username: " + trainerUserName);
+    			throw new UserNotFoundException("No trainer found with given username");
     		
     		training.setTrainer(trainer);
     	}
-    	if(!location.isEmpty())
-    		training.setLocation(location);
-    	if(!description.isEmpty())
-    		training.setDescription(description);
+    	if(!updateTraining.getLocation().isEmpty())
+    		training.setLocation(updateTraining.getLocation());
+    	if(!updateTraining.getDescription().isEmpty())
+    		training.setDescription(updateTraining.getDescription());
     	
     	Training updatedTraining = trainingService.updateTraining(training);
     	

@@ -1,92 +1,3 @@
-// import axios from 'axios';
-// import React, { useEffect, useState } from 'react';
-// import { useNavigate } from 'react-router-dom';
-// import './login.css';
-// import logo from './logo.png';
-
-// const Login = () => {
-//   const [userName, setUserName] = useState('');
-//   const navigate= useNavigate ();
-//   //const userType = 'trainer';
-//   const [userType, setUserType] = useState(null);
-//   const [password, setPassword] = useState('');
-
-//   useEffect(() => {
-//     const fetchUserType = async () => {
-//         try {
-//             // Replace with your actual API endpoint
-//             const response = await axios.get('/api/userType');
-//             const fetchedUserType = response.data.userType;
-
-           
-//             setUserType(fetchedUserType);
-            
-//             // Redirect based on userType
-//             if (fetchedUserType === 'trainer') {
-//                 navigate('/trainer/dashboard');
-//             } else if (fetchedUserType === 'manager') {
-//                 navigate('/user/dashboard');
-//             } else if (fetchedUserType === 'admin') {
-//                 navigate('/admin/dashboard');
-//             } else {
-//                 navigate('/user/dashboard');
-//             }
-//         } catch (error) {
-//             console.error('Error fetching userType:', error);
-//         }
-//     };
-
-//     fetchUserType();
-// }, [navigate]);
-//   // const handleLogin = () => {
-//   //   if (userType === 'trainer') {
-//   //     navigate('/trainer/dashboard');
-//   // } else if (userType === 'manager') {
-//   //     navigate('/user/dashboard');
-//   // } else if (userType === 'admin') {
-//   //     navigate('/admin/dashboard');
-//   // } else {
-//   //     navigate('/user/dashboard');
-//   // }
-   
-//    // e.preventDefault();
-//     // Handle login logic here
-//  // };
-
-//   return (
-//     <div className="login-container">
-//       <img src={logo} alt="Logo" className="logo" />
-//       <form >
-//       <h2>Login</h2>
-//         <div className="input-container">
-//           <input
-//             type="text"
-//             value={userName}
-//             onChange={(e) => setUserName(e.target.value)}
-//             required
-//           />
-//           <label>User Name</label>
-//         </div>
-//         <div className="input-container">
-//           <input
-//             type="password"
-//             value={password}
-//             onChange={(e) => setPassword(e.target.value)}
-//             required
-//           />
-//           <label>Password</label>
-//         </div> 
-       
-//         <button type="submit">Login</button>
-        
-       
-//       </form>
-//     </div>
-//   );
-// };
-
-// export default Login;
-
 import axios from 'axios';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -103,27 +14,43 @@ const Login = () => {
     e.preventDefault();
 
     try {
-      
-      const response = await axios.get(`${BASE_URL}/login`, {
-        params: {
-          username: userName,
-          password: password
+      // Send login request
+      const response = await axios.post(`${BASE_URL}/login`, {
+        userName,
+        password
+      },{ withCredentials: true }
+    );
+
+    console.log(response);
+
+    console.log(document.cookie)
+
+      function getCookieValue(name) {
+        const cookies = document.cookie.split('; ');
+        for (let cookie of cookies) {
+          const [cookieName, cookieValue] = cookie.split('=');
+          if (cookieName === name) {
+            return decodeURIComponent(cookieValue);
+          }
         }
-      });
-      
+        return null;
+      }
+
+      // Call getCookieValue after the axios call
+      // const userId = getCookieValue('userId');
+      // const userType = getCookieValue('userType');
+  
       const userType = response.data.userType; // Assuming the response contains the user 
       const userId = response.data.userId;   
+      console.log(userType)
 
-            // Navigate to UserProfile and pass userId via state
-            navigate('/user/profile', { state: { userId , userType} });
-
-      // Redirect based on userType
+      // Check and navigate based on userType
       if (userType === 'trainer') {
-        navigate('/trainer/dashboard');
+        navigate('/trainer/dashboard', { state: { userId, userType } });
       } else if (userType === 'admin') {
-        navigate('/admin/dashboard');
+        navigate('/admin/dashboard', { state: { userId, userType } });
       } else {
-        navigate('/user/dashboard');
+        navigate('/user/dashboard', { state: { userId, userType } });
       }
     } catch (error) {
       console.error('Error during login:', error);
@@ -161,4 +88,3 @@ const Login = () => {
 };
 
 export default Login;
-

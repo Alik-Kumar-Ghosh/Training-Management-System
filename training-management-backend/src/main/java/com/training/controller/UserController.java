@@ -1,15 +1,15 @@
 package com.training.controller;
 
 import java.util.List;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.training.model.Training;
 import com.training.model.TrainingApply;
@@ -18,17 +18,6 @@ import com.training.model.User;
 import com.training.services.AuthenticationService;
 import com.training.services.UserService;
 
-@CrossOrigin(
-	    origins = {
-	        "http://localhost:3000"
-	        },
-	    methods = {
-	                RequestMethod.OPTIONS,
-	                RequestMethod.GET,
-	                RequestMethod.PUT,
-	                RequestMethod.DELETE,
-	                RequestMethod.POST
-	})
 @RestController
 public class UserController {
 	@Autowired
@@ -37,9 +26,9 @@ public class UserController {
 	private AuthenticationService authenticationService;
 
 	@PostMapping("/login")
-	public ResponseEntity<User> login(@RequestBody User ob) {
-		String userName=ob.getUserName();
-		String password=ob.getPassword();
+	public ResponseEntity<User> login(@RequestBody User obj, HttpServletResponse response) {
+		String userName=obj.getUserName();
+		String password=obj.getPassword();
 		if(userName.isEmpty() || password.isEmpty())
 			throw new InvalidRequestException("Please enter all the required fields");
 
@@ -48,15 +37,49 @@ public class UserController {
 			throw new UserNotFoundException("No user found with username: " + userName);
 		
 		boolean isVerified = authenticationService.verifyPassword(userName, password);
-		if(isVerified)
+		if(isVerified) {
+			Cookie userId = new Cookie("userId", "" + user.getUserId());
+			Cookie userType = new Cookie("userType", user.getUserType());
+
+	        userId.setPath("/");
+	        userId.setMaxAge(7 * 24 * 60 * 60);
+	        userId.setHttpOnly(true);
+	        userId.setSecure(false);
+	        userType.setPath("/");
+	        userType.setMaxAge(7 * 24 * 60 * 60);
+	        userType.setHttpOnly(true);
+	        userType.setSecure(false);
+	        response.addCookie(userId);
+			response.addCookie(userType);
+
 			return ResponseEntity.ok(user);
+		}
 		else
 			throw new InvalidRequestException("Incorrect username/password combination! Please try again.");
 	}
+
+	@PostMapping("/logout")
+	public ResponseEntity<String> logout(HttpServletResponse response){
+		Cookie userId = new Cookie("userId", null);
+		Cookie userType = new Cookie("userType", null);
+		
+		userId.setPath("/");
+        userId.setMaxAge(0);
+        userId.setHttpOnly(true);
+        userId.setSecure(false);
+        userType.setPath("/");
+        userType.setMaxAge(0);
+        userType.setHttpOnly(true);
+        userType.setSecure(false);
+		response.addCookie(userId);
+		response.addCookie(userType);
+		
+		return ResponseEntity.ok("Logout successful");
+	}
 	
 	@GetMapping("/user/profile")
-	public ResponseEntity<User> getProfile(@RequestParam int userId){
-		User user = userService.findById(userId);
+	public ResponseEntity<User> getProfile(HttpServletRequest request){
+		User user = authenticationService.getLoggedInUser(request);
 
 		if(user == null)
 			throw new UserNotFoundException("User not found with the given user id");
@@ -65,8 +88,8 @@ public class UserController {
 	}
 
 	@GetMapping("/user/user-type")
-	public ResponseEntity<String> getUserType(@RequestParam int userId) {
-		User user = userService.findById(userId);
+	public ResponseEntity<String> getUserType(HttpServletRequest request) {
+		User user = authenticationService.getLoggedInUser(request);
 
 		if(user == null)
 			throw new UserNotFoundException("User not found with the given user id");
@@ -75,8 +98,10 @@ public class UserController {
 	}
 
 	@PutMapping("/user/update-user")
-	public ResponseEntity<User> updateUser(@RequestParam int userId, @RequestParam String phone, @RequestParam String password) {
-		User user = userService.findById(userId);
+	public ResponseEntity<User> updateUser(@RequestBody User obj, HttpServletRequest request) {
+		String phone = obj.getPhone();
+		String password = obj.getPassword();
+		User user = authenticationService.getLoggedInUser(request);
 
 		if(user == null)
 			throw new UserNotFoundException("No user found with given details");
@@ -92,11 +117,11 @@ public class UserController {
 	}
 
 	@GetMapping("/trainer/past-trainings")
-	public ResponseEntity<List<Training>> getTrainerPastTrainings(@RequestParam int userId){
-		User user = userService.findById(userId);
+	public ResponseEntity<List<Training>> getTrainerPastTrainings(HttpServletRequest request){
+		User user = authenticationService.getLoggedInUser(request);
 		
 		if(user == null)
-			throw new UserNotFoundException("No user found with user id: " + userId);
+			throw new UserNotFoundException("User not found with the given user id");
 		if(!user.getUserType().equalsIgnoreCase("trainer"))
 			throw new InvalidRequestException("You don't have permissions to send this request");
 		
@@ -104,11 +129,11 @@ public class UserController {
 	}
 	
 	@GetMapping("/trainer/ongoing-trainings")
-	public ResponseEntity<List<Training>> getTrainerOngoingTrainings(@RequestParam int userId){
-		User user = userService.findById(userId);
+	public ResponseEntity<List<Training>> getTrainerOngoingTrainings(HttpServletRequest request){
+		User user = authenticationService.getLoggedInUser(request);
 		
 		if(user == null)
-			throw new UserNotFoundException("No user found with user id: " + userId);
+			throw new UserNotFoundException("User not found with the given user id");
 		if(!user.getUserType().equalsIgnoreCase("trainer"))
 			throw new InvalidRequestException("You don't have permissions to send this request");
 		
@@ -116,11 +141,11 @@ public class UserController {
 	}
 
 	@GetMapping("/trainer/upcoming-trainings")
-	public ResponseEntity<List<Training>> getTrainerUpcomingTrainings(@RequestParam int userId){
-		User user = userService.findById(userId);
+	public ResponseEntity<List<Training>> getTrainerUpcomingTrainings(HttpServletRequest request){
+		User user = authenticationService.getLoggedInUser(request);
 		
 		if(user == null)
-			throw new UserNotFoundException("No user found with user id: " + userId);
+			throw new UserNotFoundException("User not found with the given user id");
 		if(!user.getUserType().equalsIgnoreCase("trainer"))
 			throw new InvalidRequestException("You don't have permissions to send this request");
 		
@@ -128,71 +153,71 @@ public class UserController {
 	}
 		
 	@GetMapping("/user/past-trainings")
-	public ResponseEntity<List<Training>> getUserPastTrainings(@RequestParam int userId){
-		User user = userService.findById(userId);
+	public ResponseEntity<List<Training>> getUserPastTrainings(HttpServletRequest request){
+		User user = authenticationService.getLoggedInUser(request);
 
 		if(user == null)
-			throw new UserNotFoundException("No user found with user id: " + userId);
+			throw new UserNotFoundException("User not found with the given user id");
 		else
 			return ResponseEntity.ok(userService.getMyPastTrainings(user));
 	}
 
 	@GetMapping("/user/ongoing-trainings")
-	public ResponseEntity<List<Training>> getUserOngoingTrainings(@RequestParam int userId){
-		User user = userService.findById(userId);
+	public ResponseEntity<List<Training>> getUserOngoingTrainings(HttpServletRequest request){
+		User user = authenticationService.getLoggedInUser(request);
 
 		if(user == null)
-			throw new UserNotFoundException("No user found with user id: " + userId);
+			throw new UserNotFoundException("User not found with the given user id");
 		else
 			return ResponseEntity.ok(userService.getMyOngoingTrainings(user));
 	}
 
 	@GetMapping("/user/upcoming-trainings")
-	public ResponseEntity<List<Training>> getUserUpcomingTrainings(@RequestParam int userId){
-		User user = userService.findById(userId);
+	public ResponseEntity<List<Training>> getUserUpcomingTrainings(HttpServletRequest request){
+		User user = authenticationService.getLoggedInUser(request);
 
 		if(user == null)
-			throw new UserNotFoundException("No user found with user id: " + userId);
+			throw new UserNotFoundException("User not found with the given user id");
 		else
 			return ResponseEntity.ok(userService.getMyUpcomingTrainings(user));
 	}
 
 	@GetMapping("/user/applications")
-	public ResponseEntity<List<TrainingApply>> getUserApplications(@RequestParam int userId){
-		User user = userService.findById(userId);
+	public ResponseEntity<List<TrainingApply>> getUserApplications(HttpServletRequest request){
+		User user = authenticationService.getLoggedInUser(request);
 
 		if(user == null)
-			throw new UserNotFoundException("No user found with user id: " + userId);
+			throw new UserNotFoundException("User not found with the given user id");
 		else
 			return ResponseEntity.ok(userService.getMyApplications(user));
 	}
 
 	@GetMapping("/user/requests")
-	public ResponseEntity<List<TrainingRequest>> getUserRequests(@RequestParam int userId){
-		User user = userService.findById(userId);
+	public ResponseEntity<List<TrainingRequest>> getUserRequests(HttpServletRequest request){
+		User user = authenticationService.getLoggedInUser(request);
 
 		if(user == null)
-			throw new UserNotFoundException("No user found with user id: " + userId);
+			throw new UserNotFoundException("User not found with the given user id");
 		else
 			return ResponseEntity.ok(userService.getMyRequests(user));
 	}
 
 	@GetMapping("/manager/pending-approvals")
-	public ResponseEntity<List<TrainingApply>> getManagerPendingApprovals(@RequestParam int userId){
-		User user = userService.findById(userId);
+	public ResponseEntity<List<TrainingApply>> getManagerPendingApprovals(HttpServletRequest request){
+		User user = authenticationService.getLoggedInUser(request);
 
 		if(user == null)
-			throw new UserNotFoundException("No user found with user id: " + userId);
+			throw new UserNotFoundException("User not found with the given user id");
 		else
 			return ResponseEntity.ok(userService.getPendingApplicationsManager(user));
 	}
 
 	@GetMapping("/admin/pending-approvals")
-	public ResponseEntity<List<TrainingApply>> getAdminPendingApprovals(@RequestParam int userId){
-		User user = userService.findById(userId);
+	public ResponseEntity<List<TrainingApply>> getAdminPendingApprovals(HttpServletRequest request){
+		User user = authenticationService.getLoggedInUser(request);
 
 		if(user == null)
-			throw new UserNotFoundException("No user found with user id: " + userId);
+			throw new UserNotFoundException("User not found with the given user id");
 		else {
 			if(user.getUserType().equalsIgnoreCase("admin"))
 				return ResponseEntity.ok(userService.getPendingApplicationsAdmin());
@@ -201,11 +226,11 @@ public class UserController {
 	}
 
 	@GetMapping("/admin/pending-requests")
-	public ResponseEntity<List<TrainingRequest>> getAdminPendingRequests(@RequestParam int userId){
-		User user = userService.findById(userId);
+	public ResponseEntity<List<TrainingRequest>> getAdminPendingRequests(HttpServletRequest request){
+		User user = authenticationService.getLoggedInUser(request);
 
 		if(user == null)
-			throw new UserNotFoundException("No user found with user id: " + userId);
+			throw new UserNotFoundException("User not found with the given user id");
 		else {
 			if(user.getUserType().equalsIgnoreCase("admin"))
 				return ResponseEntity.ok(userService.getPendingRequests());

@@ -1,9 +1,12 @@
 import React, { useEffect, useState, useRef } from 'react';
 import './adminDashboard.css';
 import BASE_URL from '../../utils/api';
+import { useLocation } from 'react-router-dom';
+import axios from 'axios';
 import { Link } from 'react-router-dom';
 
-const AdminDashboard = ({userId }) => {
+const AdminDashboard = () => {
+
   const [requests, setRequests] = useState([]);
   const [previousTrainings, setPreviousTrainings] = useState([]);
   const [ongoingTrainings, setOngoingTrainings] = useState([]);
@@ -20,6 +23,9 @@ const AdminDashboard = ({userId }) => {
   const textareaRef = useRef(null);
   const [newTrainingDescription, setNewTrainingDescription] = useState('');
 
+  const location = useLocation();
+  const { userId, userType } = location.state || {};
+
   useEffect(() => {
     // Fetch training requests, previous trainings, and ongoing trainings from the API
     fetchTrainingRequests();
@@ -30,11 +36,13 @@ const AdminDashboard = ({userId }) => {
   const fetchTrainingRequests = async () => {
     // Replace with your API call
     try {
-      const response = await fetch(`/admin/pending-requests?userId=${userId}`);
-      const data = await response.json();
-      setRequests(data);
+      const response = await axios.get(`${BASE_URL}/admin/pending-requests`, {
+        withCredentials: true
+    });
+      console.log(response)
+      setRequests(response.data);
     } catch (error) {
-      console.error('Error fetching training requests:', error);
+      console.error('Error fetching training requests:', error); 
     }
   };
   
