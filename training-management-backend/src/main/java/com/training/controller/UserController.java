@@ -87,6 +87,15 @@ public class UserController {
 			return ResponseEntity.ok().body(user);
 	}
 
+	@GetMapping("/trainers")
+	public ResponseEntity<List<User>> getAllTrainers(HttpServletRequest request){
+		User user = authenticationService.getLoggedInUser(request);
+		if(user == null)
+			throw new UserNotFoundException("User not found with the given user id");
+
+		return ResponseEntity.ok(userService.findAllTrainers());
+	}
+
 	@GetMapping("/user/user-type")
 	public ResponseEntity<String> getUserType(HttpServletRequest request) {
 		User user = authenticationService.getLoggedInUser(request);
