@@ -124,7 +124,7 @@ const TraineeManagerDashboard = () => {
       </header>
 
       <section className="training-section">
-        <button onClick={loadOngoingTrainings}>Ongoing Trainings</button>
+        <button onClick={loadOngoingTrainings} className="primary">Ongoing Trainings</button>
         {openSection === "ongoing" && (
           <ul>
             {ongoingTrainings.slice(0,3).length > 0 ? (
@@ -145,7 +145,7 @@ const TraineeManagerDashboard = () => {
       </section>
 
       <section className="training-section">
-        <button onClick={loadPastTrainings}>Past Trainings</button>
+        <button onClick={loadPastTrainings}className="secondary">Past Trainings</button>
         {openSection === "past" && (
           <ul>
             
@@ -153,7 +153,9 @@ const TraineeManagerDashboard = () => {
                 pastTrainings.map((training) => (
               <li key={training.trainingId}>
                 <strong>{training.topic}</strong> - {training.location} (Ended on {training.endDate})
-                <button onClick={() => handleViewDetails(training.trainingId)}>View Details</button>
+                <button onClick={() => handleViewDetails(training.trainingId)} >View Details</button>
+                
+
               </li>
             ) ) ) : (
                 <p>No past trainings.</p>
@@ -166,7 +168,7 @@ const TraineeManagerDashboard = () => {
       </section>
 
       <section className="training-apply">
-        <button onClick={loadAvailableTrainings}>Available Trainings</button>
+        <button onClick={loadAvailableTrainings}className="primary">Available Trainings</button>
         {openSection === "available" && (
           <ul>
              {availableTrainings.slice(0,3).length > 0 ? (
@@ -187,19 +189,15 @@ const TraineeManagerDashboard = () => {
       </section>
 
       <section className="training-section">
-        <button onClick={handleNewTrainingRequestClick}>Request New Training</button>
+        <button onClick={handleNewTrainingRequestClick} className="neutral">Request New Training</button>
         {showNewTrainingForm && (
           <form onSubmit={handleFormSubmit} className="new-training-form">
-            <label>
-              Training Description:
-              <textarea
-                ref={textareaRef}
-                value={newTrainingDescription}
-                onChange={(e) => setNewTrainingDescription(e.target.value)}
-                placeholder="Describe the training you need"
-                required
-              />
-            </label>
+           
+              <label for="topic"></label>
+              <input type="text" id="topic" name="topic" placeholder="Enter training topic"></input>
+<label for="description"></label>
+    <textarea id="description" name="description" placeholder="Describe the training you need"></textarea>
+
             <button type="submit">Submit Request</button>
           </form>
         )}
@@ -222,8 +220,8 @@ const TraineeManagerDashboard = () => {
               <h4>Request Details</h4>
               <p><strong>Trainee:</strong> {selectedRequest.trainee}</p>
               <p><strong>Training:</strong> {selectedRequest.training}</p>
-              <button onClick={() => handleApproval(selectedRequest.id, "Approved")}>Approve</button>
-              <button onClick={() => handleApproval(selectedRequest.id, "Rejected")}>Reject</button>
+              <button onClick={() => handleApproval(selectedRequest.id, "Approved")}className="approve">Approve</button>
+              <button onClick={() => handleApproval(selectedRequest.id, "Rejected")}className="reject">Reject</button>
             </div>
           )}
         </section>
