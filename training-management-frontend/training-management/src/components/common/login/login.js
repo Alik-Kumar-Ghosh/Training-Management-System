@@ -118,15 +118,13 @@ const Login = () => {
             navigate('/user/profile', { state: { userId , userType} });
 
       // Redirect based on userType
-      // if (userType === 'trainer') {
-      //   navigate('/trainer/dashboard');
-      // } else if (userType === 'manager') {
-      //   navigate('/user/dashboard');
-      // } else if (userType === 'admin') {
-      //   navigate('/admin/dashboard');
-      // } else {
-      //   navigate('/user/dashboard');
-      // }
+      if (userType === 'trainer') {
+        navigate('/trainer/dashboard');
+      } else if (userType === 'admin') {
+        navigate('/admin/dashboard');
+      } else {
+        navigate('/user/dashboard');
+      }
     } catch (error) {
       console.error('Error during login:', error);
     }
