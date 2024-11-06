@@ -1,9 +1,9 @@
 import axios from "axios";
 import React, { useRef, useState } from "react";
-import { useLocation } from "react-router-dom";
-import "./userDashboard.css";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import BASE_URL from "../../utils/api";
 import UserProfileBubble from '../common/profilePage/userProfileBubble';
+import "./userDashboard.css";
 
 const TraineeManagerDashboard = () => {
   const [ongoingTrainings, setOngoingTrainings] = useState([]);
@@ -15,7 +15,7 @@ const TraineeManagerDashboard = () => {
   const [newTrainingDescription, setNewTrainingDescription] = useState("");
   const textareaRef = useRef(null);
   const [openSection, setOpenSection] = useState(null); // Add state to track the opened section
-
+  const navigate = useNavigate();
   const location = useLocation();
   const { userId, userType } = location.state || {};
 
@@ -110,6 +110,11 @@ const TraineeManagerDashboard = () => {
     setShowNewTrainingForm(false);
     setNewTrainingDescription("");
   };
+  const handleViewDetails = (trainingId) => {
+    console.log(trainingId);
+    ///training?trainingId=10
+    navigate('/trainingdetails',{ state: {trainingId} });
+  };
 
   return (
     <div className="dashboard-container">
@@ -122,41 +127,63 @@ const TraineeManagerDashboard = () => {
         <button onClick={loadOngoingTrainings}>Ongoing Trainings</button>
         {openSection === "ongoing" && (
           <ul>
-            {ongoingTrainings.map((training) => (
+            {ongoingTrainings.slice(0,3).length > 0 ? (
+            ongoingTrainings.map((training) => (
               <li key={training.trainingId}>
                 <strong>{training.topic}</strong> - {training.location} from{" "}
                 {training.startDate} to {training.endDate}
+                <button onClick={() => handleViewDetails(training.trainingId)}>View Details</button>
               </li>
-            ))}
+            )) ) : (
+                <p>No ongoing trainings.</p>
+            )}
           </ul>
         )}
+        {ongoingTrainings.length > 3 && (
+        <Link to="/user/ongoing" className="see-more">...see more</Link>
+      )}
       </section>
 
       <section className="training-section">
         <button onClick={loadPastTrainings}>Past Trainings</button>
         {openSection === "past" && (
           <ul>
-            {pastTrainings.map((training) => (
+            
+            {pastTrainings.slice(0,3).length > 0 ? (
+                pastTrainings.map((training) => (
               <li key={training.trainingId}>
                 <strong>{training.topic}</strong> - {training.location} (Ended on {training.endDate})
+                <button onClick={() => handleViewDetails(training.trainingId)}>View Details</button>
               </li>
-            ))}
+            ) ) ) : (
+                <p>No past trainings.</p>
+            ) }
           </ul>
         )}
+        {pastTrainings.length > 3 && (
+        <Link to="/user/past" className="see-more">...see more</Link>
+      )}
       </section>
 
       <section className="training-apply">
         <button onClick={loadAvailableTrainings}>Available Trainings</button>
         {openSection === "available" && (
           <ul>
-            {availableTrainings.map((training) => (
+             {availableTrainings.slice(0,3).length > 0 ? (
+            availableTrainings.map((training) => (
               <li key={training.trainingId}>
                 <strong>{training.topic}</strong> - {training.location} (Starts on {training.startDate})
+                <button onClick={() => handleViewDetails(training.trainingId)}>View Details</button>
                 <button onClick={() => handleApplyTraining(training.trainingId)}>Apply</button>
               </li>
-            ))}
+            )) ) : (
+                <p>No available trainings.</p>
+            )}
           </ul>
         )}
+        {ongoingTrainings.length > 3 && (
+        <Link to="/user/upcoming" className="see-more">...see more</Link>
+      )}
       </section>
 
       <section className="training-section">
