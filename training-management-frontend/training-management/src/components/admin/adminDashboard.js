@@ -1,17 +1,14 @@
 import React, { useEffect, useState, useRef } from "react";
 import "./adminDashboard.css";
 import BASE_URL from "../../utils/api";
-import { useLocation } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
 import axios from "axios";
-import { Link } from "react-router-dom";
-import ProfileDropdown from "../common/profilePage/profileDropDown";
 import UserProfileBubble from "../common/profilePage/userProfileBubble";
 
 const AdminDashboard = () => {
   const [requests, setRequests] = useState([]);
   const [previousTrainings, setPreviousTrainings] = useState([]);
   const [ongoingTrainings, setOngoingTrainings] = useState([]);
-  const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [trainers, setTrainers] = useState([]);
   const [showNewTrainingForm, setShowNewTrainingForm] = useState(false);
   const [newTraining, setNewTraining] = useState({
@@ -148,8 +145,7 @@ const AdminDashboard = () => {
     }
   };
 
-  const toggleProfileMenu = () => setShowProfileMenu((prevState) => !prevState);
-
+  
   const resetFormState = () => {
     setShowNewTrainingForm(false);
     setNewTraining({
