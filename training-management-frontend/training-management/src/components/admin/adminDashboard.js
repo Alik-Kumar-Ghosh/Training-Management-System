@@ -93,19 +93,34 @@ const AdminDashboard = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      // Prepare the data to be sent in the POST request
+      const trainingData = {
+        startDate: newTraining.startDate,
+        endDate: newTraining.endDate,
+        topic: newTraining.topic,
+        trainerUserName: newTraining.trainerUserName,
+        location: newTraining.location,
+        description: newTraining.description,
+      };
+      console.log(trainingData)
+  
+      // Making the POST request using axios
       const response = await axios.post(
         `${BASE_URL}/training/create`,
-        { ...newTraining },
+        trainingData,
         {
-          headers: { "Content-Type": "application/json" },
           withCredentials: true,
         }
       );
+  
       console.log("Training created:", response.data);
+      // Optionally, reset the form state or show a success message
+      resetFormState();
     } catch (error) {
       console.error("Error creating training:", error);
     }
   };
+  
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;

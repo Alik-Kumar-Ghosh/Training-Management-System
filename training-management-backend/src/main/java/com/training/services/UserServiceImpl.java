@@ -61,7 +61,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public List<User> findAllTrainers(){
-		return userRepo.findAllTrainers();
+		return userRepo.findAllTrainers("Trainer");
 	}
 
 	@Override

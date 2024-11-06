@@ -21,6 +21,6 @@ public interface UserRepo extends JpaRepository<User, Integer>{
 	@Query("select t from Training t where t.trainer = :trainer")
 	List<Training> findTrainerTrainings(User trainer);
 
-	@Query("select u from User u where u.userType = :trainer")
-	List<User> findAllTrainers();
+	@Query("select u from User u where u.userType = :type")
+	List<User> findAllTrainers(String type);
 }
