@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import BASE_URL from '../../utils/api';
 import UserProfileBubble from '../common/profilePage/userProfileBubble';
 import './trainerDashboard.css';
@@ -11,7 +11,7 @@ function TrainerDashboard() {
     const [upcomingTrainings, setUpcomingTrainings] = useState([]);
     // const [participants, setParticipants] = useState([]);
     const [activeSection, setActiveSection] = useState('');
-
+    const navigate = useNavigate();
     
 
     // Fetch ongoing trainings
