@@ -5,104 +5,109 @@ import BASE_URL from '../../utils/api';
 import './userDashboard.css';
 
 const TraineeManagerDashboard = () => {
-    const [ongoingTrainings, setOngoingTrainings] = useState([]);
-    const [pastTrainings, setPastTrainings] = useState([]);
-    const [availableTrainings, setAvailableTrainings] = useState([]);
-    const [pendingApprovals, setPendingApprovals] = useState([]);
-    const [selectedRequest, setSelectedRequest] = useState(null);
-    const [showProfileMenu, setShowProfileMenu] = useState(false);
-    const [showNewTrainingForm, setShowNewTrainingForm] = useState(false);
-    const [newTrainingDescription, setNewTrainingDescription] = useState('');
-    const textareaRef = useRef(null);
+  const [ongoingTrainings, setOngoingTrainings] = useState([]);
+  const [pastTrainings, setPastTrainings] = useState([]);
+  const [availableTrainings, setAvailableTrainings] = useState([]);
+  const [pendingApprovals, setPendingApprovals] = useState([]);
+  const [selectedRequest, setSelectedRequest] = useState(null);
+  const [showProfileMenu, setShowProfileMenu] = useState(false);
+  const [showNewTrainingForm, setShowNewTrainingForm] = useState(false);
+  const [newTrainingDescription, setNewTrainingDescription] = useState("");
+  const textareaRef = useRef(null);
 
-    const [openSection, setOpenSection] = useState(null); // Add state to track the opened section
-    const location = useLocation();
-    const { userId, userType } = location.state || {};
+  const [openSection, setOpenSection] = useState(null); // Add state to track the opened section
+  const location = useLocation();
+  const { userId, userType } = location.state || {};
 
-    const loadOngoingTrainings = async () => {
-        try {
-            const response = await axios.get(`${BASE_URL}/user/ongoing-trainings`, {
-                params: { userId }
-            });
-            setOngoingTrainings(response.data);
-        } catch (error) {
-            console.error('Error fetching ongoing trainings:', error);
-        }
-    };
-
-    const loadPastTrainings = async () => {
-        try {
-            const response = await axios.get(`${BASE_URL}/user/past-trainings`, {
-                params: { userId }
-            });
-            setPastTrainings(response.data);
-        } catch (error) {
-            console.error('Error fetching past trainings:', error);
-        }
-    };
-
-    const loadAvailableTrainings = async () => {
-        try {
-            const response = await axios.get(`${BASE_URL}/user/upcoming-trainings`, {
-                params: { userId }
-            });
-            setAvailableTrainings(response.data);
-        } catch (error) {
-            console.error('Error fetching available trainings:', error);
-        }
-    };
-
-    const loadPendingApprovals = async () => {
-        if (userType === 'manager') {
-            try {
-                const response = await axios.get(`${BASE_URL}/manager/pending-approvals`, {
-                    params: { userId }
-                });
-                setPendingApprovals(response.data);
-            } catch (error) {
-                console.error('Error fetching pending approvals:', error);
-            }
-        }
-    };
-    const handleRequestClick = (request) => {
-        setSelectedRequest(request);
-        setOpenSection(openSection === 'available' ? null : 'requested');
+  const loadOngoingTrainings = async () => {
+    try {
+      const response = await axios.get(`${BASE_URL}/user/ongoing-trainings`, {
+      } ,{ withCredentials: true });
+      setOngoingTrainings(response.data);
+      console.log(response.data)
+    } catch (error) {
+      console.error("Error fetching ongoing trainings:", error);
     }
-    
-    const handleApproval = async (id, status) => {
-        try {
-            await axios.put(`${BASE_URL}/update-application/${id}`, { userId, id, status });
-            console.log(`Request ID: ${id}, Status: ${status}`);
-            setPendingApprovals((prev) => prev.filter((req) => req.id !== id));
-        } catch (error) {
-            console.error(`Error updating approval status for request ${id}:`, error);
-        }
-    };
-   
-    const handleApplyTraining = async (trainingId) => {
-        try {
-            await axios.post(`${BASE_URL}/apply/${trainingId}`, {params: {userId,trainingId}});
-            console.log(`Applied for training ID: ${trainingId}`);
-        } catch (error) {
-            console.error(`Error applying for training ${trainingId}:`, error);
-        }
-    };
-    const toggleProfileMenu = () => setShowProfileMenu((prevState) => !prevState);
 
-    const handleNewTrainingRequestClick = () => {
-        setShowNewTrainingForm(true);
-        setTimeout(() => {
-            if (textareaRef.current) {
-                textareaRef.current.focus();
-            }
-        }, 0); // Use timeout to ensure it runs after rendering
-    };
-    const handleFormSubmit = (event) => {
-        event.preventDefault();
-        console.log('New training requested with description:', newTrainingDescription);
-        setShowNewTrainingForm(false);
-        setNewTrainingDescription('');
-    };
+     const loadPastTrainings = async () => {
+    try {
+      const response = await axios.get(`${BASE_URL}/user/past-trainings`, {
+      },{ withCredentials: true });
+      setPastTrainings(response.data);
+    } catch (error) {
+      console.error("Error fetching past trainings:", error);
+    }
+  };
+
+  const loadAvailableTrainings = async () => {
+    try {
+      const response = await axios.get(`${BASE_URL}/user/upcoming-trainings`, {
+      },{ withCredentials: true });
+      setAvailableTrainings(response.data);
+    } catch (error) {
+      console.error("Error fetching available trainings:", error);
+    }
+  };
+
+  const loadPendingApprovals = async () => {
+    if (userType === "manager") {
+      try {
+        const response = await axios.get(
+          `${BASE_URL}/manager/pending-approvals`,
+        );
+        setPendingApprovals(response.data);
+      } catch (error) {
+        console.error("Error fetching pending approvals:", error);
+      }
+    }
+  };
+  const handleRequestClick = (request) => {
+    setSelectedRequest(request);
+    setOpenSection(openSection === "available" ? null : "requested");
+  };
+
+  const handleApproval = async (id, status) => {
+    try {
+      await axios.put(`${BASE_URL}/update-application/${id}`, {
+        userId,
+        id,
+        status,
+      },{ withCredentials: true });
+      console.log(`Request ID: ${id}, Status: ${status}`);
+      setPendingApprovals((prev) => prev.filter((req) => req.id !== id));
+    } catch (error) {
+      console.error(`Error updating approval status for request ${id}:`, error);
+    }
+  };
+
+  const handleApplyTraining = async (trainingId) => {
+    try {
+      await axios.post(`${BASE_URL}/apply/${trainingId}`, {
+        params: { userId, trainingId },
+      },{ withCredentials: true });
+      console.log(`Applied for training ID: ${trainingId}`);
+    } catch (error) {
+      console.error(`Error applying for training ${trainingId}:`, error);
+    }
+  };
+  const toggleProfileMenu = () => setShowProfileMenu((prevState) => !prevState);
+
+  const handleNewTrainingRequestClick = () => {
+    setShowNewTrainingForm(true);
+    setTimeout(() => {
+      if (textareaRef.current) {
+        textareaRef.current.focus();
+      }
+    }, 0); // Use timeout to ensure it runs after rendering
+  };
+  const handleFormSubmit = (event) => {
+    event.preventDefault();
+    console.log(
+      "New training requested with description:",
+      newTrainingDescription);
+      setShowNewTrainingForm(false);
+      setNewTrainingDescription("");
+  };
 
     return (
         <div className="dashboard-container">
@@ -225,8 +230,7 @@ const TraineeManagerDashboard = () => {
                 </section>
             )}
         </div>
-    );
+  );
 };
 
 export default TraineeManagerDashboard;
-
