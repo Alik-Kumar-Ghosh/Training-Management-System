@@ -14,17 +14,18 @@ const TraineeManagerDashboard = () => {
   const [showNewTrainingForm, setShowNewTrainingForm] = useState(false);
   const [newTrainingDescription, setNewTrainingDescription] = useState("");
   const textareaRef = useRef(null);
-
   const [openSection, setOpenSection] = useState(null); // Add state to track the opened section
+
   const location = useLocation();
   const { userId, userType } = location.state || {};
 
   const loadOngoingTrainings = async () => {
     try {
       const response = await axios.get(`${BASE_URL}/user/ongoing-trainings`, {
-      } ,{ withCredentials: true });
+        withCredentials: true,
+      });
       setOngoingTrainings(response.data);
-      console.log(response.data)
+      setOpenSection("ongoing"); // Set the open section to "ongoing"
     } catch (error) {
       console.error("Error fetching ongoing trainings:", error);
     }
@@ -33,8 +34,10 @@ const TraineeManagerDashboard = () => {
   const loadPastTrainings = async () => {
     try {
       const response = await axios.get(`${BASE_URL}/user/past-trainings`, {
-      },{ withCredentials: true });
+        withCredentials: true,
+      });
       setPastTrainings(response.data);
+      setOpenSection("past"); // Set the open section to "past"
     } catch (error) {
       console.error("Error fetching past trainings:", error);
     }
@@ -43,8 +46,10 @@ const TraineeManagerDashboard = () => {
   const loadAvailableTrainings = async () => {
     try {
       const response = await axios.get(`${BASE_URL}/user/upcoming-trainings`, {
-      },{ withCredentials: true });
+        withCredentials: true,
+      });
       setAvailableTrainings(response.data);
+      setOpenSection("available"); // Set the open section to "available"
     } catch (error) {
       console.error("Error fetching available trainings:", error);
     }
@@ -53,28 +58,26 @@ const TraineeManagerDashboard = () => {
   const loadPendingApprovals = async () => {
     if (userType === "manager") {
       try {
-        const response = await axios.get(
-          `${BASE_URL}/manager/pending-approvals`,
-        );
+        const response = await axios.get(`${BASE_URL}/manager/pending-approvals`);
         setPendingApprovals(response.data);
       } catch (error) {
         console.error("Error fetching pending approvals:", error);
       }
     }
   };
+
   const handleRequestClick = (request) => {
     setSelectedRequest(request);
-    setOpenSection(openSection === "available" ? null : "requested");
+    setOpenSection("requested"); // Set the open section to "requested"
   };
 
   const handleApproval = async (id, status) => {
     try {
-      await axios.put(`${BASE_URL}/update-application/${id}`, {
-        userId,
-        id,
-        status,
-      },{ withCredentials: true });
-      console.log(`Request ID: ${id}, Status: ${status}`);
+      await axios.put(
+        `${BASE_URL}/update-application/${id}`,
+        { userId, id, status },
+        { withCredentials: true }
+      );
       setPendingApprovals((prev) => prev.filter((req) => req.id !== id));
     } catch (error) {
       console.error(`Error updating approval status for request ${id}:`, error);
@@ -83,29 +86,27 @@ const TraineeManagerDashboard = () => {
 
   const handleApplyTraining = async (trainingId) => {
     try {
-      await axios.post(`${BASE_URL}/apply/${trainingId}`, {
-        params: { userId, trainingId },
-      },{ withCredentials: true });
-      console.log(`Applied for training ID: ${trainingId}`);
+      await axios.post(
+        `${BASE_URL}/apply/${trainingId}`,
+        { params: { userId, trainingId } },
+        { withCredentials: true }
+      );
     } catch (error) {
       console.error(`Error applying for training ${trainingId}:`, error);
     }
   };
- 
+
   const handleNewTrainingRequestClick = () => {
     setShowNewTrainingForm(true);
     setTimeout(() => {
       if (textareaRef.current) {
         textareaRef.current.focus();
       }
-    }, 0); // Use timeout to ensure it runs after rendering
+    }, 0);
   };
+
   const handleFormSubmit = (event) => {
     event.preventDefault();
-    console.log(
-      "New training requested with description:",
-      newTrainingDescription
-    );
     setShowNewTrainingForm(false);
     setNewTrainingDescription("");
   };
@@ -118,13 +119,11 @@ const TraineeManagerDashboard = () => {
       </header>
 
       <section className="training-section">
-        <button id="ongoing" onClick={loadOngoingTrainings}>
-          Ongoing Trainings
-        </button>
-        {openSection === "ongoing" && ( // Show only if this section is open
+        <button onClick={loadOngoingTrainings}>Ongoing Trainings</button>
+        {openSection === "ongoing" && (
           <ul>
-            {ongoingTrainings.map((training, index) => (
-              <li key={index}>
+            {ongoingTrainings.map((training) => (
+              <li key={training.trainingId}>
                 <strong>{training.topic}</strong> - {training.location} from{" "}
                 {training.startDate} to {training.endDate}
               </li>
@@ -134,15 +133,12 @@ const TraineeManagerDashboard = () => {
       </section>
 
       <section className="training-section">
-        <button id="past" onClick={loadPastTrainings}>
-          Past Trainings
-        </button>
-        {openSection === "past" && ( // Show only if this section is open
+        <button onClick={loadPastTrainings}>Past Trainings</button>
+        {openSection === "past" && (
           <ul>
-            {pastTrainings.map((training, index) => (
-              <li key={index}>
-                <strong>{training.topic}</strong> - {training.location} (Ended
-                on {training.endDate})
+            {pastTrainings.map((training) => (
+              <li key={training.trainingId}>
+                <strong>{training.topic}</strong> - {training.location} (Ended on {training.endDate})
               </li>
             ))}
           </ul>
@@ -150,21 +146,13 @@ const TraineeManagerDashboard = () => {
       </section>
 
       <section className="training-apply">
-        <button id="available" onClick={loadAvailableTrainings}>
-          Available Trainings
-        </button>
-        {openSection === "available" && ( // Show only if this section is open
+        <button onClick={loadAvailableTrainings}>Available Trainings</button>
+        {openSection === "available" && (
           <ul>
             {availableTrainings.map((training) => (
-              <li className="list-wala" key={training.id}>
-                <strong>{training.topic}</strong> - {training.location} (Starts
-                on {training.startDate})
-                <button
-                  className="apply-button"
-                  onClick={() => handleApplyTraining(training.id)}
-                >
-                  Apply
-                </button>
+              <li key={training.trainingId}>
+                <strong>{training.topic}</strong> - {training.location} (Starts on {training.startDate})
+                <button onClick={() => handleApplyTraining(training.trainingId)}>Apply</button>
               </li>
             ))}
           </ul>
@@ -172,15 +160,13 @@ const TraineeManagerDashboard = () => {
       </section>
 
       <section className="training-section">
-        <button id="request" onClick={handleNewTrainingRequestClick}>
-          Request New Training
-        </button>
+        <button onClick={handleNewTrainingRequestClick}>Request New Training</button>
         {showNewTrainingForm && (
           <form onSubmit={handleFormSubmit} className="new-training-form">
             <label>
               Training Description:
               <textarea
-                ref={textareaRef} // Add the ref here
+                ref={textareaRef}
                 value={newTrainingDescription}
                 onChange={(e) => setNewTrainingDescription(e.target.value)}
                 placeholder="Describe the training you need"
@@ -191,6 +177,7 @@ const TraineeManagerDashboard = () => {
           </form>
         )}
       </section>
+
       {userType === "manager" && (
         <section className="approval-section">
           <h3>Pending Approvals</h3>
@@ -206,22 +193,10 @@ const TraineeManagerDashboard = () => {
           {selectedRequest && (
             <div className="request-details">
               <h4>Request Details</h4>
-              <p>
-                <strong>Trainee:</strong> {selectedRequest.trainee}
-              </p>
-              <p>
-                <strong>Training:</strong> {selectedRequest.training}
-              </p>
-              <button
-                onClick={() => handleApproval(selectedRequest.id, "Approved")}
-              >
-                Approve
-              </button>
-              <button
-                onClick={() => handleApproval(selectedRequest.id, "Rejected")}
-              >
-                Reject
-              </button>
+              <p><strong>Trainee:</strong> {selectedRequest.trainee}</p>
+              <p><strong>Training:</strong> {selectedRequest.training}</p>
+              <button onClick={() => handleApproval(selectedRequest.id, "Approved")}>Approve</button>
+              <button onClick={() => handleApproval(selectedRequest.id, "Rejected")}>Reject</button>
             </div>
           )}
         </section>
