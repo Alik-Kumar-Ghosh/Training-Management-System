@@ -130,7 +130,7 @@ const TraineeManagerDashboard = () => {
             </header>
 
             <section className="training-section">
-                <button onClick={loadOngoingTrainings}>Ongoing Trainings</button>
+                <button id='ongoing' onClick={loadOngoingTrainings}>Ongoing Trainings</button>
                 {openSection === 'ongoing' && ( // Show only if this section is open
                     <ul>
                         {ongoingTrainings.map((training, index) => (
@@ -143,7 +143,7 @@ const TraineeManagerDashboard = () => {
             </section>
 
             <section className="training-section">
-                <button onClick={loadPastTrainings}>Past Trainings</button>
+                <button id='past' onClick={loadPastTrainings}>Past Trainings</button>
                 {openSection === 'past' && ( // Show only if this section is open
                     <ul>
                         {pastTrainings.map((training, index) => (
@@ -156,7 +156,7 @@ const TraineeManagerDashboard = () => {
             </section>
 
             <section className="training-apply">
-                <button onClick={loadAvailableTrainings}>Available Trainings</button>
+                <button id='available' onClick={loadAvailableTrainings}>Available Trainings</button>
                 {openSection === 'available' && ( // Show only if this section is open
                     <ul>
                         {availableTrainings.map((training) => (
@@ -170,7 +170,7 @@ const TraineeManagerDashboard = () => {
             </section>
 
             <section className="training-section">
-            <button onClick={handleNewTrainingRequestClick}>Request New Training</button>
+            <button id='request' onClick={handleNewTrainingRequestClick}>Request New Training</button>
             {showNewTrainingForm && (
                 <form onSubmit={handleFormSubmit} className="new-training-form">
                     <label>

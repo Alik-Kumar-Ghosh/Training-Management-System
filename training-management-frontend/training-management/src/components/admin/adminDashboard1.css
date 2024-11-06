@@ -62,7 +62,6 @@ body, h1, h2, h3, p {
   color: #333;
   padding: 20px;
   min-height: 100vh; /* Full height */
-  pointer-events:all; /* Ensure interaction is allowed */
 }
 
 /* Heading styles */
@@ -150,62 +149,4 @@ body, h1, h2, h3, p {
 
 .trainings-list p {
   color: #555; /* Dark gray for training details */
-}
-
-.new-training-form1{
-  display: block;
-}
-.label-1{
-  position: relative;
-}
-.create-training {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.new-training-form {
-  background: #ffffff;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  max-width: 500px;
-}
-
-.form-group {
-  /* display: flex; */
-  align-items: center;
-  gap: 10px;
-}
-
-.form-group label {
-  width: 100px; /* Set a fixed width for label */
-  font-weight: bold;
-}
-
-.form-group input,
-.form-group textarea {
-  flex: 1; /* Make inputs take the remaining space */
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  outline: none;
-}
-
-.new-training-form button {
-  padding: 10px 15px;
-  background: #4b6cb7;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background 0.3s;
-  align-self: flex-start; /* Align button to the left */
-}
-
-.new-training-form button:hover {
-  background: #354a7b;
 }

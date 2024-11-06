@@ -161,11 +161,14 @@ body {
 .header {
   height:80px;
   width: 100%;
-  margin-right: 100px;
+  padding: 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   color: white;
+  position:fixed;
+  background: linear-gradient(135deg, #2d1b76, #dd5c8b);
+  z-index: 1000;
 }
 
 .logo img {
@@ -200,6 +203,7 @@ nav ul li a:hover {
 }
 
 .hero {
+  margin-top: 90px;
   text-align: center;
   justify-content:center;
   padding-top:15vw;
@@ -210,12 +214,10 @@ nav ul li a:hover {
   background-position: center;
   overflow: hidden;
   border-radius: 20px;
-  position: relative;
 }
 
 .hero::before {
   content: "";
-  position: absolute;
   top: 0;
   left: 0;
   right: 0;
