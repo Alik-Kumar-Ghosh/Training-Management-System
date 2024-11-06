@@ -14,7 +14,7 @@ public class UserDTO {
 	private Date dob;
 	private Date doj;
 	private String managerName;
-	private int managerId;
+	private Integer managerId;
 
 	public UserDTO() {
 		super();
@@ -29,8 +29,14 @@ public class UserDTO {
 		this.phone = user.getPhone();
 		this.dob = user.getDob();
 		this.doj = user.getDoj();
-		this.managerName = user.getManager().getName();
-		this.managerId = user.getManager().getUserId();
+		if(user.getManager() != null) {
+			this.managerName = user.getManager().getName();
+			this.managerId = user.getManager().getUserId();
+		}
+		else {
+			this.managerName = null;
+			this.managerId = null;
+		}
 	}
 
 	public int getUserId() {
@@ -87,10 +93,10 @@ public class UserDTO {
 	public void setManagerName(String managerName) {
 		this.managerName = managerName;
 	}
-	public int getManagerId() {
+	public Integer getManagerId() {
 		return managerId;
 	}
-	public void setManagerId(int managerId) {
+	public void setManagerId(Integer managerId) {
 		this.managerId = managerId;
 	}
 
