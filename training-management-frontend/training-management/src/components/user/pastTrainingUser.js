@@ -1,34 +1,35 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import BASE_URL from '../../../utils/api';
-import './upcomingTraining.css';
+import BASE_URL from '../../utils/api';
+import './pastTrainingUser.css';
 
-const UpcomingTraining = () => {
-  const [upcomingTrainings, setUpcomingTrainings] = useState([]);
+const PastTrainingUser = () => {
+  const [pastTrainings, setPastTrainings] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchUpcomingTrainings = async () => {
+    const fetchPastTrainings = async () => {
       try {
-        const response = await axios.get(`${BASE_URL}/training/upcoming`);
-        setUpcomingTrainings(response.data);
+        const response = await axios.get(`${BASE_URL}/user/past-trainings`);
+        setPastTrainings(response.data);
       } catch (error) {
-        console.error('Error fetching upcoming trainings:', error);
+        console.error('Error fetching past trainings:', error);
       }
     };
 
-    fetchUpcomingTrainings();
+    fetchPastTrainings();
   }, []);
+ // , { state: { userId , userType}}
   const handleViewDetails = (trainingId) => {
     navigate(`/training-details/${trainingId}`);
   };
 
   return (
-    <div className="upcoming-training-page">
-      <h2>Upcoming Trainings</h2>
+    <div className="past-training-page">
+      <h2>Past Trainings</h2>
       <div className="training-list">
-        {upcomingTrainings.map((training) => (
+        {pastTrainings.map((training) => (
           <div className="training-item" key={training.id}>
             <h3>{training.topic}</h3>
             <p><strong>Location:</strong> {training.location}</p>
@@ -43,5 +44,5 @@ const UpcomingTraining = () => {
   );
 };
 
-export default UpcomingTraining;
+export default PastTrainingUser;
 
