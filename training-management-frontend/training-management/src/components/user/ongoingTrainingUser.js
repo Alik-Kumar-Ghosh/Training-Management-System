@@ -1,34 +1,32 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import BASE_URL from '../../../utils/api';
-import './upcomingTraining.css';
+import BASE_URL from '../../utils/api';
+import './ongoingTrainingUser.css';
 
-const UpcomingTraining = () => {
-  const [upcomingTrainings, setUpcomingTrainings] = useState([]);
+const OngoingTrainingUser = () => {
+  const [ongoingTrainings, setOngoingTrainings] = useState([]);
   const navigate = useNavigate();
-
   useEffect(() => {
-    const fetchUpcomingTrainings = async () => {
+    const fetchOngoingTrainings = async () => {
       try {
-        const response = await axios.get(`${BASE_URL}/training/upcoming`);
-        setUpcomingTrainings(response.data);
+        const response = await axios.get(`${BASE_URL}/user/ongoing-trainings`);
+        setOngoingTrainings(response.data);
       } catch (error) {
-        console.error('Error fetching upcoming trainings:', error);
+        console.error('Error fetching ongoing trainings:', error);
       }
     };
 
-    fetchUpcomingTrainings();
+    fetchOngoingTrainings();
   }, []);
   const handleViewDetails = (trainingId) => {
     navigate(`/training-details/${trainingId}`);
   };
-
   return (
-    <div className="upcoming-training-page">
-      <h2>Upcoming Trainings</h2>
+    <div className="ongoing-training-page">
+      <h2>Ongoing Trainings</h2>
       <div className="training-list">
-        {upcomingTrainings.map((training) => (
+        {ongoingTrainings.map((training) => (
           <div className="training-item" key={training.id}>
             <h3>{training.topic}</h3>
             <p><strong>Location:</strong> {training.location}</p>
@@ -43,5 +41,4 @@ const UpcomingTraining = () => {
   );
 };
 
-export default UpcomingTraining;
-
+export default OngoingTrainingUser;

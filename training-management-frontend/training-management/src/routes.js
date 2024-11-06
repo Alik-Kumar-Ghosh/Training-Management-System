@@ -7,7 +7,13 @@ import PastTraining from './components/common/landing-page/pastTraining';
 import UpcomingTraining from './components/common/landing-page/upcomingTraining';
 import Login from './components/common/login/login';
 import UserProfile from './components/common/profilePage/userProfile';
+import OngoingTrainingTrainer from './components/trainer/ongoingTrainingTrainer';
+import PastTrainingTrainer from './components/trainer/pastTrainingTrainer';
 import TrainerDashboard from './components/trainer/trainerDashboard';
+import UpcomingTrainingTrainer from './components/trainer/upcomingTrainingTrainer';
+import OngoingTrainingUser from './components/user/ongoingTrainingUser';
+import PastTrainingUser from './components/user/pastTrainingUser';
+import UpcomingTrainingUser from './components/user/upcomingTrainingUser';
 import UserDashboard from './components/user/userDashboard';
 
 const AppRoutes = () => (
@@ -19,6 +25,13 @@ const AppRoutes = () => (
       <Route path="/trainings/ongoing" element={<OngoingTraining />} />
       <Route path="/trainings/past" element={<PastTraining />} />
       <Route path="/trainings/upcoming" element={<UpcomingTraining/>} />
+      <Route path="/user/upcoming" element={<UpcomingTrainingUser/>}/>
+      <Route path="/user/past" element={<PastTrainingUser/>}/>
+      <Route path="/user/ongoing" element={<OngoingTrainingUser/>}/>
+      <Route path="/trainer/upcoming" element={<UpcomingTrainingTrainer/>}/>
+      <Route path="/trainer/past" element={<PastTrainingTrainer/>}/>
+      <Route path="/trainer/ongoing" element={<OngoingTrainingTrainer/>}/>
+      
        {/* <Route path="/admin/manage-training" element={<ManageTraining/>} />
        <Route path="/admin/pending-approvals" element={<PendingApprovals />} />
        <Route path="/manager/dashboard" element={<ManagerDashboard/>} />

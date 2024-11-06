@@ -1,10 +1,12 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import './pastTraining.css';
+import { Link, useNavigate } from 'react-router-dom';
 import BASE_URL from '../../../utils/api';
+import './pastTraining.css';
 
 const PastTraining = () => {
   const [pastTrainings, setPastTrainings] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchPastTrainings = async () => {
@@ -18,6 +20,10 @@ const PastTraining = () => {
 
     fetchPastTrainings();
   }, []);
+ // , { state: { userId , userType}}
+  const handleViewDetails = (trainingId) => {
+    navigate(`/training-details/${trainingId}`);
+  };
 
   return (
     <div className="past-training-page">
@@ -29,11 +35,14 @@ const PastTraining = () => {
             <p><strong>Location:</strong> {training.location}</p>
             <p><strong>Duration:</strong> {training.startDate} to {training.endDate}</p>
             <p><strong>Trainer:</strong> {training.trainerName}</p>
+            <button onClick={() => handleViewDetails(training.id)}>View Details</button>
           </div>
         ))}
       </div>
+      <Link to="/" className="back-link">Go Back to Home</Link>
     </div>
   );
 };
 
 export default PastTraining;
+

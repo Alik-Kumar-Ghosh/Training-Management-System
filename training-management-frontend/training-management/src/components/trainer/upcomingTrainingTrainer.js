@@ -1,17 +1,17 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import BASE_URL from '../../../utils/api';
-import './upcomingTraining.css';
+import BASE_URL from '../../utils/api';
+import './upcomingTrainingTrainer.css';
 
-const UpcomingTraining = () => {
+const UpcomingTrainingTrainer = () => {
   const [upcomingTrainings, setUpcomingTrainings] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUpcomingTrainings = async () => {
       try {
-        const response = await axios.get(`${BASE_URL}/training/upcoming`);
+        const response = await axios.get(`${BASE_URL}/trainer/upcoming-trainings`);
         setUpcomingTrainings(response.data);
       } catch (error) {
         console.error('Error fetching upcoming trainings:', error);
@@ -43,5 +43,5 @@ const UpcomingTraining = () => {
   );
 };
 
-export default UpcomingTraining;
+export default UpcomingTrainingTrainer;
 
