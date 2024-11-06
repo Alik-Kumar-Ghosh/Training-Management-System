@@ -1,8 +1,9 @@
 import axios from "axios";
 import React, { useRef, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import "./userDashboard.css";
 import BASE_URL from "../../utils/api";
+import UserProfileBubble from '../common/profilePage/userProfileBubble';
 
 const TraineeManagerDashboard = () => {
   const [ongoingTrainings, setOngoingTrainings] = useState([]);
@@ -10,7 +11,6 @@ const TraineeManagerDashboard = () => {
   const [availableTrainings, setAvailableTrainings] = useState([]);
   const [pendingApprovals, setPendingApprovals] = useState([]);
   const [selectedRequest, setSelectedRequest] = useState(null);
-  const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [showNewTrainingForm, setShowNewTrainingForm] = useState(false);
   const [newTrainingDescription, setNewTrainingDescription] = useState("");
   const textareaRef = useRef(null);
@@ -96,8 +96,6 @@ const TraineeManagerDashboard = () => {
     }
   };
 
-  const toggleProfileMenu = () => setShowProfileMenu((prevState) => !prevState);
-
   const handleNewTrainingRequestClick = () => {
     setShowNewTrainingForm(true);
     setTimeout(() => {
@@ -117,27 +115,7 @@ const TraineeManagerDashboard = () => {
     <div className="dashboard-container">
       <header className="dashboard-header">
         <h2>User Dashboard</h2>
-        <div className="user-profile" onClick={toggleProfileMenu}>
-          <img
-            src="https://via.placeholder.com/40"
-            alt="User"
-            className="profile-icon"
-          />
-          {showProfileMenu && (
-            <div className="profile-dropdown">
-              <Link
-                to={{
-                  pathname: "/profile",
-                  state: { userId, userType },
-                }}
-              >
-                <button>View Profile</button>
-              </Link>
-              <button>Settings</button>
-              <button>Logout</button>
-            </div>
-          )}
-        </div>
+        <UserProfileBubble/>
       </header>
 
       <section className="training-section">
