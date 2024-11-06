@@ -164,7 +164,7 @@ const LandingPage = () => {
       )}
     </section>
 
-    {/* Ongoing Trainings Section */}
+    {/* upcoming Trainings Section */}
     <section id="upcoming-trainings" className="section">
       <h2>Upcoming Trainings</h2>
       <div className="cards-container">

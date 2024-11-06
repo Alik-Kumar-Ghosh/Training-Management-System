@@ -1,8 +1,8 @@
 import axios from 'axios';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import BASE_URL from '../../utils/api';
 import './trainerDashboard.css';
-import BASE_URL from '../../utils/api'
 
 
 function TrainerDashboard() {
@@ -94,7 +94,7 @@ function TrainerDashboard() {
                     <div className="training-section">
                         <h3>Ongoing Trainings</h3>
                         <ul>
-                            {ongoingTrainings.length > 0 ? (
+                            {ongoingTrainings.slice(0,3).length > 0 ? (
                                 ongoingTrainings.map((training, index) => (
                                     <li key={index}>{training.topic} - {training.startDate} to {training.endDate}</li>
                                 ))
@@ -104,6 +104,9 @@ function TrainerDashboard() {
                         </ul>
                     </div>
                 )}
+                {ongoingTrainings.length > 3 && (
+        <Link to="/trainer/ongoing" className="see-more">...see more</Link>
+      )}
                 </section>
 
                 <section className="trainer-section">
@@ -112,7 +115,7 @@ function TrainerDashboard() {
                     <div className="training-section">
                         <h3>Past Trainings</h3>
                         <ul>
-                            {pastTrainings.length > 0 ? (
+                            {pastTrainings.slice(0,3).length > 0 ? (
                                 pastTrainings.map((training, index) => (
                                     <li key={index}>{training.topic} - {training.startDate} to {training.endDate}</li>
                                 ))
@@ -122,6 +125,9 @@ function TrainerDashboard() {
                         </ul>
                     </div>
                 )}
+                {pastTrainings.length > 3 && (
+        <Link to="/trainer/past" className="see-more">...see more</Link>
+      )}
                  </section>
                 
                  <section className="trainer-section">
@@ -130,7 +136,7 @@ function TrainerDashboard() {
                     <div className="training-section">
                         <h3>Upcoming Trainings</h3>
                         <ul>
-                            {upcomingTrainings.length > 0 ? (
+                            {upcomingTrainings.slice(0,3).length > 0 ? (
                                 upcomingTrainings.map((training, index) => (
                                     <li key={index}>{training.topic} - {training.startDate} to {training.endDate}</li>
                                 ))
@@ -140,6 +146,9 @@ function TrainerDashboard() {
                         </ul>
                     </div>
                 )}
+                {upcomingTrainings.length > 3 && (
+        <Link to="/trainer/upcoming" className="see-more">...see more</Link>
+      )}
                  </section>
 
                 {/* <section className="trainer-section">

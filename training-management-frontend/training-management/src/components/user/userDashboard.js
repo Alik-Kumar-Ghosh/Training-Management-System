@@ -1,8 +1,8 @@
 import axios from 'axios';
 import React, { useRef, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import './userDashboard.css';
 import BASE_URL from '../../utils/api';
+import './userDashboard.css';
 
 const TraineeManagerDashboard = () => {
     const [ongoingTrainings, setOngoingTrainings] = useState([]);
@@ -133,33 +133,39 @@ const TraineeManagerDashboard = () => {
                 <button id='ongoing' onClick={loadOngoingTrainings}>Ongoing Trainings</button>
                 {openSection === 'ongoing' && ( // Show only if this section is open
                     <ul>
-                        {ongoingTrainings.map((training, index) => (
+                        {ongoingTrainings.slice(0, 3).map((training, index) => (
                             <li key={index}>
                                 <strong>{training.topic}</strong> - {training.location} from {training.startDate} to {training.endDate}
                             </li>
                         ))}
                     </ul>
                 )}
+                {ongoingTrainings.length > 3 && (
+        <Link to="/user/ongoing" className="see-more">...see more</Link>
+      )}
             </section>
 
             <section className="training-section">
                 <button id='past' onClick={loadPastTrainings}>Past Trainings</button>
                 {openSection === 'past' && ( // Show only if this section is open
                     <ul>
-                        {pastTrainings.map((training, index) => (
+                        {pastTrainings.slice(0, 3).map((training, index) => (
                             <li key={index}>
                                 <strong>{training.topic}</strong> - {training.location} (Ended on {training.endDate})
                             </li>
                         ))}
                     </ul>
                 )}
+                 {pastTrainings.length > 3 && (
+        <Link to="/user/past" className="see-more">...see more</Link>
+      )}
             </section>
 
             <section className="training-apply">
                 <button id='available' onClick={loadAvailableTrainings}>Available Trainings</button>
                 {openSection === 'available' && ( // Show only if this section is open
                     <ul>
-                        {availableTrainings.map((training) => (
+                        {availableTrainings.slice(0,3).map((training) => (
                             <li className="list-wala" key={training.id}>
                                 <strong>{training.topic}</strong> - {training.location} (Starts on {training.startDate})
                                 <button className='apply-button' onClick={() => handleApplyTraining(training.id)}>Apply</button>
@@ -167,6 +173,9 @@ const TraineeManagerDashboard = () => {
                         ))}
                     </ul>
                 )}
+                {availableTrainings.length > 3 && (
+        <Link to="/user/upcoming" className="see-more">...see more</Link>
+      )}
             </section>
 
             <section className="training-section">
