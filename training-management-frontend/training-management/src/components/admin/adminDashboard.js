@@ -3,15 +3,12 @@ import "./adminDashboard.css";
 import BASE_URL from "../../utils/api";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
-import { Link } from "react-router-dom";
-import ProfileDropdown from '../common/profilePage/profileDropDown';
 import UserProfileBubble from "../common/profilePage/userProfileBubble";
 
 const AdminDashboard = () => {
   const [requests, setRequests] = useState([]);
   const [previousTrainings, setPreviousTrainings] = useState([]);
   const [ongoingTrainings, setOngoingTrainings] = useState([]);
-  const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [trainers, setTrainers] = useState([]);
   const [showNewTrainingForm, setShowNewTrainingForm] = useState(false);
   const [newTraining, setNewTraining] = useState({
@@ -150,8 +147,7 @@ const AdminDashboard = () => {
     }, 0); // Use timeout to ensure it runs after rendering
   };
 
-  const toggleProfileMenu = () => setShowProfileMenu((prevState) => !prevState);
-
+  
   const resetFormState = () => {
     setShowNewTrainingForm(false);
     setNewTraining({
@@ -176,16 +172,7 @@ const AdminDashboard = () => {
   
   
 
-const handleLogout = async () => {
-  try {
-    await axios.post(`${BASE_URL}/logout`);
-    console.log("Logged out successfully");
-    // Redirect to the landing page or login page after logout
-    window.location.href = "/";
-  } catch (error) {
-    console.error("Error logging out:", error);
-  }
-};
+
 
 
 

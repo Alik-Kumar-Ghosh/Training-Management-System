@@ -36,6 +36,11 @@ const Login = () => {
         return null;
       }
 
+
+      localStorage.setItem('isLoggedIn', 'true'); 
+      localStorage.setItem('userType', response.data.userType); 
+      localStorage.setItem('userId', response.data.userId);
+
       // Call getCookieValue after the axios call
       // const userId = getCookieValue('userId');
       // const userType = getCookieValue('userType');
@@ -43,6 +48,8 @@ const Login = () => {
       const userType = response.data.userType; // Assuming the response contains the user 
       const userId = response.data.userId;   
       console.log(userType)
+
+
 
       // Check and navigate based on userType
       if (userType === 'trainer') {
