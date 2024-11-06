@@ -4,12 +4,15 @@ import BASE_URL from "../../utils/api";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import ProfileDropdown from '../common/profilePage/profileDropDown';
+import UserProfileBubble from "../common/profilePage/userProfileBubble";
 
 const AdminDashboard = () => {
   const [requests, setRequests] = useState([]);
   const [previousTrainings, setPreviousTrainings] = useState([]);
   const [ongoingTrainings, setOngoingTrainings] = useState([]);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
+  const [trainers, setTrainers] = useState([]);
   const [showNewTrainingForm, setShowNewTrainingForm] = useState(false);
   const [newTraining, setNewTraining] = useState({
     startDate: "",
@@ -159,32 +162,38 @@ const AdminDashboard = () => {
     });
     setNewTrainingDescription("");
   };
+  const fetchTrainers = async () => {
+    try { 
+      const response = await axios.get(`${BASE_URL}/trainers`); 
+      setTrainers(response.data);
+    } 
+    catch (error) { 
+      console.error('Error fetching trainers:', error); 
+    } 
+  };
+  
+  
+
+const handleLogout = async () => {
+  try {
+    await axios.post(`${BASE_URL}/logout`);
+    console.log("Logged out successfully");
+    // Redirect to the landing page or login page after logout
+    window.location.href = "/";
+  } catch (error) {
+    console.error("Error logging out:", error);
+  }
+};
+
+
+
 
   return (
     <div className="admin-dashboard">
       <header className="dashboard-header">
         <h2>Admin Dashboard </h2>
-        <div className="user-profile" onClick={toggleProfileMenu}>
-          <img
-            src="https://via.placeholder.com/40"
-            alt="User"
-            className="profile-icon"
-          />
-          {showProfileMenu && (
-            <div className="profile-dropdown">
-              <Link to="/profile">
-                {" "}
-                <button onClick={() => console.log("View Profile")}>
-                  View Profile
-                </button>
-              </Link>
-              <button onClick={() => console.log("Settings")}>Settings</button>
-              <button onClick={() => console.log("Logout")}>Logout</button>
-            </div>
-          )}
-        </div>
+        <UserProfileBubble/>
       </header>
-
       <table className="requests-table"> 
   <thead>
     <tr>
@@ -263,8 +272,8 @@ const AdminDashboard = () => {
                 required
               />
             </div>
-            <div className="form-group">
-              <label htmlFor="trainerUserName">Username:</label>
+            {/* <div className="form-group">
+              <label htmlFor="trainerUserName">Trainername:</label>
               <input
                 type="text"
                 id="trainerUserName"
@@ -273,7 +282,21 @@ const AdminDashboard = () => {
                 onChange={handleInputChange}
                 required
               />
-            </div>
+            </div> */}
+
+            <div className="form-group"> 
+              <label htmlFor="trainerUserName">Trainer Name:</label> 
+              <select id="trainerUserName" name="trainerUserName" onChange={handleInputChange} required > 
+                <option value="">Select a trainer</option> 
+                {trainers.map(trainer => ( 
+                  <option key={trainer.userName} 
+                          value={trainer.userName}> 
+                          {trainer.name} 
+                    </option> ))} 
+                </select> 
+              </div>
+
+
             <div className="form-group">
               <label htmlFor="description">Description:</label>
               <textarea

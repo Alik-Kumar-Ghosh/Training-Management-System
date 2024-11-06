@@ -1,8 +1,8 @@
 import axios from 'axios';
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
 import './trainerDashboard.css';
 import BASE_URL from '../../utils/api'
+import UserProfileBubble from '../common/profilePage/userProfileBubble';
 
 
 function TrainerDashboard() {
@@ -11,12 +11,8 @@ function TrainerDashboard() {
     const [upcomingTrainings, setUpcomingTrainings] = useState([]);
     // const [participants, setParticipants] = useState([]);
     const [activeSection, setActiveSection] = useState('');
-    const [showProfileDropdown, setShowProfileDropdown] = useState(false);
 
-    // Toggle profile dropdown
-    const toggleProfileDropdown = () => {
-        setShowProfileDropdown(!showProfileDropdown);
-    };
+    
 
     // Fetch ongoing trainings
     const fetchOngoingTrainings = async () => {
@@ -51,35 +47,12 @@ function TrainerDashboard() {
         }
     };
 
-    // Fetch participant information
-    // const fetchParticipants = async () => {
-    //     setActiveSection('participants');
-    //     try {
-    //         const response = await axios.get(`${BASE_URL}/trainings/participants`,{
-    //             params: {userId, trainingId}
-    //         });
-    //         setParticipants(response.data);
-    //     } catch (error) {
-    //         console.error("Error fetching participant information:", error);
-    //     }
-    // };
 
     return (
         <div className="trainer-dashboard-container">
             <header className="trainer-dashboard-header">
                 <h2>Trainer Dashboard</h2>
-                <div className="user-profile" onClick={toggleProfileDropdown}>
-                    <img src="https://via.placeholder.com/40" alt="Profile" className="profile-icon" />
-                    {showProfileDropdown && (
-                        <div className="profile-dropdown">
-                             {/* <button onClick={() => console.log('View Profile')}>View Profile</button>
-                            <button onClick={() => console.log('Settings')}>Settings</button>
-                            <button onClick={() => console.log('Logout')}>Logout</button> */}
-                             <Link to="/profile"><button>View Profile</button></Link>
-                            <button>Logout</button>
-                        </div>
-                    )}
-                </div>
+                <UserProfileBubble/>
             </header>
 
             {/* <section className="trainer-section">
