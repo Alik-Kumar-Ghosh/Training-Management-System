@@ -50,9 +50,10 @@ const AdminDashboard = () => {
   const fetchPreviousTrainings = async () => {
     try {
       // Making the API call with axios
-      const response = await axios.get("/training/past", {
+      const response = await axios.get( `${BASE_URL}/training/past`, {
         withCredentials: true, // Include credentials (cookies) in the request
       });
+      console.log(response.data)
       setPreviousTrainings(response.data); // Update state with the response data
     } catch (error) {
       console.error("Error fetching previous trainings:", error);
@@ -63,9 +64,10 @@ const AdminDashboard = () => {
   const fetchOngoingTrainings = async () => {
     try {
       // Making the API call with axios
-      const response = await axios.get("/training/ongoing", {
+      const response = await axios.get( `${BASE_URL}/training/ongoing`, {
         withCredentials: true, // Include credentials (cookies) in the request
       });
+      console.log(response.data)
       setOngoingTrainings(response.data); // Update state with the response data
     } catch (error) {
       console.error("Error fetching ongoing trainings:", error);
@@ -211,18 +213,18 @@ const AdminDashboard = () => {
       <h2>Previous Trainings</h2>
       <ul className="trainings-list">
         {previousTrainings.map((training) => (
-          <li key={training.id}>
-            <h3>{training.name}</h3>
-            <p>{training.details}</p>
+          <li key={training.trainingId}>
+            <h3>{training.topic}</h3>
+            <p>{training.description}</p>
           </li>
         ))}
       </ul>
       <h2>Ongoing Trainings</h2>
       <ul className="trainings-list">
         {ongoingTrainings.map((training) => (
-          <li key={training.id}>
-            <h3>{training.name}</h3>
-            <p>{training.details}</p>
+          <li key={training.trainingId}>
+            <h3>{training.topic}</h3>
+            <p>{training.description}</p>
           </li>
         ))}
       </ul>
