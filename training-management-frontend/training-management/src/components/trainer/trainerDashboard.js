@@ -1,9 +1,9 @@
 import axios from 'axios';
 import React, { useState } from 'react';
-import './trainerDashboard.css';
-import UserProfileBubble from '../common/profilePage/userProfileBubble';
 import { Link } from 'react-router-dom';
 import BASE_URL from '../../utils/api';
+import UserProfileBubble from '../common/profilePage/userProfileBubble';
+import './trainerDashboard.css';
 
 function TrainerDashboard() {
     const [ongoingTrainings, setOngoingTrainings] = useState([]);
@@ -47,6 +47,11 @@ function TrainerDashboard() {
         }
     };
 
+    const handleViewDetails = (trainingId) => {
+        console.log(trainingId);
+        ///training?trainingId=10
+        navigate('/trainingdetails',{ state: {trainingId} });
+      };
 
     return (
         <div className="trainer-dashboard-container">
@@ -69,7 +74,9 @@ function TrainerDashboard() {
                         <ul>
                             {ongoingTrainings.slice(0,3).length > 0 ? (
                                 ongoingTrainings.map((training, index) => (
-                                    <li key={index}>{training.topic} - {training.startDate} to {training.endDate}</li>
+                                    <li key={index}>{training.topic} - {training.startDate} to {training.endDate}
+                                    <button onClick={() => handleViewDetails(training.trainingId)}>View Details</button>
+                                    </li>
                                 ))
                             ) : (
                                 <p>No ongoing trainings.</p>
@@ -90,7 +97,9 @@ function TrainerDashboard() {
                         <ul>
                             {pastTrainings.slice(0,3).length > 0 ? (
                                 pastTrainings.map((training, index) => (
-                                    <li key={index}>{training.topic} - {training.startDate} to {training.endDate}</li>
+                                    <li key={index}>{training.topic} - {training.startDate} to {training.endDate}
+                                    <button onClick={() => handleViewDetails(training.trainingId)}>View Details</button>
+                                    </li>
                                 ))
                             ) : (
                                 <p>No past trainings.</p>
@@ -111,7 +120,9 @@ function TrainerDashboard() {
                         <ul>
                             {upcomingTrainings.slice(0,3).length > 0 ? (
                                 upcomingTrainings.map((training, index) => (
-                                    <li key={index}>{training.topic} - {training.startDate} to {training.endDate}</li>
+                                    <li key={index}>{training.topic} - {training.startDate} to {training.endDate}
+                                    <button onClick={() => handleViewDetails(training.trainingId)}>View Details</button>
+                                    </li>
                                 ))
                             ) : (
                                 <p>No upcoming trainings.</p>

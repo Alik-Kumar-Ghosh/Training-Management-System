@@ -77,9 +77,15 @@ const UpcomingTrainingUser = () => {
         console.error(`Error applying for training ${trainingId}:`, error);
     }
 };
-  const handleViewDetails = (trainingId) => {
-    navigate(`/training-details/${trainingId}`);
-  };
+
+const handleViewDetails = (trainingId) => {
+  console.log(trainingId);
+  ///training?trainingId=10
+  navigate('/trainingdetails',{ state: {trainingId} });
+};
+  // const handleViewDetails = (trainingId) => {
+  //   navigate(`/training-details/${trainingId}`);
+  // };
 
   return (
     <div className="upcoming-training-page">
@@ -90,9 +96,9 @@ const UpcomingTrainingUser = () => {
             <h3>{training.topic}</h3>
             <p><strong>Location:</strong> {training.location}</p>
             <p><strong>Duration:</strong> {training.startDate} to {training.endDate}</p>
-            <p><strong>Trainer:</strong> {training.trainerName}</p>
-            <button onClick={() => handleViewDetails(training.id)}>View Details</button>
-            <button className='apply-button' onClick={() => handleApplyTraining(training.id)}>Apply</button>
+            <p><strong>Trainer:</strong> {training.trainer.name}</p>
+            <button onClick={() => handleViewDetails(training.trainingId)}>View Details</button>
+            <button className='apply-button' onClick={() => handleApplyTraining(training.trainingId)}>Apply</button>
           </div>
         ))}
       </div>

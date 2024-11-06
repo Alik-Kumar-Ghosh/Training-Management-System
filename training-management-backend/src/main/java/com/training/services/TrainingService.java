@@ -1,6 +1,7 @@
 package com.training.services;
 
 import java.util.List;
+
 import com.training.model.Training;
 import com.training.model.TrainingApply;
 import com.training.model.TrainingParticipant;

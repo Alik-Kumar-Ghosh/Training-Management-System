@@ -13,6 +13,7 @@ const PastTrainingTrainer = () => {
       try {
         const response = await axios.get(`${BASE_URL}/trainer/past-trainings`);
         setPastTrainings(response.data);
+        console.log(response)
       } catch (error) {
         console.error('Error fetching past trainings:', error);
       }
@@ -22,20 +23,23 @@ const PastTrainingTrainer = () => {
   }, []);
  // , { state: { userId , userType}}
   const handleViewDetails = (trainingId) => {
-    navigate(`/training-details/${trainingId}`);
+    console.log(trainingId);
+    ///training?trainingId=10
+    navigate('/trainingdetails',{ state: {trainingId} });
   };
 
   return (
     <div className="past-training-page">
       <h2>Past Trainings</h2>
       <div className="training-list">
+
         {pastTrainings.map((training) => (
-          <div className="training-item" key={training.id}>
+          <div className="training-item" key={training.trainingId}>
             <h3>{training.topic}</h3>
             <p><strong>Location:</strong> {training.location}</p>
             <p><strong>Duration:</strong> {training.startDate} to {training.endDate}</p>
-            <p><strong>Trainer:</strong> {training.trainerName}</p>
-            <button onClick={() => handleViewDetails(training.id)}>View Details</button>
+            <p><strong>Trainer:</strong> {training.trainer.name}</p>
+            <button onClick={() => handleViewDetails(training.trainingId)}>View Details</button>
           </div>
         ))}
       </div>

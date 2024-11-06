@@ -49,7 +49,7 @@ public class TrainingController {
 		}
 	}
 
-	@GetMapping("/{trainingId}")
+	@GetMapping()
 	public ResponseEntity<Training> getTrainingById(@RequestParam int trainingId){
 		Training training = trainingService.findTrainingById(trainingId);
 
@@ -58,7 +58,7 @@ public class TrainingController {
 		return ResponseEntity.ok(training);
 	}
 
-	@GetMapping("/{topic}")
+	@GetMapping("/topic")
 	public ResponseEntity<List<Training>> getTrainingsByTopic(@RequestParam String topic){
 		if(topic.isEmpty())
 			throw new InvalidRequestException("Topic can't be null!");
