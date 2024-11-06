@@ -15,6 +15,7 @@ import OngoingTrainingUser from './components/user/ongoingTrainingUser';
 import PastTrainingUser from './components/user/pastTrainingUser';
 import UpcomingTrainingUser from './components/user/upcomingTrainingUser';
 import UserDashboard from './components/user/userDashboard';
+import TrainingDetails from './components/common/training/trainingDetails';
 
 const AppRoutes = () => (
   <Router>
@@ -48,6 +49,8 @@ const AppRoutes = () => (
        <Route  path="/user/dashboard" element={<UserDashboard  />} />
        <Route  path="/trainer/dashboard" element={<TrainerDashboard/>}  />
        <Route path="/profile" element={<UserProfile />} />
+       <Route path="/trainingdetails" element={<TrainingDetails />} />
+
       </Routes>
   </Router>
 );

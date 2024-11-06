@@ -54,12 +54,14 @@ public class UserServiceImpl implements UserService {
 		Optional<User> optUser = userRepo.findByUserName(userName);
 		if(optUser.isEmpty())
 			return null;
+		
 		return optUser.get();
+		
 	}
 
 	@Override
 	public List<User> findAllTrainers(){
-		return userRepo.findAllTrainers();
+		return userRepo.findAllTrainers("Trainer");
 	}
 
 	@Override
@@ -146,6 +148,7 @@ public class UserServiceImpl implements UserService {
 		Optional<User> optUser = userRepo.findById(user.getUserId());
 		if(optUser.isEmpty())
 			return null;
-		return userRepo.save(user);
+
+		return optUser.get();
 	}
 }

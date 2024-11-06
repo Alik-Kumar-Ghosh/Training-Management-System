@@ -19,20 +19,26 @@ const OngoingTrainingUser = () => {
 
     fetchOngoingTrainings();
   }, []);
+  // const handleViewDetails = (trainingId) => {
+  //   navigate(`/training-details/${trainingId}`);
+  // };
+
   const handleViewDetails = (trainingId) => {
-    navigate(`/training-details/${trainingId}`);
+    console.log(trainingId);
+    ///training?trainingId=10
+    navigate('/trainingdetails',{ state: {trainingId} });
   };
   return (
     <div className="ongoing-training-page">
       <h2>Ongoing Trainings</h2>
       <div className="training-list">
         {ongoingTrainings.map((training) => (
-          <div className="training-item" key={training.id}>
+          <div className="training-item" key={training.trainingId}>
             <h3>{training.topic}</h3>
             <p><strong>Location:</strong> {training.location}</p>
             <p><strong>Duration:</strong> {training.startDate} to {training.endDate}</p>
-            <p><strong>Trainer:</strong> {training.trainerName}</p>
-            <button onClick={() => handleViewDetails(training.id)}>View Details</button>
+            <p><strong>Trainer:</strong> {training.trainer.name}</p>
+            <button onClick={() => handleViewDetails(training.trainingId)}>View Details</button>
           </div>
         ))}
       </div>

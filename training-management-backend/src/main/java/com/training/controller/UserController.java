@@ -1,9 +1,12 @@
 package com.training.controller;
 
+import java.util.ArrayList;
 import java.util.List;
+
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,6 +14,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.training.dto.LoginDTO;
+import com.training.dto.UserDTO;
 import com.training.model.Training;
 import com.training.model.TrainingApply;
 import com.training.model.TrainingRequest;
@@ -26,9 +32,10 @@ public class UserController {
 	private AuthenticationService authenticationService;
 
 	@PostMapping("/login")
-	public ResponseEntity<User> login(@RequestBody User obj, HttpServletResponse response) {
+	public ResponseEntity<UserDTO> login(@RequestBody LoginDTO obj, HttpServletResponse response) {
 		String userName=obj.getUserName();
 		String password=obj.getPassword();
+		System.out.println(obj);
 		if(userName.isEmpty() || password.isEmpty())
 			throw new InvalidRequestException("Please enter all the required fields");
 
@@ -42,17 +49,18 @@ public class UserController {
 			Cookie userType = new Cookie("userType", user.getUserType());
 
 	        userId.setPath("/");
-	        userId.setMaxAge(7 * 24 * 60 * 60);
-	        userId.setHttpOnly(true);
+//	        userId.setMaxAge(7 * 24 * 60 * 60);
+	        userId.setHttpOnly(false);
 	        userId.setSecure(false);
 	        userType.setPath("/");
-	        userType.setMaxAge(7 * 24 * 60 * 60);
-	        userType.setHttpOnly(true);
+//	        userType.setMaxAge(7 * 24 * 60 * 60);
+	        userType.setHttpOnly(false);
 	        userType.setSecure(false);
 	        response.addCookie(userId);
 			response.addCookie(userType);
-
-			return ResponseEntity.ok(user);
+			
+			UserDTO dto = new UserDTO(user);
+			return ResponseEntity.ok(dto);
 		}
 		else
 			throw new InvalidRequestException("Incorrect username/password combination! Please try again.");
@@ -65,11 +73,11 @@ public class UserController {
 		
 		userId.setPath("/");
         userId.setMaxAge(0);
-        userId.setHttpOnly(true);
+        userId.setHttpOnly(false);
         userId.setSecure(false);
         userType.setPath("/");
         userType.setMaxAge(0);
-        userType.setHttpOnly(true);
+        userType.setHttpOnly(false);
         userType.setSecure(false);
 		response.addCookie(userId);
 		response.addCookie(userType);
@@ -78,22 +86,30 @@ public class UserController {
 	}
 	
 	@GetMapping("/user/profile")
-	public ResponseEntity<User> getProfile(HttpServletRequest request){
+	public ResponseEntity<UserDTO> getProfile(HttpServletRequest request){
 		User user = authenticationService.getLoggedInUser(request);
 
 		if(user == null)
 			throw new UserNotFoundException("User not found with the given user id");
-		else
-			return ResponseEntity.ok().body(user);
+		else {
+			UserDTO dto = new UserDTO(user);
+			return ResponseEntity.ok().body(dto);
+		}
 	}
 
 	@GetMapping("/trainers")
-	public ResponseEntity<List<User>> getAllTrainers(HttpServletRequest request){
+	public ResponseEntity<List<UserDTO>> getAllTrainers(HttpServletRequest request){
 		User user = authenticationService.getLoggedInUser(request);
 		if(user == null)
 			throw new UserNotFoundException("User not found with the given user id");
-
-		return ResponseEntity.ok(userService.findAllTrainers());
+		
+		List<UserDTO> usersDTO = new ArrayList<>();
+		List<User> users = userService.findAllTrainers();
+		for(User trainer: users) {
+			UserDTO dto = new UserDTO(trainer);
+			usersDTO.add(dto);
+		}
+		return ResponseEntity.ok(usersDTO);
 	}
 
 	@GetMapping("/user/user-type")
@@ -107,7 +123,7 @@ public class UserController {
 	}
 
 	@PutMapping("/user/update-user")
-	public ResponseEntity<User> updateUser(@RequestBody User obj, HttpServletRequest request) {
+	public ResponseEntity<UserDTO> updateUser(@RequestBody User obj, HttpServletRequest request) {
 		String phone = obj.getPhone();
 		String password = obj.getPassword();
 		User user = authenticationService.getLoggedInUser(request);
@@ -120,8 +136,10 @@ public class UserController {
 			if(!phone.isEmpty())
 				user.setPhone(phone);
 
-			userService.updateUser(user);
-			return ResponseEntity.ok(user);
+			User updatedUser = userService.updateUser(user);
+			UserDTO dto = new UserDTO(updatedUser);
+			
+			return ResponseEntity.ok(dto);
 		}
 	}
 
