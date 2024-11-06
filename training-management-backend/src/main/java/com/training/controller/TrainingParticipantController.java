@@ -1,7 +1,10 @@
 package com.training.controller;
 
+import java.util.ArrayList;
 import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,6 +12,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.training.dto.UserDTO;
 import com.training.model.Training;
 import com.training.model.TrainingParticipant;
 import com.training.model.User;
@@ -21,12 +26,12 @@ public class TrainingParticipantController {
 	@Autowired
 	private TrainingService trainingService;
 	@Autowired
-	private UserService userService;
-	@Autowired
 	private AuthenticationService authenticationService;
+	@Autowired
+	private UserService userService;
 
 	@GetMapping("/training/participants")
-	public ResponseEntity<List<User>> getParticipants(HttpServletRequest request, @RequestParam int trainingId) {
+	public ResponseEntity<List<UserDTO>> getParticipants(HttpServletRequest request, @RequestParam int trainingId) {
 		User user = authenticationService.getLoggedInUser(request);
 		if(user == null)
 			throw new UserNotFoundException("User not found with the given user id");
@@ -39,7 +44,13 @@ public class TrainingParticipantController {
 			throw new InvalidRequestException("You don't have permissions to send this request");
 
 		List<User> participants = trainingService.getTrainingParticipants(training);
-		return new ResponseEntity<>(participants, HttpStatus.OK);
+		List<UserDTO> participantsDto = new ArrayList<>();
+		for(User participant: participants) {
+			UserDTO dto = new UserDTO(participant);
+			participantsDto.add(dto);
+		}
+
+		return ResponseEntity.ok(participantsDto);
 	}
 
 	@PostMapping("/add-participant")
