@@ -58,6 +58,11 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	public List<User> findAllTrainers(){
+		return userRepo.findAllTrainers();
+	}
+
+	@Override
 	public List<Training> getMyOngoingTrainings(User user) {
 		List<Training> ongoingTrainings = trainingRepo.findOngoingTrainings(Date.valueOf(LocalDate.now()));
 		List<Training> myTrainings = trainingParticipantRepo.findUserTrainings(user);
