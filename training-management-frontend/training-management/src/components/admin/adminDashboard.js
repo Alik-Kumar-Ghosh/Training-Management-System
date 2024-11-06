@@ -4,7 +4,7 @@ import BASE_URL from "../../utils/api";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
 import { Link } from "react-router-dom";
-import ProfileDropdown from '../common/profilePage/profileDropDown';
+import ProfileDropdown from "../common/profilePage/profileDropDown";
 import UserProfileBubble from "../common/profilePage/userProfileBubble";
 
 const AdminDashboard = () => {
@@ -29,20 +29,14 @@ const AdminDashboard = () => {
   const { userId, userType } = location.state || {};
 
   useEffect(() => {
-    // Fetch training requests, previous trainings, and ongoing trainings from the API
     fetchTrainingRequests();
     fetchPreviousTrainings();
     fetchOngoingTrainings();
   }, [userId]);
 
   const fetchTrainingRequests = async () => {
-    // Replace with your API call
     try {
-      const response = await axios.get(
-        `${BASE_URL}/admin/pending-requests`,
-        {},
-        { withCredentials: true }
-      );
+      const response = await axios.get(`${BASE_URL}/admin/pending-requests`, { withCredentials: true });
       console.log(response.data);
       setRequests(response.data);
     } catch (error) {
@@ -52,85 +46,62 @@ const AdminDashboard = () => {
 
   const fetchPreviousTrainings = async () => {
     try {
-      // Making the API call with axios
-      const response = await axios.get( `${BASE_URL}/training/past`, {
-        withCredentials: true, // Include credentials (cookies) in the request
-      });
-      console.log(response.data)
-      setPreviousTrainings(response.data); // Update state with the response data
+      const response = await axios.get(`${BASE_URL}/training/past`, { withCredentials: true });
+      console.log(response.data);
+      setPreviousTrainings(response.data);
     } catch (error) {
       console.error("Error fetching previous trainings:", error);
     }
   };
 
-  // Function to fetch ongoing trainings using axios
   const fetchOngoingTrainings = async () => {
     try {
-      // Making the API call with axios
-      const response = await axios.get( `${BASE_URL}/training/ongoing`, {
-        withCredentials: true, // Include credentials (cookies) in the request
-      });
-      console.log(response.data)
-      setOngoingTrainings(response.data); // Update state with the response data
+      const response = await axios.get(`${BASE_URL}/training/ongoing`, { withCredentials: true });
+      console.log(response.data);
+      setOngoingTrainings(response.data);
     } catch (error) {
       console.error("Error fetching ongoing trainings:", error);
     }
   };
+
   const handleAccept = async (id) => {
     try {
-      // Construct the URL with query parameters for the training request
       const url = `${BASE_URL}/update-training?requestId=${id}&status=accepted`;
-  
-      // Send the PUT request using Axios
       const response = await axios.put(url, {}, { withCredentials: true });
-  
-      console.log('Accepted:', response.data);
-      // Optionally, update the state or reload the data
+      console.log("Accepted:", response.data);
       fetchTrainingRequests();
       fetchPreviousTrainings();
       fetchOngoingTrainings();
     } catch (error) {
-      console.error('Error accepting the training request:', error);
+      console.error("Error accepting the training request:", error);
     }
   };
-  
+
   const handleReject = async (id) => {
     try {
-      // Construct the URL with query parameters for the training request
       const url = `${BASE_URL}/update-training?requestId=${id}&status=rejected`;
-  
-      // Send the PUT request using Axios
       const response = await axios.put(url, {}, { withCredentials: true });
-  
-      console.log('Rejected:', response.data);
-      // Optionally, update the state or reload the data
+      console.log("Rejected:", response.data);
       fetchTrainingRequests();
       fetchPreviousTrainings();
       fetchOngoingTrainings();
     } catch (error) {
-      console.error('Error rejecting the training request:', error);
+      console.error("Error rejecting the training request:", error);
     }
   };
-  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // Making the POST request using axios
       const response = await axios.post(
         `${BASE_URL}/training/create`,
+        { ...newTraining },
         {
-          ...newTraining,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-          withCredentials: true, // Include credentials (cookies) in the request
+          headers: { "Content-Type": "application/json" },
+          withCredentials: true,
         }
       );
-
       console.log("Training created:", response.data);
-      // Optionally, you can update the state to reflect the new training
     } catch (error) {
       console.error("Error creating training:", error);
     }
@@ -141,13 +112,25 @@ const AdminDashboard = () => {
     setNewTraining({ ...newTraining, [name]: value });
   };
 
-  const handleNewTrainingRequestClick = () => {
+  const handleNewTrainingRequestClick = async () => {
     setShowNewTrainingForm(true);
+    // Fetch trainers when the form is opened
+    await fetchTrainers();
     setTimeout(() => {
       if (textareaRef.current) {
         textareaRef.current.focus();
       }
-    }, 0); // Use timeout to ensure it runs after rendering
+    }, 0);
+  };
+
+  const fetchTrainers = async () => {
+    try {
+      const response = await axios.get(`${BASE_URL}/trainers`, { withCredentials: true });
+      console.log("Trainers:", response.data);
+      setTrainers(response.data);
+    } catch (error) {
+      console.error("Error fetching trainers:", error);
+    }
   };
 
   const toggleProfileMenu = () => setShowProfileMenu((prevState) => !prevState);
@@ -164,60 +147,44 @@ const AdminDashboard = () => {
     });
     setNewTrainingDescription("");
   };
-  const fetchTrainers = async () => {
-    try { 
-      const response = await axios.get(`${BASE_URL}/trainers`); 
-      setTrainers(response.data);
-    } 
-    catch (error) { 
-      console.error('Error fetching trainers:', error); 
-    } 
+
+  const handleLogout = async () => {
+    try {
+      await axios.post(`${BASE_URL}/logout`);
+      console.log("Logged out successfully");
+      window.location.href = "/";
+    } catch (error) {
+      console.error("Error logging out:", error);
+    }
   };
-  
-  
-
-const handleLogout = async () => {
-  try {
-    await axios.post(`${BASE_URL}/logout`);
-    console.log("Logged out successfully");
-    // Redirect to the landing page or login page after logout
-    window.location.href = "/";
-  } catch (error) {
-    console.error("Error logging out:", error);
-  }
-};
-
-
-
 
   return (
     <div className="admin-dashboard">
       <header className="dashboard-header">
-        <h2>Admin Dashboard </h2>
-        <UserProfileBubble/>
+        <h2>Admin Dashboard</h2>
+        <UserProfileBubble />
       </header>
-      <table className="requests-table"> 
-  <thead>
-    <tr>
-      <th>Training Request</th>
-      <th>User Name</th>
-      <th>Actions</th>
-    </tr>
-  </thead>
-  <tbody>
-    {requests.map((request) => (
-      <tr key={request.requestId}>
-        <td>{request.trainingTopic}</td>
-        <td>{request.user.name}</td>
-        <td>
-          <button onClick={() => handleAccept(request.requestId)}>Accept</button>
-          <button onClick={() => handleReject(request.requestId)}>Reject</button>
-        </td>
-      </tr>
-    ))}
-  </tbody>
-</table>
-
+      <table className="requests-table">
+        <thead>
+          <tr>
+            <th>Training Request</th>
+            <th>User Name</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {requests.map((request) => (
+            <tr key={request.requestId}>
+              <td>{request.trainingTopic}</td>
+              <td>{request.user.name}</td>
+              <td>
+                <button onClick={() => handleAccept(request.requestId)}>Accept</button>
+                <button onClick={() => handleReject(request.requestId)}>Reject</button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
 
       <h2>Previous Trainings</h2>
       <ul className="trainings-list">
@@ -238,76 +205,35 @@ const handleLogout = async () => {
         ))}
       </ul>
       <section className="create-training">
-        <button onClick={handleNewTrainingRequestClick}>
-          Create New Training
-        </button>
+        <button onClick={handleNewTrainingRequestClick}>Create New Training</button>
         {showNewTrainingForm && (
           <form className="new-training-form" onSubmit={handleSubmit}>
             <div className="form-group">
               <label htmlFor="startDate">Start Date:</label>
-              <input
-                type="date"
-                id="startDate"
-                name="startDate"
-                onChange={handleInputChange}
-                required
-              />
+              <input type="date" id="startDate" name="startDate" onChange={handleInputChange} required />
             </div>
             <div className="form-group">
               <label htmlFor="endDate">End Date:</label>
-              <input
-                type="date"
-                id="endDate"
-                name="endDate"
-                onChange={handleInputChange}
-                required
-              />
+              <input type="date" id="endDate" name="endDate" onChange={handleInputChange} required />
             </div>
             <div className="form-group">
               <label htmlFor="topic">Topic:</label>
-              <input
-                type="text"
-                id="topic"
-                name="topic"
-                placeholder="Enter topic"
-                onChange={handleInputChange}
-                required
-              />
+              <input type="text" id="topic" name="topic" placeholder="Enter topic" onChange={handleInputChange} required />
             </div>
-            {/* <div className="form-group">
-              <label htmlFor="trainerUserName">Trainername:</label>
-              <input
-                type="text"
-                id="trainerUserName"
-                name="trainerUserName"
-                placeholder="Enter username"
-                onChange={handleInputChange}
-                required
-              />
-            </div> */}
-
-            <div className="form-group"> 
-              <label htmlFor="trainerUserName">Trainer Name:</label> 
-              <select id="trainerUserName" name="trainerUserName" onChange={handleInputChange} required > 
-                <option value="">Select a trainer</option> 
-                {trainers.map(trainer => ( 
-                  <option key={trainer.userName} 
-                          value={trainer.userName}> 
-                          {trainer.name} 
-                    </option> ))} 
-                </select> 
-              </div>
-
-
+            <div className="form-group">
+              <label htmlFor="trainerUserName">Trainer Name:</label>
+              <select id="trainerUserName" name="trainerUserName" onChange={handleInputChange} required>
+                <option value="">Select a trainer</option>
+                {trainers.map((trainer) => (
+                  <option key={trainer.userName} value={trainer.userName}>
+                    {trainer.name}
+                  </option>
+                ))}
+              </select>
+            </div>
             <div className="form-group">
               <label htmlFor="description">Description:</label>
-              <textarea
-                id="description"
-                ref={textareaRef}
-                name="description"
-                placeholder="Enter training description"
-                onChange={handleInputChange}
-              ></textarea>
+              <textarea id="description" ref={textareaRef} name="description" placeholder="Enter training description" onChange={handleInputChange}></textarea>
             </div>
             <button type="submit">Submit</button>
           </form>
