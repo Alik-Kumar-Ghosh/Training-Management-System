@@ -148,7 +148,7 @@ public class UserServiceImpl implements UserService {
 		Optional<User> optUser = userRepo.findById(user.getUserId());
 		if(optUser.isEmpty())
 			return null;
-
-		return optUser.get();
+		
+		return userRepo.save(optUser.get());
 	}
 }

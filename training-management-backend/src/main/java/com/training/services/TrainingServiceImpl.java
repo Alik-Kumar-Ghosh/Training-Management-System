@@ -32,7 +32,9 @@ public class TrainingServiceImpl implements TrainingService {
 
 	@Override
 	public Training createTraining(Training training) {
-		return trainingRepo.save(training);
+		if(training.getStartDate().compareTo(training.getEndDate()) < 0)
+			return trainingRepo.save(training);
+		throw new InvalidRequestException("Error creating training! Kindly check your input data");
 	}
 
 	@Override
