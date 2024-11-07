@@ -40,7 +40,7 @@ public class TrainingApplyController {
     		TrainingApply trainingApply = trainingService.createTrainingApply(application);
     		return ResponseEntity.ok(trainingApply);
     	}catch(Exception e) {
-    		throw new InvalidRequestException("Error applying for training! Kindly check your input data");
+    		throw new InvalidRequestException(e.getMessage());
     	}
     }
 
