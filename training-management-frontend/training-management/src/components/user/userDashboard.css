@@ -408,3 +408,85 @@ button {
   .approvals-table button:nth-of-type(2):hover {
     background-color: #c82333; /* Darker red on hover */
   }
+
+
+
+
+
+
+
+
+  /* Modal Overlay */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5); /* Dark overlay */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Ensure it appears above other elements */
+}
+
+/* Modal Box */
+.modal {
+    background-color: #fff;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 400px; /* Limits the width */
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    animation: modalFadeIn 0.3s ease-in-out; /* Smooth fade-in */
+}
+
+/* Modal Content */
+.modal p {
+    font-size: 18px;
+    color: #333;
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+/* Confirmation Buttons */
+.confirm-button, .cancel-button {
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.confirm-button {
+    background-color: #28a745; /* Green for confirm */
+    color: white;
+}
+
+.confirm-button:hover {
+    background-color: #218838;
+}
+
+.cancel-button {
+    background-color: #dc3545; /* Red for cancel */
+    color: white;
+}
+
+.cancel-button:hover {
+    background-color: #c82333;
+}
+
+/* Animation for modal fade-in effect */
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
