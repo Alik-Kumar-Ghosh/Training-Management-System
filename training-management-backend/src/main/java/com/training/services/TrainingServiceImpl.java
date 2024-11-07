@@ -39,8 +39,11 @@ public class TrainingServiceImpl implements TrainingService {
 	public TrainingApply createTrainingApply(TrainingApply trainingApplication) {
 		User user = trainingApplication.getUser();
 		Training training = trainingApplication.getTraining();
-		if(getTrainingParticipants(training).contains(user))
-			throw new InvalidRequestException("You can't apply more than once to the same training!!!");
+		List<TrainingApply> applications = getTrainingApplications(training);
+		for(TrainingApply application: applications) {
+			if(application.getUser() == user)
+				throw new InvalidRequestException("You can't apply more than once to the same training!!!");
+		}
 		return trainingApplyRepo.save(trainingApplication);
 	}
 
