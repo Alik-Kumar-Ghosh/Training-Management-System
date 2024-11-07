@@ -21,7 +21,7 @@ const UpcomingTraining = () => {
     fetchUpcomingTrainings();
   }, []);
   const handleViewDetails = (trainingId) => {
-    navigate(`/training-details/${trainingId}`);
+    navigate('/trainingdetails',{ state: {trainingId} });
   };
 
   return (
@@ -34,11 +34,11 @@ const UpcomingTraining = () => {
             <p><strong>Location:</strong> {training.location}</p>
             <p><strong>Duration:</strong> {training.startDate} to {training.endDate}</p>
             <p><strong>Trainer:</strong> {training.trainer.name}</p>
-            <button onClick={() => handleViewDetails(training.id)}>View Details</button>
+            <button onClick={() => handleViewDetails(training.trainingId)}>View Details</button>
           </div>
         ))}
       </div>
-      <Link to="/" className="back-link">Go Back to Home</Link>
+      {/* <Link to="/" className="back-link">Go Back to Home</Link> */}
     </div>
   );
 };
