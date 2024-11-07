@@ -11,8 +11,9 @@ const PastTraining = () => {
   useEffect(() => {
     const fetchPastTrainings = async () => {
       try {
-        const response = await axios.get(`${BASE_URL}/training/past`);
+        const response = await axios.get(`${BASE_URL}/training/past`,{ withCredentials: true });
         setPastTrainings(response.data);
+        console.log(response)
       } catch (error) {
         console.error('Error fetching past trainings:', error);
       }
@@ -22,7 +23,7 @@ const PastTraining = () => {
   }, []);
  // , { state: { userId , userType}}
   const handleViewDetails = (trainingId) => {
-    navigate(`/training-details/${trainingId}`);
+    navigate('/trainingdetails',{ state: {trainingId} });
   };
 
   return (
@@ -35,7 +36,7 @@ const PastTraining = () => {
             <p><strong>Location:</strong> {training.location}</p>
             <p><strong>Duration:</strong> {training.startDate} to {training.endDate}</p>
             <p><strong>Trainer:</strong> {training.trainer.name}</p>
-            <button onClick={() => handleViewDetails(training.id)}>View Details</button>
+            <button onClick={() => handleViewDetails(training.trainingId)}>View Details</button>
           </div>
         ))}
       </div>
