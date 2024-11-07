@@ -56,7 +56,9 @@ const LandingPage = () => {
         <Navbar/>
       </header>
       <section className="hero">
-        <h1>Welcome to Skill Forge</h1>
+
+        <h1>Welcome to Skill forge</h1>
+
         <p>Manage your training programs effectively and efficiently.</p>
         <Link to="/login">
           <button className="hero-button">Login</button>

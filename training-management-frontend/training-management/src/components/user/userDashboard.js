@@ -1,3 +1,5 @@
+// 
+
 import axios from "axios";
 import React, { useRef, useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -14,7 +16,10 @@ const TraineeManagerDashboard = () => {
   const [showNewTrainingForm, setShowNewTrainingForm] = useState(false);
   const [newTrainingDescription, setNewTrainingDescription] = useState("");
   const textareaRef = useRef(null);
-  const [openSection, setOpenSection] = useState(null); // Add state to track the opened section
+  const [openSection, setOpenSection] = useState(null);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [selectedTrainingId, setSelectedTrainingId] = useState(null);
+  const [newTrainingTopic, setNewTrainingTopic] = useState("");
   const navigate = useNavigate();
   const location = useLocation();
   const { userId, userType } = location.state || {};
@@ -23,7 +28,7 @@ const TraineeManagerDashboard = () => {
     if (userType === "manager") {
       loadPendingApprovals();
     }
-  }, [userType]); // Call only once when the component mounts
+  }, [userType]);
 
   const loadOngoingTrainings = async () => {
     try {
@@ -81,29 +86,45 @@ const TraineeManagerDashboard = () => {
     try {
       await axios.put(
         `http://localhost:8084/update-application`,
-        null, // No request body needed
+        null,
         {
           params: { applicationId, status },
           withCredentials: true,
         }
       );
-      // Remove the approved/rejected request from the list
       setPendingApprovals((prev) => prev.filter((req) => req.applyId !== applicationId));
     } catch (error) {
       console.error(`Error updating approval status for request ${applicationId}:`, error);
     }
   };
 
-  const handleApplyTraining = async (trainingId) => {
+  const handleApplyClick = (trainingId) => {
+    setSelectedTrainingId(trainingId);
+    setShowConfirmModal(true);
+  };
+
+  const confirmApply = async () => {
+    if (!selectedTrainingId) return;
+
     try {
       await axios.post(
-        `${BASE_URL}/apply/${trainingId}?trainingId=${trainingId}`,
-        console.log("Applied"),
+        `${BASE_URL}/apply/${selectedTrainingId}?trainingId=${selectedTrainingId}`,
+        {},
         { withCredentials: true }
       );
+      alert("Applied successfully!");
     } catch (error) {
-      console.error(`Error applying for training ${trainingId}:`, error);
+      console.error(`Error applying for training ${selectedTrainingId}:`, error);
+      alert("Failed to apply for training. Please try again.");
+    } finally {
+      setShowConfirmModal(false);
+      setSelectedTrainingId(null);
     }
+  };
+
+  const cancelApply = () => {
+    setShowConfirmModal(false);
+    setSelectedTrainingId(null);
   };
 
   const handleNewTrainingRequestClick = () => {
@@ -119,17 +140,13 @@ const TraineeManagerDashboard = () => {
     navigate('/trainingdetails', { state: { trainingId } });
   };
 
-  const [newTrainingTopic, setNewTrainingTopic] = useState("");
-
-
   const handleFormSubmit = async (event) => {
     event.preventDefault();
 
     try {
-      // Make the POST request with topic and description from the form
       await axios.post(
         "http://localhost:8084/request-training",
-        null, // no request body needed, as params are in the URL
+        null,
         {
           params: {
             topic: newTrainingTopic,
@@ -139,7 +156,6 @@ const TraineeManagerDashboard = () => {
         }
       );
 
-      // Clear form and close it after submission
       setNewTrainingTopic("");
       setNewTrainingDescription("");
       setShowNewTrainingForm(false);
@@ -182,14 +198,14 @@ const TraineeManagerDashboard = () => {
 
       {/* Past Trainings Section */}
       <section className="training-section">
-        <button onClick={loadPastTrainings}className="secondary">Past Trainings</button>
+        <button onClick={loadPastTrainings} className="secondary">Past Trainings</button>
         {openSection === "past" && (
           <ul>
             {pastTrainings.slice(0, 3).length > 0 ? (
               pastTrainings.map((training) => (
                 <li key={training.trainingId}>
                   <strong>{training.topic}</strong> - {training.location} (Ended on {training.endDate})
-                  <button onClick={() => handleViewDetails(training.trainingId)} className="view-details-button" >View Details</button>
+                  <button onClick={() => handleViewDetails(training.trainingId)} className="view-details-button">View Details</button>
                 </li>
               ))
             ) : (
@@ -204,7 +220,7 @@ const TraineeManagerDashboard = () => {
 
       {/* Available Trainings Section */}
       <section className="training-apply">
-        <button onClick={loadAvailableTrainings}className="primary">Available Trainings</button>
+        <button onClick={loadAvailableTrainings} className="primary">Available Trainings</button>
         {openSection === "available" && (
           <ul>
             {availableTrainings.slice(0, 3).length > 0 ? (
@@ -212,7 +228,7 @@ const TraineeManagerDashboard = () => {
                 <li key={training.trainingId}>
                   <strong>{training.topic}</strong> - {training.location} (Starts on {training.startDate})
                   <button onClick={() => handleViewDetails(training.trainingId)} className="view-details-button">View Details</button>
-                  <button onClick={() => handleApplyTraining(training.trainingId)} className="view-details-button" style={{"background-color": "green"}}>Apply</button>
+                  <button onClick={() => handleApplyClick(training.trainingId)} className="view-details-button" style={{ backgroundColor: "green" }}>Apply</button>
                 </li>
               ))
             ) : (
@@ -227,79 +243,45 @@ const TraineeManagerDashboard = () => {
 
       {/* Request New Training Section */}
       <section className="training-section">
-      <button onClick={handleNewTrainingRequestClick} className="neutral">
-        Request New Training
-      </button>
-      {showNewTrainingForm && (
-        <form onSubmit={handleFormSubmit} className="new-training-form">
-          
-          <label htmlFor="topic">Training Topic</label>
-          <input
-            type="text"
-            id="topic"
-            name="topic"
-            placeholder="Enter training topic"
-            value={newTrainingTopic}
-            onChange={(e) => setNewTrainingTopic(e.target.value)}
-            required
-          />
-          
+        <button onClick={handleNewTrainingRequestClick} className="neutral">Request New Training</button>
+        {showNewTrainingForm && (
+          <form onSubmit={handleFormSubmit} className="new-training-form">
+            <label htmlFor="topic">Training Topic</label>
+            <input
+              type="text"
+              id="topic"
+              name="topic"
+              placeholder="Enter training topic"
+              value={newTrainingTopic}
+              onChange={(e) => setNewTrainingTopic(e.target.value)}
+              required
+            />
 
-          
-          <label htmlFor="description">Description</label>
-          <textarea
-            id="description"
-            name="description"
-            placeholder="Describe the training you need"
-            value={newTrainingDescription}
-            onChange={(e) => setNewTrainingDescription(e.target.value)}
-            ref={textareaRef}
-            required
-          />
-      
-          <button type="submit">Submit Request</button>
-        </form>
-      )}
-    </section>
+            <label htmlFor="description">Description</label>
+            <textarea
+              id="description"
+              name="description"
+              placeholder="Enter training description"
+              ref={textareaRef}
+              value={newTrainingDescription}
+              onChange={(e) => setNewTrainingDescription(e.target.value)}
+              required
+            />
 
-      {/* Manager's Pending Approvals Section */}
-      {userType === "manager" && (
-       <section className="approval-section">
-       <h3>Pending Approvals</h3>
-       <table className="approvals-table">
-         <thead>
-           <tr>
-             <th>Trainee Name</th>
-             <th>Training Topic</th>
-             <th>Location</th>
-             <th>Trainer</th>
-             <th>Actions</th>
-           </tr>
-         </thead>
-         <tbody>
-           {pendingApprovals.map((request) => (
-             <tr key={request.applyId} onClick={() => handleRequestClick(request)}>
-               <td>{request.user.name}</td>
-               <td>{request.training.topic}</td>
-               <td>{request.training.location}</td>
-               <td>{request.training.trainer.name}</td>
-               <td>
-                 <button onClick={() => handleApproval(request.applyId, "Approved")}>Approve</button>
-                 <button onClick={() => handleApproval(request.applyId, "Rejected")}>Reject</button>
-               </td>
-             </tr>
-           ))}
-         </tbody>
-       </table>
-       </section>
-      )}
+            <button type="submit" className="primary">Submit</button>
+          </form>
+        )}
+      </section>
 
-      {/* Trainee's Pending Approvals Section */}
-      {userType === "trainee" && (
-        <section className="approval-section">
-          <h3>Pending Approvals</h3>
-          <p>No pending approvals.</p>
-        </section>
+      {/* Confirmation Modal */}
+      {showConfirmModal && (
+        <div className="modal-overlay">
+          <div className="modal">
+            <p>Are you sure you want to apply for this training?</p>
+            <button onClick={confirmApply} className="confirm-button">Yes</button>
+            <button onClick={cancelApply} className="cancel-button">No</button>
+          </div>
+        </div>
       )}
     </div>
   );
