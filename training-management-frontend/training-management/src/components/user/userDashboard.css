@@ -129,7 +129,7 @@ body {
 
 .training-apply button {
     padding: 10px 15px;
-    background-color: black;
+    background-color:#042a52;
     color: white;
     border: none;
     border-radius: 4px;
@@ -139,7 +139,7 @@ body {
 }
 
 .training-apply button:hover {
-    background-color: #ff00ae;
+    background-color: #0088ff;
 }
 
 
@@ -301,7 +301,6 @@ body {
 .view-details-button {
     padding: 4px 8px; 
     font-size: 12px;
-    background-color: black;
     color: white;
     border: none;
     border-radius: 3px;
@@ -311,6 +310,8 @@ body {
     align-items: center;
     justify-content: center;
     max-width: fit-content; 
+    margin-left: 10px;
+    background-color:#042a52;
 }
 
  .view-details-button:hover {
@@ -387,4 +388,52 @@ button {
   .see-more:hover {
     color: #0056b3;
     text-decoration: underline;
+  }
+
+  .approvals-table{ 
+    border-collapse: collapse;
+    margin-bottom: 30px;
+  }
+  
+  .approvals-table th, .approvals-table td {
+    border: 1px solid #ddd; /* Light border for table cells */
+    padding: 12px;
+    text-align: left;
+  }
+  
+  .approvals-table th {
+    background-color: black; /* Header background color */
+    color: white; /* Header text color */
+  }
+  
+  .approvals-table tr:nth-child(even) {
+    background-color: #f2f2f2; /* Zebra stripes for table rows */
+  }
+  
+  .approvals-table tr:hover {
+    background-color: #e9ecef; /* Hover effect for table rows */
+  }
+  
+  .approvals-table button {
+    background-color: #28a745; /* Accept button color */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 8px 12px;
+    cursor: pointer;
+    margin-right: 5px;
+    margin:10px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .approvals-table button:hover {
+    background-color: #218838; /* Darker green on hover */
+  }
+  
+  .approvals-table button:nth-of-type(2) {
+    background-color: #dc3545; /* Reject button color */
+  }
+  
+  .approvals-table button:nth-of-type(2):hover {
+    background-color: #c82333; /* Darker red on hover */
   }
