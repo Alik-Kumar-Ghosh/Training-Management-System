@@ -1,7 +1,7 @@
   import React, { useEffect, useState, useRef } from "react";
   import "./adminDashboard.css";
   import BASE_URL from "../../utils/api";
-  import { useLocation, Link } from "react-router-dom";
+  import { useLocation, Link,useNavigate } from "react-router-dom";
   import axios from "axios";
   import UserProfileBubble from "../common/profilePage/userProfileBubble";
 
@@ -24,7 +24,7 @@
 
     const location = useLocation();
     const { userId, userType } = location.state || {};
-
+    const navigate = useNavigate();
     useEffect(() => {
       fetchTrainingRequests();
       fetchPreviousTrainings();
@@ -198,6 +198,11 @@
       }
     };
   
+    const handleViewDetails = (trainingId) => {
+      console.log(trainingId);
+      ///training?trainingId=10
+      navigate('/trainingdetails',{ state: {trainingId} });
+    };
 
     return (
       <div className="admin-dashboard">
@@ -263,6 +268,8 @@
           <li key={training.trainingId}>
             <h3>{training.topic}</h3>
             <p>{training.description}</p>
+            <button onClick={() => handleViewDetails(training.trainingId)} className="view-detail-button">View Details</button>
+
           </li>
         ))}
       </ul>
@@ -279,6 +286,8 @@
           <li key={training.trainingId}>
             <h3>{training.topic}</h3>
             <p>{training.description}</p>
+            <button onClick={() => handleViewDetails(training.trainingId)} className="view-detail-button">View Details</button>
+
           </li>
         ))}
       </ul>

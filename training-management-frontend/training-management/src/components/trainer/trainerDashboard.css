@@ -108,23 +108,6 @@ body {
     border-bottom: none;
 }
 
-.trainer-section button {
-    display: inline-block;
-    /*width: 100%;  Make buttons full-width */
-    padding: 10px;
-    color: #fff;
-    background-color: black;
-    border: none;
-    border-radius: 5px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    margin-top: 10px;
-}
-
-.trainer-section button:hover {
-    background-color: #ff00ae;
-}
 
 .participant-info-section {
     width: 100%;
@@ -154,4 +137,54 @@ body {
     margin-bottom: 10px;
 }
 
+.view-detail-button {
+    padding: 4px 8px; 
+    font-size: 12px;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+    display: inline-flex; 
+    align-items: center;
+    justify-content: center;
+    max-width: fit-content; 
+    margin-left: 10px;
+    background-color:#093564;
+}
 
+ .view-detail-button:hover {
+    background-color: #0dc1ea;
+    transform: scale(1.05); 
+}
+
+.view-detail-button:active {
+    transform: scale(1); 
+}
+
+.button {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 4px;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  /* Primary action button (e.g., "Apply" for training) */
+  .button.primary {
+    background-color: #042a52;
+  }
+  
+  .button.primary:hover {
+    background-color: #6a89aa;
+  }
+  
+  /* Secondary action button (e.g., "View Details") */
+  .button.secondary {
+    background-color: #064c8a;
+  }
+  
+  .button.secondary:hover {
+    background-color: #81a5b9;
+  }

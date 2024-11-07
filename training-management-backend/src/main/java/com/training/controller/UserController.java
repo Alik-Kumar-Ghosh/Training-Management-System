@@ -123,16 +123,25 @@ public class UserController {
 	}
 
 	@PutMapping("/user/update-user")
-	public ResponseEntity<UserDTO> updateUser(@RequestBody User obj, HttpServletRequest request) {
+	public ResponseEntity<UserDTO> updateUser(@RequestBody LoginDTO obj, HttpServletRequest request) {
 		String phone = obj.getPhone();
 		String password = obj.getPassword();
+		String newPassword = obj.getNewPassword();
+
 		User user = authenticationService.getLoggedInUser(request);
 
 		if(user == null)
 			throw new UserNotFoundException("No user found with given details");
 		else {
-			if(!password.isEmpty())
+			if(newPassword != null && !newPassword.isEmpty()) {
+				if(password == null || password.isEmpty())
+					throw new InvalidRequestException("Please enter correct old password!!!");
+				if(!authenticationService.verifyPassword(user.getUserName(), password))
+					throw new InvalidRequestException("Please enter correct old password!!!");
+				if(password.equals(newPassword))
+					throw new InvalidRequestException("You can't keep your old and new password same!!!");
 				user.setPassword(authenticationService.hashPassword(password));
+			}
 			if(!phone.isEmpty())
 				user.setPhone(phone);
 

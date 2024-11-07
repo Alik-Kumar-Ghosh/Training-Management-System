@@ -45,7 +45,7 @@ const PastTrainingUser = () => {
           </div>
         ))}
       </div>
-      <Link to="/" className="back-link">Go Back to Home</Link>
+      {/* <Link to="/" className="back-link">Go Back to Home</Link> */}
     </div>
   );
 };
