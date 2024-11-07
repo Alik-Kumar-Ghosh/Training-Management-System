@@ -209,7 +209,7 @@ const LandingPage = () => {
               </div>
             ))}
           </div>
-          {ongoingTrainings.length > 5 && (
+          {ongoingTrainings.length > 3 && (
             <Link to="/trainings/ongoing" className="see-more">
               ...see more
             </Link>
@@ -233,7 +233,7 @@ const LandingPage = () => {
               </div>
             ))}
           </div>
-          {upcomingTrainings.length > 5 && (
+          {upcomingTrainings.length > 3 && (
             <Link to="/trainings/upcoming" className="see-more">
               ...see more
             </Link>
@@ -257,7 +257,7 @@ const LandingPage = () => {
               </div>
             ))}
           </div>
-          {ongoingTrainings.length > 5 && (
+          {ongoingTrainings.length > 3 && (
             <Link to="/trainings/past" className="see-more">
               ...see more
             </Link> //add for new tr past

@@ -232,7 +232,8 @@ const TraineeManagerDashboard = () => {
       </button>
       {showNewTrainingForm && (
         <form onSubmit={handleFormSubmit} className="new-training-form">
-          <label htmlFor="topic">Training Topic:</label>
+          
+          <label htmlFor="topic">Training Topic</label>
           <input
             type="text"
             id="topic"
@@ -242,8 +243,10 @@ const TraineeManagerDashboard = () => {
             onChange={(e) => setNewTrainingTopic(e.target.value)}
             required
           />
+          
 
-          <label htmlFor="description">Description:</label>
+          
+          <label htmlFor="description">Description</label>
           <textarea
             id="description"
             name="description"
@@ -253,7 +256,7 @@ const TraineeManagerDashboard = () => {
             ref={textareaRef}
             required
           />
-
+      
           <button type="submit">Submit Request</button>
         </form>
       )}
