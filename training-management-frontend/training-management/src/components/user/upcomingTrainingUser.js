@@ -59,7 +59,7 @@ const UpcomingTrainingUser = () => {
   useEffect(() => {
     const fetchUpcomingTrainings = async () => {
       try {
-        const response = await axios.get(`${BASE_URL}/user/upcoming-trainings`);
+        const response = await axios.get(`${BASE_URL}/training/upcoming`);
         setUpcomingTrainings(response.data);
       } catch (error) {
         console.error('Error fetching upcoming trainings:', error);

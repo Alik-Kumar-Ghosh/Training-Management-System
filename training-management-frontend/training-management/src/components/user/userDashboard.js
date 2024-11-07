@@ -220,7 +220,7 @@ const TraineeManagerDashboard = () => {
             )}
           </ul>
         )}
-        {ongoingTrainings.length > 3 && (
+        {availableTrainings.length > 3 && (
           <Link to="/user/upcoming" className="see-more">...see more</Link>
         )}
       </section>
