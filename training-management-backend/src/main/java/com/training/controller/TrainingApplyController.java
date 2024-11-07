@@ -40,7 +40,7 @@ public class TrainingApplyController {
     		TrainingApply trainingApply = trainingService.createTrainingApply(application);
     		return ResponseEntity.ok(trainingApply);
     	}catch(Exception e) {
-    		throw new InvalidRequestException("Error applying for training! Kindly check your input data");
+    		throw new InvalidRequestException(e.getMessage());
     	}
     }
 
@@ -72,7 +72,7 @@ public class TrainingApplyController {
     	return ResponseEntity.ok(applications);
     }
 
-    @PutMapping("/update-application/{applicationId}")
+    @PutMapping("/update-application")
     public ResponseEntity<TrainingApply> updateTrainingApplication(HttpServletRequest request, @RequestParam int applicationId,
     		@RequestParam String status) throws Exception{
     	User user = authenticationService.getLoggedInUser(request);

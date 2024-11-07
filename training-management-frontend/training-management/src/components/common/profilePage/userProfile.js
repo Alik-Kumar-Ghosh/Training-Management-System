@@ -39,19 +39,18 @@ const UserProfile = () => {
         for (let cookie of cookies) {
             const [cookieName, cookieValue] = cookie.split('=');
             if (cookieName === name) {
-                console.log(`Found cookie: ${cookieName} = ${cookieValue}`); // Debugging
+               // console.log(`Found cookie: ${cookieName} = ${cookieValue}`); // Debugging
                 return decodeURIComponent(cookieValue);
             }
         }
-        console.warn(`Cookie ${name} not found`); // Debugging
+       // console.warn(`Cookie ${name} not found`); // Debugging
         return null;
     }
     
-    const userId = getCookieValue('userId'); // Replace '12345' with a valid user ID for testing
-
-      // Call getCookieValue after the axios call
-    //   const userId = getCookieValue('userId');
-      const userType = getCookieValue('userType');
+    const userId = getCookieValue('userId'); 
+    const userType = getCookieValue('userType');
+    console.log(userId)
+    console.log(userType)
 
     useEffect(() => {
         const fetchProfileData = async () => {
@@ -126,7 +125,7 @@ const UserProfile = () => {
                 </div>
                 <div className="profile-field">
                     <span>Employee ID:</span>
-                    <p>{profile.employeeId}</p>
+                    <p>{userId}</p>
                 </div>
                 <div className="profile-field">
                     <span>Date of Birth:</span>
@@ -134,7 +133,7 @@ const UserProfile = () => {
                 </div>
                 <div className="profile-field">
                     <span>Date of Joining:</span>
-                    <p>{profile.dateOfJoining}</p>
+                    <p>{profile.doj}</p>
                 </div>
 
                 {/* Editable field for Phone */}

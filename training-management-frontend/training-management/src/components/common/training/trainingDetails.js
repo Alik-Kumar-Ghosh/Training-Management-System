@@ -33,7 +33,23 @@ const TrainingDetails = () => {
     fetchTrainingDetails();
   }, [trainingId]);
 
-  
+  function getCookieValue(name) {
+    const cookies = document.cookie.split('; ');
+    for (let cookie of cookies) {
+      const [cookieName, cookieValue] = cookie.split('=');
+      if (cookieName === name) {
+        // console.log(`Found cookie: ${cookieName} = ${cookieValue}`); // Debugging
+        return decodeURIComponent(cookieValue);
+      }
+    }
+    // console.warn(`Cookie ${name} not found`); // Debugging
+    return null;
+  }
+
+  const userId = getCookieValue('userId');
+  const userType = getCookieValue('userType');
+  console.log(userId)
+  console.log(userType)
 
   if (!trainingDetails) return <p>Loading...</p>;
 
@@ -43,9 +59,9 @@ const TrainingDetails = () => {
       <p><strong>Description:</strong> {trainingDetails.description}</p>
       <p><strong>Location:</strong> {trainingDetails.location}</p>
       <p><strong>Duration:</strong> {trainingDetails.startDate} to {trainingDetails.endDate}</p>
-      <p><strong>Trainer:</strong> {trainingDetails.trainerName}</p>
+      <p><strong>Trainer:</strong> {trainingDetails.trainer.name}</p>
 
-      <h3>Participants</h3>
+      {/* <h3>Participants</h3>
       {participants && participants.length > 0 ? (
         <ul>
           {participants.map((participant) => (
@@ -54,6 +70,23 @@ const TrainingDetails = () => {
         </ul>
       ) : (
         <p>No participants found.</p>
+      )} */}
+
+      {userType === 'admin' || userType === 'trainer' ? (
+        <>
+          <h3>Participants</h3>
+          {participants.length > 0 ? (
+            <ul>
+              {participants.map((participant) => (
+                <li key={participant.id}>{participant.name}</li>
+              ))}
+            </ul>
+          ) : (
+            <p>No participants found.</p>
+          )}
+        </>
+      ) : (
+        <p></p>
       )}
     </div>
   );
