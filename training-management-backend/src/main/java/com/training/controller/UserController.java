@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.training.dto.LoginDTO;
 import com.training.dto.UserDTO;
 import com.training.model.Training;
 import com.training.model.TrainingApply;
@@ -31,9 +32,10 @@ public class UserController {
 	private AuthenticationService authenticationService;
 
 	@PostMapping("/login")
-	public ResponseEntity<UserDTO> login(@RequestBody User obj, HttpServletResponse response) {
+	public ResponseEntity<UserDTO> login(@RequestBody LoginDTO obj, HttpServletResponse response) {
 		String userName=obj.getUserName();
 		String password=obj.getPassword();
+		System.out.println(obj);
 		if(userName.isEmpty() || password.isEmpty())
 			throw new InvalidRequestException("Please enter all the required fields");
 

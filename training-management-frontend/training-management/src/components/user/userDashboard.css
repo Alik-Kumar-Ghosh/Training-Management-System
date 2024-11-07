@@ -425,6 +425,7 @@ body {
 }
 
 /* New Training Form Styles */
+/* New Training Form Styles */
 .new-training-form {
     justify-content: center;
     align-items: center;
@@ -432,20 +433,31 @@ body {
     display: flex; /* Use flexbox for layout */
     flex-direction: column; /* Arrange items vertically */
     position: relative; /* Ensure relative positioning for children */
+    width: 80%; /* Adjust the width if necessary */
+    max-width: 600px; /* Optional: limit max-width */
 }
 
 .new-training-form label {
     margin-bottom: 5px; /* Reduce margin for label */
+    font-weight: bold; /* Optional: make labels stand out */
+}
+
+/* Topic input field */
+.new-training-form input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px; /* Space below the topic input */
+    border: 1px solid #ced4da;
+    border-radius: 4px;
 }
 
 .new-training-form textarea {
     width: 100%;
     padding: 10px;
+    margin-bottom: 15px; /* Space below the description textarea */
     border: 1px solid #ced4da;
     border-radius: 4px;
     resize: vertical; /* Allow vertical resizing only */
-    z-index: 1; /* Ensure textarea is below the button */
-    position: relative; /* Ensure stacking context */
 }
 
 .new-training-form button {
@@ -455,14 +467,13 @@ body {
     border: none;
     border-radius: 4px;
     cursor: pointer;
-    display: block; /* Ensures the button takes full width */
-    margin-top: 50px; /* Space above the button */
-    z-index: 2; /* Ensure button is above the textarea */
+    margin-top: 20px; /* Space above the button */
 }
 
 .new-training-form button:hover {
-    background-color: #ff00ae;
+    background-color: #2167e9;
 }
+
 
 
 /* Approval Section Styles */
@@ -528,8 +539,6 @@ body {
     pointer-events:all; /* Ensure interaction is allowed */
 }
 
-
-
 .view-details-button {
     padding: 4px 8px; 
     font-size: 12px;
@@ -543,7 +552,6 @@ body {
     align-items: center;
     justify-content: center;
     max-width: fit-content; 
-    margin-left: 10px;
 }
 
  .view-details-button:hover {
@@ -554,3 +562,70 @@ body {
 .view-details-button:active {
     transform: scale(1); 
 }
+
+/* General button styles */
+button {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 4px;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  /* Primary action button (e.g., "Apply" for training) */
+  button.primary {
+    background-color: #042a52;
+  }
+  
+  button.primary:hover {
+    background-color: #6a89aa;
+  }
+  
+  /* Secondary action button (e.g., "View Details") */
+  button.secondary {
+    background-color: #064c8a;
+  }
+  
+  button.secondary:hover {
+    background-color: #81a5b9;
+  }
+  
+  /* Approve button */
+  button.approve {
+    background-color: #28A745;
+  }
+  
+  button.approve:hover {
+    background-color: #218838;
+  }
+  
+  /* Reject button */
+  button.reject {
+    background-color: #DC3545;
+  }
+  
+  button.reject:hover {
+    background-color: #C82333;
+  }
+  
+  /* Neutral button (e.g., "Request New Training") */
+  button.neutral {
+    background-color: #6C757D;
+  }
+  
+  button.neutral:hover {
+    background-color: #565e64;
+  }
+  
+  /* Example CSS for links */
+  .see-more {
+    color: #007BFF;
+    text-decoration: none;
+    font-weight: bold;
+  }
+  
+  .see-more:hover {
+    color: #0056b3;
+    text-decoration: underline;
+  }
