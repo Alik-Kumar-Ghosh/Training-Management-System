@@ -115,14 +115,39 @@ const TraineeManagerDashboard = () => {
     }, 0);
   };
 
-  const handleFormSubmit = (event) => {
-    event.preventDefault();
-    setShowNewTrainingForm(false);
-    setNewTrainingDescription("");
-  };
-
   const handleViewDetails = (trainingId) => {
     navigate('/trainingdetails', { state: { trainingId } });
+  };
+
+  const [newTrainingTopic, setNewTrainingTopic] = useState("");
+
+
+  const handleFormSubmit = async (event) => {
+    event.preventDefault();
+
+    try {
+      // Make the POST request with topic and description from the form
+      await axios.post(
+        "http://localhost:8084/request-training",
+        null, // no request body needed, as params are in the URL
+        {
+          params: {
+            topic: newTrainingTopic,
+            description: newTrainingDescription,
+          },
+          withCredentials: true,
+        }
+      );
+
+      // Clear form and close it after submission
+      setNewTrainingTopic("");
+      setNewTrainingDescription("");
+      setShowNewTrainingForm(false);
+      alert("Training request submitted successfully!");
+    } catch (error) {
+      console.error("Error submitting training request:", error);
+      alert("Failed to submit training request. Please try again.");
+    }
   };
 
   return (
@@ -187,7 +212,7 @@ const TraineeManagerDashboard = () => {
                 <li key={training.trainingId}>
                   <strong>{training.topic}</strong> - {training.location} (Starts on {training.startDate})
                   <button onClick={() => handleViewDetails(training.trainingId)} className="view-details-button">View Details</button>
-                  <button onClick={() => handleApplyTraining(training.trainingId)} className="view-details-button">Apply</button>
+                  <button onClick={() => handleApplyTraining(training.trainingId)} className="view-details-button" style={{"background-color": "green"}}>Apply</button>
                 </li>
               ))
             ) : (
@@ -202,46 +227,68 @@ const TraineeManagerDashboard = () => {
 
       {/* Request New Training Section */}
       <section className="training-section">
-        <button onClick={handleNewTrainingRequestClick} className="neutral">Request New Training</button>
-        {showNewTrainingForm && (
-          <form onSubmit={handleFormSubmit} className="new-training-form">
-           
-              <label for="topic"></label>
-              <input type="text" id="topic" name="topic" placeholder="Enter training topic"></input>
-<label for="description"></label>
-    <textarea id="description" name="description" placeholder="Describe the training you need"></textarea>
+      <button onClick={handleNewTrainingRequestClick} className="neutral">
+        Request New Training
+      </button>
+      {showNewTrainingForm && (
+        <form onSubmit={handleFormSubmit} className="new-training-form">
+          <label htmlFor="topic">Training Topic:</label>
+          <input
+            type="text"
+            id="topic"
+            name="topic"
+            placeholder="Enter training topic"
+            value={newTrainingTopic}
+            onChange={(e) => setNewTrainingTopic(e.target.value)}
+            required
+          />
 
-            <button type="submit">Submit Request</button>
-          </form>
-        )}
-      </section>
+          <label htmlFor="description">Description:</label>
+          <textarea
+            id="description"
+            name="description"
+            placeholder="Describe the training you need"
+            value={newTrainingDescription}
+            onChange={(e) => setNewTrainingDescription(e.target.value)}
+            ref={textareaRef}
+            required
+          />
+
+          <button type="submit">Submit Request</button>
+        </form>
+      )}
+    </section>
 
       {/* Manager's Pending Approvals Section */}
       {userType === "manager" && (
-        <section className="approval-section">
-          <h3>Pending Approvals</h3>
-          <ul>
-            {pendingApprovals.map((request) => (
-              <li key={request.applyId}>
-                <button onClick={() => handleRequestClick(request)}>
-                  {request.user.name} - {request.training.topic}
-                </button>
-              </li>
-            ))}
-          </ul>
-          {selectedRequest && (
-            <div className="request-details">
-              <h4>Request Details</h4>
-
-              <p><strong>Trainee:</strong> {selectedRequest.user.name}</p>
-              <p><strong>Training Topic:</strong> {selectedRequest.training.topic}</p>
-              <p><strong>Location:</strong> {selectedRequest.training.location}</p>
-              <p><strong>Trainer:</strong> {selectedRequest.training.trainer.name}</p>
-              <button onClick={() => handleApproval(selectedRequest.applyId, "Approved")}>Approve</button>
-              <button onClick={() => handleApproval(selectedRequest.applyId, "Rejected")}>Reject</button>
-            </div>
-          )}
-        </section>
+       <section className="approval-section">
+       <h3>Pending Approvals</h3>
+       <table className="approvals-table">
+         <thead>
+           <tr>
+             <th>Trainee Name</th>
+             <th>Training Topic</th>
+             <th>Location</th>
+             <th>Trainer</th>
+             <th>Actions</th>
+           </tr>
+         </thead>
+         <tbody>
+           {pendingApprovals.map((request) => (
+             <tr key={request.applyId} onClick={() => handleRequestClick(request)}>
+               <td>{request.user.name}</td>
+               <td>{request.training.topic}</td>
+               <td>{request.training.location}</td>
+               <td>{request.training.trainer.name}</td>
+               <td>
+                 <button onClick={() => handleApproval(request.applyId, "Approved")}>Approve</button>
+                 <button onClick={() => handleApproval(request.applyId, "Rejected")}>Reject</button>
+               </td>
+             </tr>
+           ))}
+         </tbody>
+       </table>
+       </section>
       )}
 
       {/* Trainee's Pending Approvals Section */}
