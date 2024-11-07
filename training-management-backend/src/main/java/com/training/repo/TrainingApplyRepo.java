@@ -15,7 +15,7 @@ public interface TrainingApplyRepo extends JpaRepository<TrainingApply, Integer>
 	@Query("select t from TrainingApply t where t.training = :training")
 	List<TrainingApply> findApplications(Training training);
 
-	@Query("select t from TrainingApply t where t.status = :status and t.user.getManager() = :user")
+	@Query("select t from TrainingApply t where t.status = :status and t.user.manager = :user")
 	List<TrainingApply> findPendingApplicationsManager(User user, String status);
 
 	@Query("select t from TrainingApply t where t.status = :status")

@@ -539,7 +539,6 @@ body {
     pointer-events:all; /* Ensure interaction is allowed */
 }
 
-/* Apply button styles */
 .view-details-button {
     padding: 4px 8px; 
     font-size: 12px;
@@ -630,4 +629,3 @@ button {
     color: #0056b3;
     text-decoration: underline;
   }
-  
