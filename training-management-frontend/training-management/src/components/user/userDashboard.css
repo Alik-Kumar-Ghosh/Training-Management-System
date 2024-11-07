@@ -34,36 +34,6 @@ body {
     cursor: pointer;
 }
 
-.profile-icon {
-    border-radius: 50%;
-}
-
-/* Profile Dropdown Styles */
-.profile-dropdown {
-    position: absolute;
-    top: 40px;
-    right: 0;
-    background-color: #fff;
-    border: 1px solid black;
-    border-radius: 4px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    z-index: 10;
-}
-
-.profile-dropdown button {
-    width: 100%;
-    padding: 10px;
-    border: none;
-    background-color: transparent;
-    color: #ff00ae;
-    cursor: pointer;
-    text-align: left;
-}
-
-.profile-dropdown button:hover {
-    background-color: #e9f5ff;
-}
-
 /* Training Section Styles */
 .training-section {
     margin: 20px 0;
@@ -199,6 +169,7 @@ body {
 .new-training-form label {
     margin-bottom: 5px; /* Reduce margin for label */
     font-weight: bold; /* Optional: make labels stand out */
+    position: relative;
 }
 
 /* Topic input field */
