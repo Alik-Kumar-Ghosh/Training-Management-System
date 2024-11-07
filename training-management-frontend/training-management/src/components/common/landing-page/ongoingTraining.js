@@ -31,7 +31,7 @@ const OngoingTraining = () => {
             <h3>{training.topic}</h3>
             <p><strong>Location:</strong> {training.location}</p>
             <p><strong>Duration:</strong> {training.startDate} to {training.endDate}</p>
-            <p><strong>Trainer:</strong> {training.trainerName}</p>
+            <p><strong>Trainer:</strong> {training.trainer.name}</p>
             <button onClick={() => handleViewDetails(training.id)}>View Details</button>
           </div>
         ))}
