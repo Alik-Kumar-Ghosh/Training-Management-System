@@ -1,54 +1,4 @@
-/* .admin-dashboard {
-    font-family: Arial, sans-serif;
-    padding: 20px;
-  }
-  
-  .requests-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 20px;
-  }
-  
-  .requests-table th, .requests-table td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: left;
-  }
-  
-  .requests-table th {
-    background-color: #4CAF50;
-    color: white;
-  }
-  
-  .requests-table td button {
-    margin-right: 10px;
-    padding: 5px 10px;
-    border: none;
-    background-color: #4CAF50;
-    color: white;
-    cursor: pointer;
-    border-radius: 5px;
-    transition: background-color 0.3s ease;
-  }
-  
-  .requests-table td button:hover {
-    background-color: #45a049;
-  }
-  
-  .trainings-list {
-    list-style-type: none;
-    padding: 0;
-  }
-  
-  .trainings-list li {
-    background-color: white;
-    padding: 10px;
-    margin-bottom: 10px;
-    border-radius: 5px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  } */
-  
-/* Reset default styles */
+
 body, h1, h2, h3, p {
   margin: 0;
   padding: 0;
@@ -164,48 +114,56 @@ body, h1, h2, h3, p {
   gap: 10px;
 }
 
+/* adminDashboard.css */
+
 .new-training-form {
-  background: #ffffff;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
-  gap: 15px;
-  max-width: 500px;
+  gap: 1rem;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #f9f9f9;
 }
 
 .form-group {
-  /* display: flex; */
+  display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 1rem;
 }
 
 .form-group label {
-  width: 100px; /* Set a fixed width for label */
+  position:relative;
+  width: 150px;
   font-weight: bold;
 }
 
 .form-group input,
+.form-group select,
 .form-group textarea {
-  flex: 1; /* Make inputs take the remaining space */
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  outline: none;
+  flex: 1;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
 }
 
-.new-training-form button {
-  padding: 10px 15px;
-  background: #4b6cb7;
-  color: #fff;
+.form-group textarea {
+  resize: vertical;
+}
+
+button[type="submit"] {
+  padding: 0.75rem 1.5rem;
   border: none;
-  border-radius: 5px;
+  border-radius: 4px;
+  background-color: #007bff;
+  color: white;
+  font-size: 1rem;
   cursor: pointer;
-  transition: background 0.3s;
-  align-self: flex-start; /* Align button to the left */
 }
 
-.new-training-form button:hover {
-  background: #354a7b;
+button[type="submit"]:hover {
+  background-color: #0056b3;
 }
