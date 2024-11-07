@@ -98,11 +98,11 @@ const handleViewDetails = (trainingId) => {
             <p><strong>Duration:</strong> {training.startDate} to {training.endDate}</p>
             <p><strong>Trainer:</strong> {training.trainer.name}</p>
             <button onClick={() => handleViewDetails(training.trainingId)}>View Details</button>
-            <button className='apply-button' onClick={() => handleApplyTraining(training.trainingId)}>Apply</button>
-          </div>
+            <button onClick={() => handleApplyTraining(training.trainingId)}style={{"background-color": "green"}} >Apply</button>
+            </div>
         ))}
       </div>
-      <Link to="/" className="back-link">Go Back to Home</Link>
+      {/* <Link to="/" className="back-link">Go Back to Home</Link> */}
     </div>
   );
 };
