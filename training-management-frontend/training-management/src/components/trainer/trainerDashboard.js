@@ -66,7 +66,7 @@ function TrainerDashboard() {
             </section> */}
 
             <section className="trainer-section">
-            <button onClick={fetchOngoingTrainings}>Ongoing Trainings</button>
+            <button onClick={fetchOngoingTrainings}className="primary">Ongoing Trainings</button>
                 {activeSection === 'ongoing' && (
                     <div className="training-section">
                         <h3>Ongoing Trainings</h3>
@@ -74,7 +74,8 @@ function TrainerDashboard() {
                             {ongoingTrainings.slice(0,3).length > 0 ? (
                                 ongoingTrainings.map((training, index) => (
                                     <li key={index}>{training.topic} - {training.startDate} to {training.endDate}
-                                    <button onClick={() => handleViewDetails(training.trainingId)}>View Details</button>
+                                    <button onClick={() => handleViewDetails(training.trainingId)} className="view-detail-button">View Details</button>
+                                    {/* <button onClick={() => handleViewDetails(training.trainingId)}>View Details</button> */}
                                     </li>
                                 ))
                             ) : (
@@ -89,7 +90,7 @@ function TrainerDashboard() {
                 </section>
 
                 <section className="trainer-section">
-                <button onClick={fetchPastTrainings}>Past Trainings</button>
+                <button onClick={fetchPastTrainings} class="secondary">Past Trainings</button>
                 {activeSection === 'past' && (
                     <div className="training-section">
                         <h3>Past Trainings</h3>
@@ -97,7 +98,8 @@ function TrainerDashboard() {
                             {pastTrainings.slice(0,3).length > 0 ? (
                                 pastTrainings.map((training, index) => (
                                     <li key={index}>{training.topic} - {training.startDate} to {training.endDate}
-                                    <button onClick={() => handleViewDetails(training.trainingId)}>View Details</button>
+                                    <button onClick={() => handleViewDetails(training.trainingId)} className="view-detail-button">View Details</button>
+                                    {/* <button onClick={() => handleViewDetails(training.trainingId)}>View Details</button> */}
                                     </li>
                                 ))
                             ) : (
@@ -112,7 +114,7 @@ function TrainerDashboard() {
                  </section>
                 
                  <section className="trainer-section">
-                <button onClick={fetchUpcomingTrainings}>Upcoming Trainings</button>
+                <button onClick={fetchUpcomingTrainings}className="primary">Upcoming Trainings</button>
                 {activeSection === 'upcoming' && (
                     <div className="training-section">
                         <h3>Upcoming Trainings</h3>
@@ -120,7 +122,8 @@ function TrainerDashboard() {
                             {upcomingTrainings.slice(0,3).length > 0 ? (
                                 upcomingTrainings.map((training, index) => (
                                     <li key={index}>{training.topic} - {training.startDate} to {training.endDate}
-                                    <button onClick={() => handleViewDetails(training.trainingId)}>View Details</button>
+                                    <button onClick={() => handleViewDetails(training.trainingId)} className="view-details-button">View Details</button>
+                                    {/* <button onClick={() => handleViewDetails(training.trainingId)}>View Details</button> */}
                                     </li>
                                 ))
                             ) : (
