@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import BASE_URL from "../../utils/api";
 import UserProfileBubble from '../common/profilePage/userProfileBubble';
@@ -19,13 +19,19 @@ const TraineeManagerDashboard = () => {
   const location = useLocation();
   const { userId, userType } = location.state || {};
 
+  useEffect(() => {
+    if (userType === "manager") {
+      loadPendingApprovals();
+    }
+  }, [userType]); // Call only once when the component mounts
+
   const loadOngoingTrainings = async () => {
     try {
       const response = await axios.get(`${BASE_URL}/user/ongoing-trainings`, {
         withCredentials: true,
       });
       setOngoingTrainings(response.data);
-      setOpenSection("ongoing"); // Set the open section to "ongoing"
+      setOpenSection("ongoing");
     } catch (error) {
       console.error("Error fetching ongoing trainings:", error);
     }
@@ -37,7 +43,7 @@ const TraineeManagerDashboard = () => {
         withCredentials: true,
       });
       setPastTrainings(response.data);
-      setOpenSection("past"); // Set the open section to "past"
+      setOpenSection("past");
     } catch (error) {
       console.error("Error fetching past trainings:", error);
     }
@@ -45,42 +51,46 @@ const TraineeManagerDashboard = () => {
 
   const loadAvailableTrainings = async () => {
     try {
-      const response = await axios.get(`${BASE_URL}/user/upcoming-trainings`, {
+      const response = await axios.get(`${BASE_URL}/training/upcoming`, {
         withCredentials: true,
       });
       setAvailableTrainings(response.data);
-      setOpenSection("available"); // Set the open section to "available"
+      setOpenSection("available");
     } catch (error) {
       console.error("Error fetching available trainings:", error);
     }
   };
 
   const loadPendingApprovals = async () => {
-    if (userType === "manager") {
-      try {
-        const response = await axios.get(`${BASE_URL}/manager/pending-approvals`);
-        setPendingApprovals(response.data);
-      } catch (error) {
-        console.error("Error fetching pending approvals:", error);
-      }
+    try {
+      const response = await axios.get(`${BASE_URL}/manager/pending-approvals`, {
+        withCredentials: true,
+      });
+      setPendingApprovals(response.data);
+    } catch (error) {
+      console.error("Error fetching pending approvals:", error);
     }
   };
 
   const handleRequestClick = (request) => {
     setSelectedRequest(request);
-    setOpenSection("requested"); // Set the open section to "requested"
+    setOpenSection("requested");
   };
 
-  const handleApproval = async (id, status) => {
+  const handleApproval = async (applicationId, status) => {
     try {
       await axios.put(
-        `${BASE_URL}/update-application/${id}`,
-        { userId, id, status },
-        { withCredentials: true }
+        `http://localhost:8084/update-application`,
+        null, // No request body needed
+        {
+          params: { applicationId, status },
+          withCredentials: true,
+        }
       );
-      setPendingApprovals((prev) => prev.filter((req) => req.id !== id));
+      // Remove the approved/rejected request from the list
+      setPendingApprovals((prev) => prev.filter((req) => req.applyId !== applicationId));
     } catch (error) {
-      console.error(`Error updating approval status for request ${id}:`, error);
+      console.error(`Error updating approval status for request ${applicationId}:`, error);
     }
   };
 
@@ -88,7 +98,7 @@ const TraineeManagerDashboard = () => {
     try {
       await axios.post(
         `${BASE_URL}/apply/${trainingId}`,
-        { params: { userId, trainingId } },
+        { userId, trainingId },
         { withCredentials: true }
       );
     } catch (error) {
@@ -110,82 +120,87 @@ const TraineeManagerDashboard = () => {
     setShowNewTrainingForm(false);
     setNewTrainingDescription("");
   };
+
   const handleViewDetails = (trainingId) => {
-    console.log(trainingId);
-    ///training?trainingId=10
-    navigate('/trainingdetails',{ state: {trainingId} });
+    navigate('/trainingdetails', { state: { trainingId } });
   };
 
   return (
     <div className="dashboard-container">
       <header className="dashboard-header">
         <h2>User Dashboard</h2>
-        <UserProfileBubble/>
+        <UserProfileBubble />
       </header>
 
+      {/* Ongoing Trainings Section */}
       <section className="training-section">
         <button onClick={loadOngoingTrainings}>Ongoing Trainings</button>
         {openSection === "ongoing" && (
           <ul>
-            {ongoingTrainings.slice(0,3).length > 0 ? (
-            ongoingTrainings.map((training) => (
-              <li key={training.trainingId}>
-                <strong>{training.topic}</strong> - {training.location} from{" "}
-                {training.startDate} to {training.endDate}
-                <button onClick={() => handleViewDetails(training.trainingId)}>View Details</button>
-              </li>
-            )) ) : (
-                <p>No ongoing trainings.</p>
+            {ongoingTrainings.slice(0, 3).length > 0 ? (
+              ongoingTrainings.map((training) => (
+                <li key={training.trainingId}>
+                  <strong>{training.topic}</strong> - {training.location} from{" "}
+                  {training.startDate} to {training.endDate}
+                  <button onClick={() => handleViewDetails(training.trainingId)} className="view-details-button">View Details</button>
+                </li>
+              ))
+            ) : (
+              <p>No ongoing trainings.</p>
             )}
           </ul>
         )}
         {ongoingTrainings.length > 3 && (
-        <Link to="/user/ongoing" className="see-more">...see more</Link>
-      )}
+          <Link to="/user/ongoing" className="see-more">...see more</Link>
+        )}
       </section>
 
+      {/* Past Trainings Section */}
       <section className="training-section">
         <button onClick={loadPastTrainings}>Past Trainings</button>
         {openSection === "past" && (
           <ul>
-            
-            {pastTrainings.slice(0,3).length > 0 ? (
-                pastTrainings.map((training) => (
-              <li key={training.trainingId}>
-                <strong>{training.topic}</strong> - {training.location} (Ended on {training.endDate})
-                <button onClick={() => handleViewDetails(training.trainingId)}>View Details</button>
-              </li>
-            ) ) ) : (
-                <p>No past trainings.</p>
-            ) }
+            {pastTrainings.slice(0, 3).length > 0 ? (
+              pastTrainings.map((training) => (
+                <li key={training.trainingId}>
+                  <strong>{training.topic}</strong> - {training.location} (Ended on {training.endDate})
+                  <button onClick={() => handleViewDetails(training.trainingId)} className="view-details-button" >View Details</button>
+                </li>
+              ))
+            ) : (
+              <p>No past trainings.</p>
+            )}
           </ul>
         )}
         {pastTrainings.length > 3 && (
-        <Link to="/user/past" className="see-more">...see more</Link>
-      )}
+          <Link to="/user/past" className="see-more">...see more</Link>
+        )}
       </section>
 
+      {/* Available Trainings Section */}
       <section className="training-apply">
         <button onClick={loadAvailableTrainings}>Available Trainings</button>
         {openSection === "available" && (
           <ul>
-             {availableTrainings.slice(0,3).length > 0 ? (
-            availableTrainings.map((training) => (
-              <li key={training.trainingId}>
-                <strong>{training.topic}</strong> - {training.location} (Starts on {training.startDate})
-                <button onClick={() => handleViewDetails(training.trainingId)}>View Details</button>
-                <button onClick={() => handleApplyTraining(training.trainingId)}>Apply</button>
-              </li>
-            )) ) : (
-                <p>No available trainings.</p>
+            {availableTrainings.slice(0, 3).length > 0 ? (
+              availableTrainings.map((training) => (
+                <li key={training.trainingId}>
+                  <strong>{training.topic}</strong> - {training.location} (Starts on {training.startDate})
+                  <button onClick={() => handleViewDetails(training.trainingId)} className="view-details-button">View Details</button>
+                  <button onClick={() => handleApplyTraining(training.trainingId)} className="view-details-button">Apply</button>
+                </li>
+              ))
+            ) : (
+              <p>No available trainings.</p>
             )}
           </ul>
         )}
         {ongoingTrainings.length > 3 && (
-        <Link to="/user/upcoming" className="see-more">...see more</Link>
-      )}
+          <Link to="/user/upcoming" className="see-more">...see more</Link>
+        )}
       </section>
 
+      {/* Request New Training Section */}
       <section className="training-section">
         <button onClick={handleNewTrainingRequestClick}>Request New Training</button>
         {showNewTrainingForm && (
@@ -205,14 +220,15 @@ const TraineeManagerDashboard = () => {
         )}
       </section>
 
+      {/* Manager's Pending Approvals Section */}
       {userType === "manager" && (
         <section className="approval-section">
           <h3>Pending Approvals</h3>
           <ul>
             {pendingApprovals.map((request) => (
-              <li key={request.id}>
+              <li key={request.applyId}>
                 <button onClick={() => handleRequestClick(request)}>
-                  {request.trainee} - {request.training}
+                  {request.user.name} - {request.training.topic}
                 </button>
               </li>
             ))}
@@ -220,15 +236,18 @@ const TraineeManagerDashboard = () => {
           {selectedRequest && (
             <div className="request-details">
               <h4>Request Details</h4>
-              <p><strong>Trainee:</strong> {selectedRequest.trainee}</p>
-              <p><strong>Training:</strong> {selectedRequest.training}</p>
-              <button onClick={() => handleApproval(selectedRequest.id, "Approved")}>Approve</button>
-              <button onClick={() => handleApproval(selectedRequest.id, "Rejected")}>Reject</button>
+              <p><strong>Trainee:</strong> {selectedRequest.user.name}</p>
+              <p><strong>Training Topic:</strong> {selectedRequest.training.topic}</p>
+              <p><strong>Location:</strong> {selectedRequest.training.location}</p>
+              <p><strong>Trainer:</strong> {selectedRequest.training.trainer.name}</p>
+              <button onClick={() => handleApproval(selectedRequest.applyId, "accepted")}>Approve</button>
+              <button onClick={() => handleApproval(selectedRequest.applyId, "rejected")}>Reject</button>
             </div>
           )}
         </section>
       )}
 
+      {/* Trainee's Pending Approvals Section */}
       {userType === "trainee" && (
         <section className="approval-section">
           <h3>Pending Approvals</h3>

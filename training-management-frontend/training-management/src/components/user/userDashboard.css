@@ -528,3 +528,29 @@ body {
     pointer-events:all; /* Ensure interaction is allowed */
 }
 
+
+
+.view-details-button {
+    padding: 4px 8px; 
+    font-size: 12px;
+    background-color: black;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+    display: inline-flex; 
+    align-items: center;
+    justify-content: center;
+    max-width: fit-content; 
+    margin-left: 10px;
+}
+
+ .view-details-button:hover {
+    background-color: #ff00ae;
+    transform: scale(1.05); 
+}
+
+.view-details-button:active {
+    transform: scale(1); 
+}
