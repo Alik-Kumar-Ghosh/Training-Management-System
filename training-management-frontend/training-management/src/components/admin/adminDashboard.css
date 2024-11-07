@@ -10,8 +10,7 @@ body, h1, h2, h3, p {
   font-family: Arial, sans-serif;
   background-color: #f5f7fa; /* Light background color */
   color: #333;
-  padding: 20px;
-  min-height: 100vh; /* Full height */
+  padding: 20px;/* Full height */
   pointer-events:all; /* Ensure interaction is allowed */
 }
 
