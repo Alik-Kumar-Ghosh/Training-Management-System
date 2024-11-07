@@ -32,6 +32,7 @@ body, h1, h2, h3, p {
   width: 100%;
   border-collapse: collapse;
   margin-bottom: 30px;
+  
 }
 
 .requests-table th, .requests-table td {
@@ -41,7 +42,7 @@ body, h1, h2, h3, p {
 }
 
 .requests-table th {
-  background-color: black; /* Header background color */
+  background-color: rgb(6, 62, 136); /* Header background color */
   color: white; /* Header text color */
 }
 
@@ -74,6 +75,56 @@ body, h1, h2, h3, p {
 }
 
 .requests-table button:nth-of-type(2):hover {
+  background-color: #c82333; /* Darker red on hover */
+}
+
+.approvals-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 30px;
+  
+}
+
+.approvals-table th, .requests-table td {
+  border: 1px solid #ddd; /* Light border for table cells */
+  padding: 12px;
+  text-align: left;
+}
+
+.approvals-table thead {
+  background-color: rgb(5, 54, 117); /* Header background color */
+  color: white; /* Header text color */
+}
+
+.approvals-table tr:nth-child(even) {
+  background-color: #f2f2f2; /* Zebra stripes for table rows */
+}
+
+.approvals-table tr:hover {
+  background-color: #e9ecef; /* Hover effect for table rows */
+}
+
+.approvals-table button {
+  background-color: #28a745; /* Accept button color */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 8px 12px;
+  cursor: pointer;
+  margin-right: 5px;
+  margin:10px;
+  transition: background-color 0.3s ease;
+}
+
+.approvals-table button:hover {
+  background-color: #218838; /* Darker green on hover */
+}
+
+.approvals-table button:nth-of-type(2) {
+  background-color: #dc3545; /* Reject button color */
+}
+
+.approvals-table button:nth-of-type(2):hover {
   background-color: #c82333; /* Darker red on hover */
 }
 
@@ -111,6 +162,9 @@ body, h1, h2, h3, p {
   display: flex;
   flex-direction: column;
   gap: 10px;
+}
+.create-training button{
+  background-color: #0056b3;
 }
 
 /* adminDashboard.css */
