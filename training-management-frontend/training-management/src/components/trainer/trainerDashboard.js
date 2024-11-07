@@ -9,7 +9,6 @@ function TrainerDashboard() {
     const [ongoingTrainings, setOngoingTrainings] = useState([]);
     const [pastTrainings, setPastTrainings] = useState([]);
     const [upcomingTrainings, setUpcomingTrainings] = useState([]);
-    // const [participants, setParticipants] = useState([]);
     const [activeSection, setActiveSection] = useState('');
     const navigate = useNavigate();
     

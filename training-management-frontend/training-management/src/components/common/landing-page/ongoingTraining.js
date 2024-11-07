@@ -10,7 +10,7 @@ const OngoingTraining = () => {
   useEffect(() => {
     const fetchOngoingTrainings = async () => {
       try {
-        const response = await axios.get(`${BASE_URL}/training/ongoing`);
+        const response = await axios.get(`${BASE_URL}/training/ongoing`,{withCredentials:true});
         setOngoingTrainings(response.data);
       } catch (error) {
         console.error('Error fetching ongoing trainings:', error);
@@ -20,7 +20,7 @@ const OngoingTraining = () => {
     fetchOngoingTrainings();
   }, []);
   const handleViewDetails = (trainingId) => {
-    navigate(`/training-details/${trainingId}`);
+    navigate(`/trainingdetails`,{ state: {trainingId} });
   };
   return (
     <div className="ongoing-training-page">
@@ -31,8 +31,8 @@ const OngoingTraining = () => {
             <h3>{training.topic}</h3>
             <p><strong>Location:</strong> {training.location}</p>
             <p><strong>Duration:</strong> {training.startDate} to {training.endDate}</p>
-            <p><strong>Trainer:</strong> {training.trainerName}</p>
-            <button onClick={() => handleViewDetails(training.id)}>View Details</button>
+            <p><strong>Trainer:</strong> {training.trainer.name}</p>
+            <button onClick={() => handleViewDetails(training.trainingId)}>View Details</button>
           </div>
         ))}
       </div>

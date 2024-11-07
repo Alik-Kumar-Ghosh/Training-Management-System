@@ -90,23 +90,14 @@
     const handleSubmit = async (e) => {
       e.preventDefault();
       try {
-        // Prepare the data to be sent in the POST request
-        const trainingData = {
-          startDate: newTraining.startDate,
-          endDate: newTraining.endDate,
-          topic: newTraining.topic,
-          trainerUserName: newTraining.trainerUserName,
-          location: newTraining.location,
-          description: newTraining.description,
-        };
-        console.log(trainingData)
+        // Destructure the newTraining state to use in query parameters
+        const { startDate, endDate, topic, trainerUserName, location, description } = newTraining;
     
+        // Making the POST request using axios with query parameters
         const response = await axios.post(
-          `${BASE_URL}/training/create`,
-          trainingData,
-          {
-            withCredentials: true,
-          }
+          `${BASE_URL}/training/create?startDate=${encodeURIComponent(startDate)}&endDate=${encodeURIComponent(endDate)}&topic=${encodeURIComponent(topic)}&trainerUserName=${encodeURIComponent(trainerUserName)}&location=${encodeURIComponent(location)}&description=${encodeURIComponent(description)}`,
+          {},
+          { withCredentials: true }
         );
     
         console.log("Training created:", response.data);
@@ -116,6 +107,7 @@
         console.error("Error creating training:", error);
       }
     };
+    
     
 
     const handleInputChange = (e) => {
@@ -275,7 +267,7 @@
         ))}
       </ul>
       {previousTrainings.length > 3 && (
-            <Link to="/trainings/previous" className="see-more">
+            <Link to="/trainings/past" className="see-more">
               ...see more
             </Link>
       )}
