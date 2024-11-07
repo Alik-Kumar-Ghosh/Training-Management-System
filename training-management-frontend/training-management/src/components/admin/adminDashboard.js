@@ -101,7 +101,6 @@
         };
         console.log(trainingData)
     
-        // Making the POST request using axios
         const response = await axios.post(
           `${BASE_URL}/training/create`,
           trainingData,
