@@ -8,6 +8,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.training.controller.InvalidRequestException;
 import com.training.model.Training;
 import com.training.model.TrainingApply;
 import com.training.model.TrainingParticipant;
@@ -36,6 +37,10 @@ public class TrainingServiceImpl implements TrainingService {
 
 	@Override
 	public TrainingApply createTrainingApply(TrainingApply trainingApplication) {
+		User user = trainingApplication.getUser();
+		Training training = trainingApplication.getTraining();
+		if(getTrainingParticipants(training).contains(user))
+			throw new InvalidRequestException("You can't apply more than once to the same training!!!");
 		return trainingApplyRepo.save(trainingApplication);
 	}
 
