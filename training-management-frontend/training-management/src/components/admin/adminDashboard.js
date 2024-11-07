@@ -267,7 +267,7 @@
         ))}
       </ul>
       {previousTrainings.length > 3 && (
-            <Link to="/trainings/previous" className="see-more">
+            <Link to="/trainings/past" className="see-more">
               ...see more
             </Link>
       )}
