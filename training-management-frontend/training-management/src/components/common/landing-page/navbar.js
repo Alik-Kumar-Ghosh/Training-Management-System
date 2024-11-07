@@ -17,11 +17,11 @@ const Navbar = () => {
         <li><a href="#about">About</a></li>
         <li><a href="#benefits">Benefits</a></li>
         <li><a href="#trainings">Trainings</a></li>
-        {isLoggedIn ? (
+        {/* {isLoggedIn ? (
           <li><Link to="/dashboard">Dashboard</Link></li>
         ) : (
           <li><Link to="/login">Login</Link></li>
-        )}
+        )} */}
       </ul>
     </nav>
   );

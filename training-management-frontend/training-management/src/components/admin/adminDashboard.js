@@ -220,19 +220,23 @@ const AdminDashboard = () => {
         {showNewTrainingForm && (
           <form className="new-training-form" onSubmit={handleSubmit}>
             <div className="form-group">
-              <label htmlFor="startDate">Start Date:</label>
+              {/* <label htmlFor="startDate">Start Date:</label> */}
               <input type="date" id="startDate" name="startDate" onChange={handleInputChange} required />
             </div>
             <div className="form-group">
-              <label htmlFor="endDate">End Date:</label>
+              {/* <label htmlFor="endDate">End Date:</label> */}
               <input type="date" id="endDate" name="endDate" onChange={handleInputChange} required />
             </div>
             <div className="form-group">
-              <label htmlFor="topic">Topic:</label>
+              {/* <label htmlFor="topic">Topic:</label> */}
               <input type="text" id="topic" name="topic" placeholder="Enter topic" onChange={handleInputChange} required />
             </div>
             <div className="form-group">
-              <label htmlFor="trainerUserName">Trainer Name:</label>
+              {/* <label htmlFor="topic">Topic:</label> */}
+              <input type="text" id="location" name="location" placeholder="Enter location" onChange={handleInputChange} required />
+            </div>
+            <div className="form-group">
+              {/* <label htmlFor="trainerUserName">Trainer Name:</label> */}
               <select id="trainerUserName" name="trainerUserName" onChange={handleInputChange} required>
                 <option value="">Select a trainer</option>
                 {trainers.map((trainer) => (
@@ -243,7 +247,7 @@ const AdminDashboard = () => {
               </select>
             </div>
             <div className="form-group">
-              <label htmlFor="description">Description:</label>
+              {/* <label htmlFor="description">Description:</label> */}
               <textarea id="description" ref={textareaRef} name="description" placeholder="Enter training description" onChange={handleInputChange}></textarea>
             </div>
             <button type="submit">Submit</button>
