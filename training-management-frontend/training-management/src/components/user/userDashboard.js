@@ -97,8 +97,8 @@ const TraineeManagerDashboard = () => {
   const handleApplyTraining = async (trainingId) => {
     try {
       await axios.post(
-        `${BASE_URL}/apply/${trainingId}`,
-        { userId, trainingId },
+        `${BASE_URL}/apply/${trainingId}?trainingId=${trainingId}`,
+        console.log("Applied"),
         { withCredentials: true }
       );
     } catch (error) {
