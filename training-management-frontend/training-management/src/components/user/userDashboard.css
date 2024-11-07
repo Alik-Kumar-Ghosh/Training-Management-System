@@ -169,6 +169,7 @@ body {
 .new-training-form label {
     margin-bottom: 5px; /* Reduce margin for label */
     font-weight: bold; /* Optional: make labels stand out */
+    position: relative;
 }
 
 /* Topic input field */
