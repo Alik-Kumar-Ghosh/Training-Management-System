@@ -266,23 +266,37 @@
       </table>
 
       <h2>Previous Trainings</h2>
+      <div>
       <ul className="trainings-list">
-        {previousTrainings.map((training) => (
+        {previousTrainings.slice(0, 3).map((training) => (
           <li key={training.trainingId}>
             <h3>{training.topic}</h3>
             <p>{training.description}</p>
           </li>
         ))}
       </ul>
+      {previousTrainings.length > 3 && (
+            <Link to="/trainings/previous" className="see-more">
+              ...see more
+            </Link>
+      )}
+      </div>
       <h2>Ongoing Trainings</h2>
+      <div>
       <ul className="trainings-list">
-        {ongoingTrainings.map((training) => (
+        {ongoingTrainings.slice(0, 3).map((training) => (
           <li key={training.trainingId}>
             <h3>{training.topic}</h3>
             <p>{training.description}</p>
           </li>
         ))}
       </ul>
+      {ongoingTrainings.length > 3 && (
+            <Link to="/trainings/ongoing" className="see-more">
+              ...see more
+            </Link>
+      )}
+      </div>
       <section className="create-training">
         <button onClick={handleNewTrainingRequestClick}>Create New Training</button>
         {showNewTrainingForm && (
