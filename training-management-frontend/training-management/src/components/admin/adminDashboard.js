@@ -11,6 +11,12 @@
     const [ongoingTrainings, setOngoingTrainings] = useState([]);
     const [trainers, setTrainers] = useState([]);
     const [showNewTrainingForm, setShowNewTrainingForm] = useState(false);
+
+    const [remarksData, setRemarksData] = useState({}); // New state for storing remarks
+    const [isRejectModalOpen, setIsRejectModalOpen] = useState(false);
+    const [rejectRemarks, setRejectRemarks] = useState("");
+    const [selectedRejectId, setSelectedRejectId] = useState(null);
+
     const [newTraining, setNewTraining] = useState({
       startDate: "",
       endDate: "",
@@ -31,6 +37,42 @@
       fetchOngoingTrainings();
     }, [userId]);
 
+
+    const handleRejectConfirm = async () => {
+      if (rejectRemarks.trim() === "") {
+        alert("Please enter remarks before rejecting.");
+        return;
+      }
+      try {
+        const url = `${BASE_URL}/update-training?requestId=${selectedRejectId}&status=rejected`;
+        await axios.put(url, {}, { withCredentials: true });
+        
+        // Update remarks data
+        setRemarksData((prev) => ({ ...prev, [selectedRejectId]: rejectRemarks }));
+        
+        // Fetch training request to get the user’s email
+        const rejectedRequest = requests.find(req => req.requestId === selectedRejectId);
+        
+        if (rejectedRequest && rejectedRequest.user && rejectedRequest.user.email) {
+          await sendEmail(rejectedRequest.user.email, rejectRemarks);
+          alert("Rejection email sent successfully!");
+        }
+        
+        // Refresh training data
+        fetchTrainingRequests();
+        fetchPreviousTrainings();
+        fetchOngoingTrainings();
+      } catch (error) {
+        console.error("Error rejecting the training request:", error);
+        alert(error);
+      } finally {
+        setIsRejectModalOpen(false);
+        setRejectRemarks("");
+      }
+    };
+    
+
+
     const fetchTrainingRequests = async () => {
       try {
         const response = await axios.get(`${BASE_URL}/admin/pending-requests`, { withCredentials: true });
@@ -38,6 +80,7 @@
         setRequests(response.data);
       } catch (error) {
         console.error("Error fetching training requests:", error);
+        alert(error)
       }
     };
 
@@ -48,6 +91,7 @@
         setPreviousTrainings(response.data);
       } catch (error) {
         console.error("Error fetching previous trainings:", error);
+        alert(error)
       }
     };
 
@@ -58,33 +102,30 @@
         setOngoingTrainings(response.data);
       } catch (error) {
         console.error("Error fetching ongoing trainings:", error);
+        alert(error)
       }
     };
 
+    
     const handleAccept = async (id) => {
       try {
         const url = `${BASE_URL}/update-training?requestId=${id}&status=accepted`;
-        const response = await axios.put(url, {}, { withCredentials: true });
-        console.log("Accepted:", response.data);
+        await axios.put(url, {}, { withCredentials: true });
+        alert("Training request accepted successfully!");
         fetchTrainingRequests();
         fetchPreviousTrainings();
         fetchOngoingTrainings();
       } catch (error) {
         console.error("Error accepting the training request:", error);
+        alert(error)
       }
     };
 
-    const handleReject = async (id) => {
-      try {
-        const url = `${BASE_URL}/update-training?requestId=${id}&status=rejected`;
-        const response = await axios.put(url, {}, { withCredentials: true });
-        console.log("Rejected:", response.data);
-        fetchTrainingRequests();
-        fetchPreviousTrainings();
-        fetchOngoingTrainings();
-      } catch (error) {
-        console.error("Error rejecting the training request:", error);
-      }
+    
+
+    const handleReject = (id) => {
+      setSelectedRejectId(id);
+      setIsRejectModalOpen(true);
     };
 
     const handleSubmit = async (e) => {
@@ -105,6 +146,7 @@
         resetFormState();
       } catch (error) {
         console.error("Error creating training:", error);
+        alert(error)
       }
     };
     
@@ -133,6 +175,7 @@
         setTrainers(response.data);
       } catch (error) {
         console.error("Error fetching trainers:", error);
+        alert(error)
       }
     };
 
@@ -157,6 +200,7 @@
         window.location.href = "/";
       } catch (error) {
         console.error("Error logging out:", error);
+        alert(error)
       }
     };
 
@@ -173,6 +217,7 @@
         setApprovalRequests(response.data);
       } catch (error) {
         console.error("Error fetching approval requests:", error);
+        alert(error)
       }
     };
   
@@ -184,19 +229,46 @@
         fetchApprovalRequests(); // Refresh the approval requests
       } catch (error) {
         console.error("Error accepting the approval request:", error);
+        alert(error)
       }
     };
-  
-    const handleReject1 = async (applyId) => {
+
+    const handleReject1 = (applyId) => {
+      setSelectedRejectId(applyId);
+      setIsRejectModalOpen(true);
+    };
+
+    const handleRejectConfirm1 = async () => {
+      if (rejectRemarks.trim() === "") {
+        alert("Please enter remarks before rejecting.");
+        return;
+      }
       try {
-        const url = `${BASE_URL}/update-application?applicationId=${applyId}&status=rejected`;
-        const response = await axios.put(url, {}, { withCredentials: true });
-        console.log("Rejected:", response.data);
-        fetchApprovalRequests(); // Refresh the approval requests
+        const url = `${BASE_URL}/update-application?applicationId=${selectedRejectId}&status=rejected`;
+        await axios.put(url, {}, { withCredentials: true });
+        
+        // Update remarks data
+        setRemarksData((prev) => ({ ...prev, [selectedRejectId]: rejectRemarks }));
+        
+        // Fetch the approval request to get the user’s email
+        const rejectedRequest = approvalRequests.find(req => req.applyId === selectedRejectId);
+        
+        if (rejectedRequest && rejectedRequest.user && rejectedRequest.user.email) {
+          await sendEmail(rejectedRequest.user.email, rejectRemarks);
+          alert("Rejection email sent successfully!");
+        }
+        
+        // Refresh approval requests
+        fetchApprovalRequests();
       } catch (error) {
         console.error("Error rejecting the approval request:", error);
+        alert(error);
+      } finally {
+        setIsRejectModalOpen(false);
+        setRejectRemarks("");
       }
     };
+
   
     const handleViewDetails = (trainingId) => {
       console.log(trainingId);
@@ -204,12 +276,51 @@
       navigate('/trainingdetails',{ state: {trainingId} });
     };
 
+    const sendEmail = async (to, message) => {
+      try {
+        console.log(to,message)
+          const response = await axios.post(
+             `http://localhost:8084/api/email/send`,
+              null,  
+              {
+                  params: {
+                      to: to,            
+                      subject: 'Rejected',       
+                      message: message  
+                  },
+                  withCredentials: true
+              }
+          );
+          
+          console.log('Email response:', response.data);
+          return response.data;  
+        } catch (error) {
+          console.error('Failed to send email:', error);
+          throw error; 
+      }
+  };
     return (
       <div className="admin-dashboard">
         <header className="dashboard-header">
           <h2>Admin Dashboard</h2>
           <UserProfileBubble />
         </header>
+
+      {isRejectModalOpen && (
+        <div className="modal-overlay">
+          <div className="modal">
+            <h3>Rejection Remarks</h3>
+            <textarea
+              placeholder="Enter your remarks here"
+              value={rejectRemarks}
+              onChange={(e) => setRejectRemarks(e.target.value)}
+            ></textarea>
+            <button onClick={handleRejectConfirm}>Confirm</button>
+            <button onClick={() => setIsRejectModalOpen(false)}>Cancel</button>
+          </div>
+        </div>
+      )}
+
         <table className="requests-table">
           <thead>
             <tr>
@@ -231,6 +342,7 @@
             ))}
           </tbody>
         </table>
+
         <div className="admin-dashboard">
       <h3>Pending Training Approvals</h3>
       <table className="approvals-table">
@@ -260,7 +372,6 @@
           ))}
         </tbody>
       </table>
-
       <h2>Previous Trainings</h2>
       <div>
       <ul className="trainings-list">
