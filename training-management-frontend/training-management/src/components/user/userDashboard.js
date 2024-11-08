@@ -1,5 +1,3 @@
-// 
-
 import axios from "axios";
 import React, { useRef, useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -99,6 +97,7 @@ const TraineeManagerDashboard = () => {
           withCredentials: true,
         }
       );
+      alert("Applied Sucessfully");
       setPendingApprovals((prev) => prev.filter((req) => req.applyId !== applicationId));
     } catch (error) {
       console.error(`Error updating approval status for request ${applicationId}:`, error);
@@ -193,15 +192,17 @@ const TraineeManagerDashboard = () => {
       return;
     }
     try {
-      const url = `${BASE_URL}/update-application?applicationId=${selectedRejectId}&status=rejected`;
-      await axios.put(url, {}, { withCredentials: true });
+      console.log(selectedRejectId)
+      // const url = `${BASE_URL}/update-application?applicationId=${selectedRejectId}&status=rejected`;
+      // await axios.put(url, {}, { withCredentials: true });
+      handleApproval(selectedRejectId, "Rejected")
       setRemarksData((prev) => ({
         ...prev,
         [selectedRejectId]: rejectRemarks,
       }));
-      
-      // Fetch updated list after rejection
-      fetchPendingApprovals();
+    
+      // Fetch updated list after rejection   handleApproval(request.applyId, "Rejected")
+      //fetchPendingApprovals();
       
       // Send email after remarks submission
       const userEmail = pendingApprovals.find(
@@ -239,6 +240,11 @@ const TraineeManagerDashboard = () => {
       console.error("Failed to send email:", error);
       throw error;
     }
+  };
+  
+  const handleReject = (id) => {
+    setSelectedRejectId(id);
+    setIsRejectModalOpen(true);
   };
 
   return (
@@ -399,7 +405,7 @@ const TraineeManagerDashboard = () => {
                <td>{request.training.trainer.name}</td>
                <td>
                  <button onClick={() => handleApproval(request.applyId, "Approved")}>Approve</button>
-                 <button onClick={() => handleApproval(request.applyId, "Rejected")}>Reject</button>
+                 <button onClick={() => handleReject(request.applyId)}>Reject</button>
                </td>
              </tr>
            ))}
